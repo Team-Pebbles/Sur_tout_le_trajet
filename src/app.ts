@@ -1,9 +1,9 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, ShaderMaterial, SphereParticleEmitter, Effect } from "@babylonjs/core";
+import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, ShaderMaterial, HtmlElementTexture,ThinEngine } from "@babylonjs/core";
 
-import { Viewer } from 'cesium';
+import { Viewer,  Ion, MapboxImageryProvider, createWorldTerrain } from 'cesium';
 
 class App {
     constructor() {
@@ -28,6 +28,18 @@ class App {
 			attributes: ["position", "normal", "uv"],
 			uniforms: ["world", "worldView", "worldViewProjection", "view", "projection"]
         });
+
+        this.cesiumInit()
+
+        let mapCanvas: any = document.getElementById("cesiumCanvas")
+        if(mapCanvas == null && mapCanvas == undefined) return;
+
+        var e = new ThinEngine(mapCanvas);
+
+        let mapCanvasTexture = new HtmlElementTexture("mapCanvas",mapCanvas,{scene: scene, engine: scene.getEngine()});
+    
+        
+        shaderMaterial.setTexture("textureSampler", mapCanvasTexture);
         sphere.material = shaderMaterial;
 
         // hide/show the Inspector
@@ -44,10 +56,35 @@ class App {
 
         // run the main render loop
         engine.runRenderLoop(() => {
+            mapCanvasTexture.update();
             scene.render();
         });
+      
+    }
 
-        var viewer = new Viewer('cesiumContainer');
+    cesiumInit() {
+        Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw';
+        var viewer = new Viewer('cesiumContainer', {
+            imageryProvider : new MapboxImageryProvider({
+                url : 'https://api.mapbox.com/v4/',
+                mapId: 'mapbox.satellite',
+                accessToken: 'pk.eyJ1IjoiaWNoYmlucm9iIiwiYSI6ImNqZGtrbHYzMDAxbGUzM254ODY3MXA1dm4ifQ.2-TYG46620MlH6XmwYs4Jw'
+            }),
+            terrainProvider : createWorldTerrain(),
+            scene3DOnly: true,
+            selectionIndicator: false,
+            baseLayerPicker: false,
+            navigationHelpButton: false,
+            homeButton: false,
+            geocoder: false
+            // requestRenderMode : true,
+            // maximumRenderTimeChange : Infinity
+      
+        });
+
+        let viewerDOM = document.getElementById("cesiumContainer")
+        let viewerCanvas = viewerDOM?.querySelector(".cesium-widget > canvas")
+        if(viewerCanvas !== null && viewerCanvas !== undefined) viewerCanvas.id = "cesiumCanvas"
     }
 }
 new App();
