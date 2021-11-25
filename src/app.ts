@@ -94,9 +94,9 @@ class App {
         let shaderMaterial = new ShaderMaterial("shader", scene, "./stream",
         {
 			attributes: ["position", "normal", "uv"],
-			uniforms: ["world", "worldView", "worldViewProjection", "view", "projection"]
+			uniforms: ["world", "worldView", "worldViewProjection", "view", "projection", "time", ""]
         });
-
+        //plane.shaderMaterial.setFloat("u_time", );
         let mapCanvas: any = document.getElementById("cesiumCanvas")
         if(mapCanvas == null && mapCanvas == undefined) return;
 
