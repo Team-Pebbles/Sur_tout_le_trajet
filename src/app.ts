@@ -1,46 +1,34 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, ShaderMaterial, HtmlElementTexture,ThinEngine } from "@babylonjs/core";
+import { Engine, Scene, FreeCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, ShaderMaterial, HtmlElementTexture,ThinEngine, Camera } from "@babylonjs/core";
 
 import { Viewer,  Ion, MapboxImageryProvider, createWorldTerrain } from 'cesium';
 
 class App {
     constructor() {
         // create the canvas html element and attach it to the webpage
-        var canvas = document.createElement("canvas");
+        const canvas = document.createElement("canvas");
         canvas.style.width = "100%";
         canvas.style.height = "100%";
         canvas.id = "gameCanvas";
         document.body.appendChild(canvas);
 
+  
+
         // initialize babylon scene and engine
-        var engine = new Engine(canvas, true);
-        var scene = new Scene(engine);
+        const engine = new Engine(canvas, true);
+        const scene = new Scene(engine);
 
-        var camera: ArcRotateCamera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, Vector3.Zero(), scene);
+        let camera = new FreeCamera("camera1", new Vector3(0, 5, -10), scene);
+        camera.setTarget(Vector3.Zero());
         camera.attachControl(canvas, true);
-        var light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
-        var sphere: Mesh = MeshBuilder.CreateSphere("sphere", { diameter: 1 }, scene);
 
-    var shaderMaterial = new ShaderMaterial("shader", scene, "./stream",
-        {
-			attributes: ["position", "normal", "uv"],
-			uniforms: ["world", "worldView", "worldViewProjection", "view", "projection"]
-        });
+        let light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
 
         this.cesiumInit()
 
-        let mapCanvas: any = document.getElementById("cesiumCanvas")
-        if(mapCanvas == null && mapCanvas == undefined) return;
-
-        var e = new ThinEngine(mapCanvas);
-
-        let mapCanvasTexture = new HtmlElementTexture("mapCanvas",mapCanvas,{scene: scene, engine: scene.getEngine()});
-    
-        
-        shaderMaterial.setTexture("textureSampler", mapCanvasTexture);
-        sphere.material = shaderMaterial;
+        let mapCanvasTexture = this.addMapCanvas(scene)
 
         // hide/show the Inspector
         window.addEventListener("keydown", (ev) => {
@@ -56,7 +44,9 @@ class App {
 
         // run the main render loop
         engine.runRenderLoop(() => {
-            mapCanvasTexture.update();
+            if(mapCanvasTexture !== null && mapCanvasTexture !== undefined) {
+                mapCanvasTexture.update();
+            }
             scene.render();
         });
       
@@ -86,5 +76,43 @@ class App {
         let viewerCanvas = viewerDOM?.querySelector(".cesium-widget > canvas")
         if(viewerCanvas !== null && viewerCanvas !== undefined) viewerCanvas.id = "cesiumCanvas"
     }
+
+    addMapCanvas(scene){
+		if (scene.activeCameras.length === 0){
+		    scene.activeCameras.push(scene.activeCamera);
+		}              
+
+        let size = {x: window.innerWidth,y: window.innerHeight }
+
+		var secondCamera = new FreeCamera("mapCanvasCamera", new Vector3(0, 0, -50), scene);                
+		secondCamera.mode = Camera.ORTHOGRAPHIC_CAMERA;
+		secondCamera.layerMask = 0x20000000;
+		scene.activeCameras.push(secondCamera);
+
+        let plane: Mesh = MeshBuilder.CreatePlane("plane", { width: size.x, height: size.y }, scene);
+
+        let shaderMaterial = new ShaderMaterial("shader", scene, "./stream",
+        {
+			attributes: ["position", "normal", "uv"],
+			uniforms: ["world", "worldView", "worldViewProjection", "view", "projection"]
+        });
+
+        let mapCanvas: any = document.getElementById("cesiumCanvas")
+        if(mapCanvas == null && mapCanvas == undefined) return;
+
+        let e = new ThinEngine(mapCanvas);
+
+        let mapCanvasTexture = new HtmlElementTexture("mapCanvas",mapCanvas,{scene: scene, engine: scene.getEngine()});
+    
+        plane.name = "planeMapCanvas";
+		plane.layerMask = 0x20000000;
+		plane.freezeWorldMatrix();
+
+        shaderMaterial.setTexture("textureSampler", mapCanvasTexture);
+        plane.material = shaderMaterial;
+
+        return mapCanvasTexture
+
+	}
 }
 new App();
