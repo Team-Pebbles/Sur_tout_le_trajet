@@ -1,0 +1,15 @@
+button.cesium-infoBox-camera {
+    display: none;
+}
+
+.cesium-viewer-bottom,
+.cesium-viewer-toolbar,
+.cesium-viewer-animationContainer,
+.cesium-viewer-timelineContainer,
+.cesium-viewer-fullscreenContainer,
+.cesium-viewer-selectionIndicatorContainer,
+.cesium-viewer-infoBoxContainer,
+.cesium-viewer-fullscreenContainer
+{
+  display: none !important;
+}
