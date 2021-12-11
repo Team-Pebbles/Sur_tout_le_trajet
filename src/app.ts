@@ -1,7 +1,7 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { Engine, Scene, FreeCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, ShaderMaterial, HtmlElementTexture,ThinEngine, Camera } from "@babylonjs/core";
+import { Engine, Scene, FreeCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, ShaderMaterial, HtmlElementTexture,ThinEngine, Camera, Vector2 } from "@babylonjs/core";
 
 import { Viewer,  Ion, MapboxImageryProvider, createWorldTerrain } from 'cesium';
 
@@ -89,14 +89,14 @@ class App {
 		secondCamera.layerMask = 0x20000000;
 		scene.activeCameras.push(secondCamera);
 
-        let plane: Mesh = MeshBuilder.CreatePlane("plane", { width: size.x, height: size.y }, scene);
+        let plane: Mesh = MeshBuilder.CreatePlane("plane", { width: 1000, height: 700 }, scene);
 
         let shaderMaterial = new ShaderMaterial("shader", scene, "./stream",
         {
 			attributes: ["position", "normal", "uv"],
-			uniforms: ["world", "worldView", "worldViewProjection", "view", "projection", "time", ""]
+			uniforms: ["world", "worldView", "worldViewProjection", "view", "projection", "time"]
         });
-        //plane.shaderMaterial.setFloat("u_time", );
+        //shaderMaterial.setVector2("u_resolution", new Vector2(window.innerWidth, window.innerHeight))
         let mapCanvas: any = document.getElementById("cesiumCanvas")
         if(mapCanvas == null && mapCanvas == undefined) return;
 
