@@ -1,7 +1,12 @@
 export class Midi {
     constructor() {
+        this.initMidi()
+    }
+
+    initMidi() {
         navigator.requestMIDIAccess()
-        .then(this.onMIDISuccess, this.onMIDIFailure);
+        .then(this.onMIDISuccess.bind(this), this.onMIDIFailure);
+
     }
 
     onMIDISuccess(midiAccess) {
@@ -9,6 +14,16 @@ export class Midi {
     
         var inputs = midiAccess.inputs;
         var outputs = midiAccess.outputs;
+        for (var input of inputs.values()) {
+            console.log(input)
+            input.onmidimessage = (m) => {
+                this.getMIDIMessage(m)
+            };
+        };
+    }
+
+    getMIDIMessage(m) {
+        console.log(m)
     }
     
     onMIDIFailure() {
