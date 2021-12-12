@@ -3,7 +3,8 @@ import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
 import { Engine, Scene, FreeCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, ShaderMaterial, HtmlElementTexture,ThinEngine, Camera, Vector2 } from "@babylonjs/core";
 
-import { Viewer,  Ion, MapboxImageryProvider, createWorldTerrain } from 'cesium';
+import { Midi } from "./midi";
+import { CesiumViewer } from "./cesiumViewer";
 
 class App {
     constructor() {
@@ -26,7 +27,7 @@ class App {
 
         let light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
 
-        this.cesiumInit()
+        new CesiumViewer();
 
         let mapCanvasTexture = this.addMapCanvas(scene)
 
@@ -49,33 +50,11 @@ class App {
             }
             scene.render();
         });
+
+        new Midi();
       
     }
 
-    cesiumInit() {
-        Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw';
-        var viewer = new Viewer('cesiumContainer', {
-            imageryProvider : new MapboxImageryProvider({
-                url : 'https://api.mapbox.com/v4/',
-                mapId: 'mapbox.satellite',
-                accessToken: 'pk.eyJ1IjoiaWNoYmlucm9iIiwiYSI6ImNqZGtrbHYzMDAxbGUzM254ODY3MXA1dm4ifQ.2-TYG46620MlH6XmwYs4Jw'
-            }),
-            terrainProvider : createWorldTerrain(),
-            scene3DOnly: true,
-            selectionIndicator: false,
-            baseLayerPicker: false,
-            navigationHelpButton: false,
-            homeButton: false,
-            geocoder: false
-            // requestRenderMode : true,
-            // maximumRenderTimeChange : Infinity
-      
-        });
-
-        let viewerDOM = document.getElementById("cesiumContainer")
-        let viewerCanvas = viewerDOM?.querySelector(".cesium-widget > canvas")
-        if(viewerCanvas !== null && viewerCanvas !== undefined) viewerCanvas.id = "cesiumCanvas"
-    }
 
     addMapCanvas(scene){
 		if (scene.activeCameras.length === 0){
