@@ -28,14 +28,9 @@
    // pointer-events: none;
   }
 
-  // #gameCanvas {
-  //   position: absolute;
-  //   width: 100vw !important;
-  //   height: 50vh !important; 
-  //   top: 50vh !important;
-  //   left: 0;
-  //   z-index: 960;
-  // }
+  #gameCanvas {
+    clip-path: inset(6% 3% 6% 3% round 20px);
+  }
   
   // .viewer-invert {
   //   position: absolute;

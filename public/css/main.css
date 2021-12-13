@@ -39,4 +39,8 @@ html, body {
   filter: opacity(0);
 }
 
+#gameCanvas {
+  clip-path: inset(6% 3% 5% 3% round 20px);
+}
+
 /*# sourceMappingURL=main.css.map */

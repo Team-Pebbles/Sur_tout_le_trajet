@@ -3,22 +3,27 @@ precision highp float;
 varying vec2 vUV;
 uniform sampler2D textureSampler;
 uniform float time;
+uniform vec2 u_resolution;
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
-    // float p = 3.14159265359;
-    // vec2 resolution = u_resolution.xy;
-    // vec2 uv = fragCoord.xy;
     // fragColor = texture2D(textureSampler, uv);
     vec2 uv = fragCoord.xy;
-    //vec2 coord = 1.0 - uv * 2.0;
-    //uv.y =  - abs(1. - uv.y * 2.);
-    uv.y = 1. - abs(1. - uv.y * 2.);
-    uv.x = 1. - abs(1. - uv.x * 2.);
+    //uv = fract(uv*3.);
+    uv.y = uv.y + .17; //offset on y
+    uv.y = abs(1. - uv.y * 2.); // Mirror
+    uv.y *= .5; // ratio
+    uv.y = 1. - uv.y; // invert Mirror
+    //uv.x = 1. - abs(1. - uv.x * 2.);
+
+    //fix separation line bug
     uv.y *= .99;
-    //uv = fract(( 1. - abs(1. - uv * 2.))*.5);
+    uv.x *= .99;
+    
+    // Fract the uv
+    // uv = fract(( 1. - abs(1. - uv * 2.))*.5);
     fragColor = texture2D(textureSampler, uv);
-    //fragColor = vec4(1., vec2(uv), 1.);
+    //fragColor = vec4(vec2(uv), 1., 1.);
 }
 
 
