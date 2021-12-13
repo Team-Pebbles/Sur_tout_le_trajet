@@ -14,7 +14,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     uv.y = abs(1. - uv.y * 2.); // Mirror
     uv.y *= .5; // ratio
     uv.y = 1. - uv.y; // invert Mirror
-    //uv.x = 1. - abs(1. - uv.x * 2.);
+    // uv.x = 1. - abs(1. - uv.x * 2.) * .5;
 
     //fix separation line bug
     uv.y *= .99;
