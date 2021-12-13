@@ -32,6 +32,7 @@
     "webpack-dev-server": "^4.5.0"
   },
   "dependencies": {
-    "@types/webmidi": "^2.0.6"
+    "@types/webmidi": "^2.0.6",
+    "howler": "^2.2.3"
   }
 }
