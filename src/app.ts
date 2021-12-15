@@ -18,6 +18,7 @@ import {
 
 import { Midi } from "./midi"
 import { CesiumViewer } from "./cesiumViewer"
+import { InputManager } from "./inputManager"
 
 class App {
   constructor() {
@@ -31,14 +32,13 @@ class App {
     // initialize babylon scene and engine
     const engine = new Engine(canvas, true)
     const scene = new Scene(engine)
+    const inputs = new InputManager(scene, engine)
 
     let camera = new FreeCamera("camera1", new Vector3(0, 5, -10), scene)
     camera.setTarget(Vector3.Zero())
     camera.attachControl(canvas, true)
 
     let light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene)
-
-    new CesiumViewer()
 
     let mapCanvasTexture = this.addMapCanvas(scene)
 
@@ -54,6 +54,10 @@ class App {
       }
     })
 
+    scene.registerBeforeRender(() => {
+      inputs.registerBeforeRender()
+    })
+
     // run the main render loop
     engine.runRenderLoop(() => {
       if (mapCanvasTexture !== null && mapCanvasTexture !== undefined) {
@@ -62,6 +66,7 @@ class App {
       scene.render()
     })
 
+    new CesiumViewer(inputs)
     new Midi()
   }
 

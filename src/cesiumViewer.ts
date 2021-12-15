@@ -7,13 +7,16 @@ import {
   ScreenSpaceEventType,
   Cartesian3,
 } from "cesium"
+import { InputManager } from "./inputManager"
 
 export class CesiumViewer {
   private viewer: Viewer
   private handler: ScreenSpaceEventHandler
   private viewerCanvas: HTMLCanvasElement | null
+  private inputManager: InputManager
 
-  constructor() {
+  constructor(inputManager: InputManager) {
+    this.inputManager = inputManager
     Ion.defaultAccessToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw"
 
@@ -135,7 +138,7 @@ export class CesiumViewer {
       },
       false
     )
-
+    //TODO : Déporter dans le inputManager
     let zActive = true,
       sActive = true,
       aActive = true,
@@ -165,8 +168,9 @@ export class CesiumViewer {
       var cameraHeight = ellipsoid.cartesianToCartographic(camera.position).height
       var moveRate = cameraHeight / 100.0
 
+      console.log(this.inputManager.getState())
       // Z
-      if (flags.moveForward && zActive) {
+      if (this.inputManager.getState() == "FORWARD" && zActive) {
         camera.moveForward(moveRate)
         //document.getElementById('audioDDerive').play();
       }
