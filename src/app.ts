@@ -1,97 +1,107 @@
-import "@babylonjs/core/Debug/debugLayer";
-import "@babylonjs/inspector";
-import "@babylonjs/loaders/glTF";
-import { Engine, Scene, FreeCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, ShaderMaterial, HtmlElementTexture,ThinEngine, Camera, Vector2 } from "@babylonjs/core";
+import "@babylonjs/core/Debug/debugLayer"
+import "@babylonjs/inspector"
+import "@babylonjs/loaders/glTF"
+import {
+  Engine,
+  Scene,
+  FreeCamera,
+  Vector3,
+  HemisphericLight,
+  Mesh,
+  MeshBuilder,
+  ShaderMaterial,
+  HtmlElementTexture,
+  ThinEngine,
+  Camera,
+  Vector2,
+} from "@babylonjs/core"
 
-import { Midi } from "./midi";
-import { CesiumViewer } from "./cesiumViewer";
+import { Midi } from "./midi"
+import { CesiumViewer } from "./cesiumViewer"
 
 class App {
-    constructor() {
-        // create the canvas html element and attach it to the webpage
-        const canvas = document.createElement("canvas");
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
-        canvas.id = "gameCanvas";
-        document.body.appendChild(canvas);
+  constructor() {
+    // create the canvas html element and attach it to the webpage
+    const canvas = document.createElement("canvas")
+    canvas.style.width = "100%"
+    canvas.style.height = "100%"
+    canvas.id = "gameCanvas"
+    document.body.appendChild(canvas)
 
-  
+    // initialize babylon scene and engine
+    const engine = new Engine(canvas, true)
+    const scene = new Scene(engine)
 
-        // initialize babylon scene and engine
-        const engine = new Engine(canvas, true);
-        const scene = new Scene(engine);
+    let camera = new FreeCamera("camera1", new Vector3(0, 5, -10), scene)
+    camera.setTarget(Vector3.Zero())
+    camera.attachControl(canvas, true)
 
-        let camera = new FreeCamera("camera1", new Vector3(0, 5, -10), scene);
-        camera.setTarget(Vector3.Zero());
-        camera.attachControl(canvas, true);
+    let light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene)
 
-        let light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
+    new CesiumViewer()
 
-        new CesiumViewer();
+    let mapCanvasTexture = this.addMapCanvas(scene)
 
-        let mapCanvasTexture = this.addMapCanvas(scene)
+    // hide/show the Inspector
+    window.addEventListener("keydown", (ev) => {
+      // Shift+Ctrl+Alt+I
+      if (ev.shiftKey && ev.ctrlKey && ev.altKey && ev.keyCode === 73) {
+        if (scene.debugLayer.isVisible()) {
+          scene.debugLayer.hide()
+        } else {
+          scene.debugLayer.show()
+        }
+      }
+    })
 
-        // hide/show the Inspector
-        window.addEventListener("keydown", (ev) => {
-            // Shift+Ctrl+Alt+I
-            if (ev.shiftKey && ev.ctrlKey && ev.altKey && ev.keyCode === 73) {
-                if (scene.debugLayer.isVisible()) {
-                    scene.debugLayer.hide();
-                } else {
-                    scene.debugLayer.show();
-                }
-            }
-        });
+    // run the main render loop
+    engine.runRenderLoop(() => {
+      if (mapCanvasTexture !== null && mapCanvasTexture !== undefined) {
+        mapCanvasTexture.update()
+      }
+      scene.render()
+    })
 
-        // run the main render loop
-        engine.runRenderLoop(() => {
-            if(mapCanvasTexture !== null && mapCanvasTexture !== undefined) {
-                mapCanvasTexture.update();
-            }
-            scene.render();
-        });
+    new Midi()
+  }
 
-        new Midi();
-      
+  addMapCanvas(scene) {
+    if (scene.activeCameras.length === 0) {
+      scene.activeCameras.push(scene.activeCamera)
     }
 
+    let size = { x: window.innerWidth, y: window.innerHeight }
 
-    addMapCanvas(scene){
-		if (scene.activeCameras.length === 0){
-		    scene.activeCameras.push(scene.activeCamera);
-		}              
+    var secondCamera = new FreeCamera("mapCanvasCamera", new Vector3(0, 0, -50), scene)
+    secondCamera.mode = Camera.ORTHOGRAPHIC_CAMERA
+    secondCamera.layerMask = 0x20000000
+    scene.activeCameras.push(secondCamera)
 
-        let size = {x: window.innerWidth,y: window.innerHeight }
+    let plane: Mesh = MeshBuilder.CreatePlane("plane", { width: size.x, height: size.y }, scene)
 
-		var secondCamera = new FreeCamera("mapCanvasCamera", new Vector3(0, 0, -50), scene);                
-		secondCamera.mode = Camera.ORTHOGRAPHIC_CAMERA;
-		secondCamera.layerMask = 0x20000000;
-		scene.activeCameras.push(secondCamera);
+    let shaderMaterial = new ShaderMaterial("shader", scene, "./stream", {
+      attributes: ["position", "normal", "uv"],
+      uniforms: ["world", "worldView", "worldViewProjection", "view", "projection", "time"],
+    })
+    shaderMaterial.setVector2("u_resolution", new Vector2(window.innerWidth, window.innerHeight))
+    let mapCanvas: any = document.getElementById("cesiumCanvas")
+    if (mapCanvas == null && mapCanvas == undefined) return
 
-        let plane: Mesh = MeshBuilder.CreatePlane("plane", { width: size.x, height: size.y }, scene);
+    let e = new ThinEngine(mapCanvas)
 
-        let shaderMaterial = new ShaderMaterial("shader", scene, "./stream",
-        {
-			attributes: ["position", "normal", "uv"],
-			uniforms: ["world", "worldView", "worldViewProjection", "view", "projection", "time"]
-        });
-        shaderMaterial.setVector2("u_resolution", new Vector2(window.innerWidth, window.innerHeight))
-        let mapCanvas: any = document.getElementById("cesiumCanvas")
-        if(mapCanvas == null && mapCanvas == undefined) return;
+    let mapCanvasTexture = new HtmlElementTexture("mapCanvas", mapCanvas, {
+      scene: scene,
+      engine: scene.getEngine(),
+    })
 
-        let e = new ThinEngine(mapCanvas);
+    plane.name = "planeMapCanvas"
+    plane.layerMask = 0x20000000
+    plane.freezeWorldMatrix()
 
-        let mapCanvasTexture = new HtmlElementTexture("mapCanvas",mapCanvas,{scene: scene, engine: scene.getEngine()});
-    
-        plane.name = "planeMapCanvas";
-		plane.layerMask = 0x20000000;
-		plane.freezeWorldMatrix();
+    shaderMaterial.setTexture("textureSampler", mapCanvasTexture)
+    plane.material = shaderMaterial
 
-        shaderMaterial.setTexture("textureSampler", mapCanvasTexture);
-        plane.material = shaderMaterial;
-
-        return mapCanvasTexture
-
-	}
+    return mapCanvasTexture
+  }
 }
-new App();
+new App()
