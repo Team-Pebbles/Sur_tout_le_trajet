@@ -14,11 +14,14 @@ button.cesium-infoBox-camera {
 }
 
 /*  Map */
-*, *::after, *::before {
+*,
+*::after,
+*::before {
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -28,7 +31,8 @@ html, body {
   background: #000;
 }
 
-.controller, .cesium-widget > canvas {
+.controller,
+.cesium-widget > canvas {
   width: 100vw;
   height: 100vh;
   position: absolute;
@@ -40,7 +44,7 @@ html, body {
 }
 
 #gameCanvas {
-  clip-path: inset(6% 3% 5% 3% round 20px);
+  clip-path: inset(6% 3% 6% 3% round 20px);
 }
 
 /*# sourceMappingURL=main.css.map */
