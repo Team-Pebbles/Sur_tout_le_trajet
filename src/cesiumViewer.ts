@@ -8,6 +8,7 @@ import {
   Cartesian3,
 } from "cesium"
 import { InputManager } from "./inputManager"
+import { IACesiumCamera } from "./inputActions"
 
 export class CesiumViewer {
   private viewer: Viewer
@@ -17,6 +18,7 @@ export class CesiumViewer {
 
   constructor(inputManager: InputManager) {
     this.inputManager = inputManager
+    //console.log(IACesiumCamera.FORWARD)
     Ion.defaultAccessToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw"
 
@@ -168,9 +170,10 @@ export class CesiumViewer {
       var cameraHeight = ellipsoid.cartesianToCartographic(camera.position).height
       var moveRate = cameraHeight / 100.0
 
-      console.log(this.inputManager.getState())
-      // Z
-      if (this.inputManager.getState() == "FORWARD" && zActive) {
+      //      console.log(IACesiumCameraProxy.FORWARD)
+      // // Z
+      if (IACesiumCamera.FORWARD && zActive) {
+        console.log("forwaaaaard")
         camera.moveForward(moveRate)
         //document.getElementById('audioDDerive').play();
       }

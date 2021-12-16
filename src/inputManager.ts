@@ -1,21 +1,25 @@
 import { DeviceSourceManager, Engine, Scene, DeviceType, Color3, XboxInput } from "@babylonjs/core"
-enum State {
-  NULL = "NULL",
-  FORWARD = "FORWARD",
-  BACKWARD = "BACKWARD",
-  LEFT = "LEFT",
-  RIGHT = "RIGHT",
-  UP = "UP",
-  DOWN = "DOWN",
-}
+import { InputActions } from "./inputActions"
 
 export class InputManager {
   private scene: Scene
   private dsm: DeviceSourceManager
-  private _state: string
+  private kbInputList: string[]
   constructor(scene: Scene, engine: Engine) {
+    //  InputActions.maps[0].actions.FORWARD.isActive = true
+    this.kbInputList = []
+    InputActions.maps.forEach((map) => {
+      let actions = map["actions"]
+      for (const key in actions) {
+        if (Object.prototype.hasOwnProperty.call(actions, key)) {
+          const element = actions[key]
+          console.log(element, key)
+          this.kbInputList.push(element.keyboard)
+        }
+      }
+    })
+
     this.scene = scene
-    this._state = State.NULL
     this.dsm = new DeviceSourceManager(engine)
 
     this.dsm.onDeviceConnectedObservable.add((device) => {
@@ -42,8 +46,9 @@ export class InputManager {
     })
   }
 
-  getState() {
-    return this._state
+  setActiveInput(input: string) {
+    console.log(input)
+    return input
   }
 
   registerBeforeRender() {
@@ -61,41 +66,26 @@ export class InputManager {
     const kb = this.dsm.getDeviceSource(DeviceType.Keyboard)
     const xInput = this.dsm.getDeviceSource(DeviceType.Xbox)
 
-    const inputsList = {
-      FORWARD: {
-        kb: kb?.getInput("Z".charCodeAt(0)),
-        xInput: xInput!.getInput(XboxInput.A),
-      },
-    }
-
-    // for (const key in inputsList) {
-    //   if (Object.prototype.hasOwnProperty.call(object, key)) {
-    //     const element = object[key];
-
-    //   }
-    // }
-
     if (kb) {
-      if (this.dsm.getDeviceSource(DeviceType.Keyboard)?.getInput("Z".charCodeAt(0)) == 1) {
-        this._state = State.FORWARD
-      }
-      if (this.dsm.getDeviceSource(DeviceType.Keyboard)?.getInput("S".charCodeAt(0)) == 1) {
-        this._state = State.BACKWARD
-      }
+      this.kbInputList.forEach((input) => {
+        if (kb?.getInput(input.charCodeAt(0)) == 1) {
+          this.setActiveInput(input)
+        }
+      })
       // this._state = State.NULL
       // console.log(this.dsm.getDeviceSource(DeviceType.Keyboard)?.getInput(0))
     }
 
-    if (this.dsm.getDeviceSource(DeviceType.Xbox)) {
-      if (this.dsm.getDeviceSource(DeviceType.Xbox)!.getInput(XboxInput.A) == 1) {
-      }
-      if (this.dsm.getDeviceSource(DeviceType.Xbox)!.getInput(XboxInput.LStickXAxis) < -0.25) {
-        console.log("left")
-      } else if (
-        this.dsm.getDeviceSource(DeviceType.Xbox)!.getInput(XboxInput.LStickXAxis) > 0.25
-      ) {
-        console.log("right")
-      }
-    }
+    // if (this.dsm.getDeviceSource(DeviceType.Xbox)) {
+    //   if (this.dsm.getDeviceSource(DeviceType.Xbox)!.getInput(XboxInput.A) == 1) {
+    //   }
+    //   if (this.dsm.getDeviceSource(DeviceType.Xbox)!.getInput(XboxInput.LStickXAxis) < -0.25) {
+    //     console.log("left")
+    //   } else if (
+    //     this.dsm.getDeviceSource(DeviceType.Xbox)!.getInput(XboxInput.LStickXAxis) > 0.25
+    //   ) {
+    //     console.log("right")
+    //   }
+    // }
   }
 }
