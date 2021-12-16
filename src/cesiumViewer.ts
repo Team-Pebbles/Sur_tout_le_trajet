@@ -14,10 +14,10 @@ export class CesiumViewer {
   private viewer: Viewer
   private handler: ScreenSpaceEventHandler
   private viewerCanvas: HTMLCanvasElement | null
-  private inputManager: InputManager
+  //  private inputManager: InputManager
 
-  constructor(inputManager: InputManager) {
-    this.inputManager = inputManager
+  constructor() {
+    // this.inputManager = inputManager
     //console.log(IACesiumCamera.FORWARD)
     Ion.defaultAccessToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw"
@@ -50,7 +50,7 @@ export class CesiumViewer {
     this.viewerCanvas = this.viewer.canvas
     this.viewerCanvas.id = "cesiumCanvas"
     this.handler = new ScreenSpaceEventHandler(this.viewerCanvas)
-    this.controller()
+    //this.controller()
   }
 
   controller() {

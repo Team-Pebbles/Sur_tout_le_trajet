@@ -29,6 +29,7 @@ class App {
     canvas.id = "gameCanvas"
     document.body.appendChild(canvas)
 
+    new CesiumViewer()
     // initialize babylon scene and engine
     const engine = new Engine(canvas, true)
     const scene = new Scene(engine)
@@ -66,7 +67,6 @@ class App {
       scene.render()
     })
 
-    new CesiumViewer(inputs)
     new Midi()
   }
 
