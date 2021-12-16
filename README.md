@@ -2,22 +2,22 @@
 
 ## Inputs Management
 
-- [] midi
+- [ ] midi
   - [x] MIDI access
-  - [] MIDI interface
+  - [ ] MIDI interface
 - [x] keyboard
-- [] mouse
-- [] xbox
+- [ ] mouse
+- [ ] xbox
 
 ## Rendering
 
-- [] GLSL color filter
-- [] search for fx
-  - [] Kaleidoscope
-  - [] Noise
+- [ ] GLSL color filter
+- [ ] search for fx
+  - [ ] Kaleidoscope
+  - [ ] Noise
 
 ## Audio
 
-- [] live audio reactive
-  - [] Library
-  - [] interface w/ GLSL
+- [ ] live audio reactive
+  - [ ] Library
+  - [ ] interface w/ GLSL
