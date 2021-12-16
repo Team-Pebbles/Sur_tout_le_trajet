@@ -46,9 +46,20 @@ export class InputManager {
     })
   }
 
-  setActiveInput(input: string) {
-    console.log(input)
-    return input
+  setInputSate(input: string, state: boolean) {
+    // console.log(input)
+    // return input
+    InputActions.maps.forEach((map) => {
+      let actions = map["actions"]
+      for (const key in actions) {
+        if (Object.prototype.hasOwnProperty.call(actions, key)) {
+          const element = actions[key]
+          if (element.keyboard == input) {
+            element.isActive = state
+          }
+        }
+      }
+    })
   }
 
   registerBeforeRender() {
@@ -69,11 +80,11 @@ export class InputManager {
     if (kb) {
       this.kbInputList.forEach((input) => {
         if (kb?.getInput(input.charCodeAt(0)) == 1) {
-          this.setActiveInput(input)
+          this.setInputSate(input, true)
+        } else {
+          this.setInputSate(input, false)
         }
       })
-      // this._state = State.NULL
-      // console.log(this.dsm.getDeviceSource(DeviceType.Keyboard)?.getInput(0))
     }
 
     // if (this.dsm.getDeviceSource(DeviceType.Xbox)) {

@@ -29,11 +29,12 @@ class App {
     canvas.id = "gameCanvas"
     document.body.appendChild(canvas)
 
-    new CesiumViewer()
     // initialize babylon scene and engine
     const engine = new Engine(canvas, true)
     const scene = new Scene(engine)
     const inputs = new InputManager(scene, engine)
+
+    new CesiumViewer(inputs)
 
     let camera = new FreeCamera("camera1", new Vector3(0, 5, -10), scene)
     camera.setTarget(Vector3.Zero())

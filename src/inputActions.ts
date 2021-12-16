@@ -14,6 +14,26 @@ export const InputActions = {
           keyboard: "S",
           xbox: "B",
         },
+        LEFT: {
+          isActive: false,
+          keyboard: "Q",
+          xbox: "B",
+        },
+        RIGHT: {
+          isActive: false,
+          keyboard: "D",
+          xbox: "B",
+        },
+        UP: {
+          isActive: false,
+          keyboard: "A",
+          xbox: "B",
+        },
+        DOWN: {
+          isActive: false,
+          keyboard: "E",
+          xbox: "B",
+        },
       },
     },
   ],
@@ -22,6 +42,10 @@ export const InputActions = {
 const IACesiumCameraHandler = {
   get: (target, prop, receiver) => {
     return target[prop].isActive
+  },
+  set: (target, prop, newVal) => {
+    target[prop].isActive = newVal
+    return true
   },
 }
 

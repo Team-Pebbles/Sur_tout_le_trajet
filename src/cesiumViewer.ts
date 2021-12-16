@@ -14,10 +14,10 @@ export class CesiumViewer {
   private viewer: Viewer
   private handler: ScreenSpaceEventHandler
   private viewerCanvas: HTMLCanvasElement | null
-  //  private inputManager: InputManager
+  private inputManager: InputManager
 
-  constructor() {
-    // this.inputManager = inputManager
+  constructor(inputManager: InputManager) {
+    this.inputManager = inputManager
     //console.log(IACesiumCamera.FORWARD)
     Ion.defaultAccessToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw"
@@ -50,7 +50,7 @@ export class CesiumViewer {
     this.viewerCanvas = this.viewer.canvas
     this.viewerCanvas.id = "cesiumCanvas"
     this.handler = new ScreenSpaceEventHandler(this.viewerCanvas)
-    //this.controller()
+    this.controller()
   }
 
   controller() {
@@ -73,19 +73,10 @@ export class CesiumViewer {
 
     var startMousePosition
     var mousePosition
-    var flags = {
-      looking: false,
-      moveForward: false,
-      moveBackward: false,
-      moveUp: false,
-      moveDown: false,
-      moveLeft: false,
-      moveRight: false,
-      changeLocation: false,
-    }
+    var looking = false
 
     this.handler.setInputAction(function (movement) {
-      flags.looking = true
+      looking = true
       mousePosition = startMousePosition = Cartesian3.clone(movement.position)
     }, ScreenSpaceEventType.LEFT_DOWN)
 
@@ -95,123 +86,70 @@ export class CesiumViewer {
     }, ScreenSpaceEventType.MOUSE_MOVE)
 
     this.handler.setInputAction(function (position) {
-      flags.looking = false
+      looking = false
     }, ScreenSpaceEventType.LEFT_UP)
-
-    function getFlagForKeyCode(keyCode: string) {
-      switch (keyCode) {
-        case "z":
-          return "moveForward"
-        case "s":
-          return "moveBackward"
-        case "a":
-          return "moveUp"
-        case "e":
-          return "moveDown"
-        case "d":
-          return "moveRight"
-        case "q":
-          return "moveLeft"
-        case "m":
-          return "changeLocation"
-        default:
-          return undefined
-      }
-    }
-
-    document.addEventListener(
-      "keydown",
-      function (e) {
-        var flagName = getFlagForKeyCode(e.key)
-        if (typeof flagName !== "undefined") {
-          flags[flagName] = true
-        }
-      },
-      false
-    )
-
-    document.addEventListener(
-      "keyup",
-      function (e) {
-        var flagName = getFlagForKeyCode(e.key)
-        if (typeof flagName !== "undefined") {
-          flags[flagName] = false
-        }
-      },
-      false
-    )
-    //TODO : Déporter dans le inputManager
-    let zActive = true,
-      sActive = true,
-      aActive = true,
-      eActive = true,
-      qActive = true,
-      dActive = true,
-      mActive = true
 
     this.viewer.clock.onTick.addEventListener((clock) => {
       // OLD CONTROLLER
-      var camera = this.viewer.camera
+      let camera = this.viewer.camera
 
-      if (flags.looking) {
-        var width = canvas.clientWidth
-        var height = canvas.clientHeight
+      if (looking) {
+        let width = canvas.clientWidth
+        let height = canvas.clientHeight
 
         // Coordinate (0.0, 0.0) will be where the mouse was clicked.
-        var x = (mousePosition.x - startMousePosition.x) / width
-        var y = -(mousePosition.y - startMousePosition.y) / height
+        let x = (mousePosition.x - startMousePosition.x) / width
+        let y = -(mousePosition.y - startMousePosition.y) / height
 
-        var lookFactor = 0.05
+        let lookFactor = 0.05
         camera.lookRight(x * lookFactor)
         camera.lookUp(y * lookFactor)
       }
 
       // Change movement speed based on the distance of the camera to the surface of the ellipsoid.
-      var cameraHeight = ellipsoid.cartesianToCartographic(camera.position).height
-      var moveRate = cameraHeight / 100.0
+      let cameraHeight = ellipsoid.cartesianToCartographic(camera.position).height
+      let moveRate = cameraHeight / 100.0
 
-      //      console.log(IACesiumCameraProxy.FORWARD)
       // // Z
-      if (IACesiumCamera.FORWARD && zActive) {
-        console.log("forwaaaaard")
+      if (IACesiumCamera.FORWARD) {
         camera.moveForward(moveRate)
         //document.getElementById('audioDDerive').play();
       }
       // S
-      if (flags.moveBackward && sActive) {
+      if (IACesiumCamera.BACKWARD) {
         camera.moveBackward(moveRate)
         //document.getElementById('audioDDerive').play();
       }
 
       // A
-      if (flags.moveUp && aActive) {
+      if (IACesiumCamera.UP) {
         camera.moveUp(moveRate)
         //document.getElementById('audioDLeftRight').play();
       }
 
       // E
-      if (flags.moveDown && eActive) {
+      if (IACesiumCamera.DOWN) {
         camera.moveDown(moveRate)
         //document.getElementById('audioDLeftRight').play();
       }
 
       // Q
-      if (flags.moveLeft && qActive) {
+      if (IACesiumCamera.LEFT) {
         camera.moveLeft(moveRate)
         //document.getElementById('audioDLeftRight').play();
       }
 
       // D
-      if (flags.moveRight && dActive) {
+      if (IACesiumCamera.RIGHT) {
         camera.moveRight(moveRate)
         //document.getElementById('audioDLeftRight').play();
       }
 
       // M
-      if (flags.changeLocation && mActive) {
-        console.log("mActive", mActive)
-        // map().setLocation();
-      }
+      // if () {
+      //   console.log("mActive", mActive)
+      //   // map().setLocation();
+      // }
     })
   }
 }
