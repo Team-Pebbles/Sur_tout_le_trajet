@@ -38,19 +38,20 @@ class App {
     // initialize babylon scene and engine
     this.engine = new Engine(this.canvas, true)
     this.scene = new Scene(this.engine)
+
+    // INPUT MANAGER
     this.inputs = new InputManager(this.scene, this.engine)
-
+    new Midi()
+    // CESIUM VIEWER
     new CesiumViewer(this.inputs)
-
+    // SETUP SCENE
     this.cameras()
     this.lights()
-
-    //let mapCanvasTexture = this.addMapCanvas(this.scene)
     this.mapCanvas = new MapCanvas(this.scene)
-
-    this.debug()
+    //RENDER
     this.rendering()
-    new Midi()
+    // dev things
+    this.debug()
   }
 
   cameras() {
