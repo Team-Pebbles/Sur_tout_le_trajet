@@ -7,8 +7,8 @@ import {
   ScreenSpaceEventType,
   Cartesian3,
 } from "cesium"
-import { InputManager } from "./inputManager"
-import { IACesiumCamera } from "./inputActions"
+import { InputManager } from "./inputs/inputManager"
+import { IACesiumCamera } from "./inputs/inputActions"
 
 export class CesiumViewer {
   private viewer: Viewer
