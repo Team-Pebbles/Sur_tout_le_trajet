@@ -1,28 +1,31 @@
-import { DeviceSourceManager, Engine, Scene, DeviceType, Color3, XboxInput } from "@babylonjs/core"
-import { InputActions } from "./inputActions"
+import {
+  DeviceSourceManager,
+  Engine,
+  DeviceType,
+  XboxInput,
+  DeviceSource,
+  Nullable,
+} from "@babylonjs/core"
+import { IAControl, IAControlList, IAMaps, InputActions } from "./inputActions"
 
 export class InputManager {
-  private scene: Scene
   private dsm: DeviceSourceManager
   private kbInputList: string[]
-  constructor(scene: Scene, engine: Engine) {
-    //  InputActions.maps[0].actions.FORWARD.isActive = true
+  constructor(engine: Engine) {
     this.kbInputList = []
-    InputActions.maps.forEach((map) => {
-      let actions = map["actions"]
+    InputActions.maps.forEach((map: IAMaps) => {
+      let actions: IAControlList = map["actions"]
       for (const key in actions) {
         if (Object.prototype.hasOwnProperty.call(actions, key)) {
-          const element = actions[key]
-          console.log(element, key)
+          const element: IAControl = actions[key]
           this.kbInputList.push(element.keyboard)
         }
       }
     })
 
-    this.scene = scene
     this.dsm = new DeviceSourceManager(engine)
 
-    this.dsm.onDeviceConnectedObservable.add((device) => {
+    this.dsm.onDeviceConnectedObservable.add((device: DeviceSource<DeviceType>) => {
       switch (device.deviceType) {
         case DeviceType.Keyboard:
           console.log("Keyboard")
@@ -49,11 +52,11 @@ export class InputManager {
   setInputSate(input: string, state: boolean) {
     // console.log(input)
     // return input
-    InputActions.maps.forEach((map) => {
-      let actions = map["actions"]
+    InputActions.maps.forEach((map: IAMaps) => {
+      let actions: IAControlList = map["actions"]
       for (const key in actions) {
         if (Object.prototype.hasOwnProperty.call(actions, key)) {
-          const element = actions[key]
+          const element: IAControl = actions[key]
           if (element.keyboard == input) {
             element.isActive = state
           }
@@ -74,11 +77,15 @@ export class InputManager {
      * e.g. if(dsm.getDeviceSource(DeviceType.Keyboard)?.getInput(90) == 1)
      */
 
-    const kb = this.dsm.getDeviceSource(DeviceType.Keyboard)
-    const xInput = this.dsm.getDeviceSource(DeviceType.Xbox)
+    const kb: Nullable<DeviceSource<DeviceType.Keyboard>> = this.dsm.getDeviceSource(
+      DeviceType.Keyboard
+    )
+    const xInput: Nullable<DeviceSource<DeviceType.Xbox>> = this.dsm.getDeviceSource(
+      DeviceType.Xbox
+    )
 
     if (kb) {
-      this.kbInputList.forEach((input) => {
+      this.kbInputList.forEach((input: string) => {
         if (kb?.getInput(input.charCodeAt(0)) == 1) {
           this.setInputSate(input, true)
         } else {

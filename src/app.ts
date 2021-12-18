@@ -1,20 +1,7 @@
 import "@babylonjs/core/Debug/debugLayer"
 import "@babylonjs/inspector"
 import "@babylonjs/loaders/glTF"
-import {
-  Engine,
-  Scene,
-  FreeCamera,
-  Vector3,
-  HemisphericLight,
-  Mesh,
-  MeshBuilder,
-  ShaderMaterial,
-  HtmlElementTexture,
-  ThinEngine,
-  Camera,
-  Vector2,
-} from "@babylonjs/core"
+import { Engine, Scene, FreeCamera, Vector3, HemisphericLight } from "@babylonjs/core"
 
 import { Midi } from "./inputs/midi"
 import { CesiumViewer } from "./cesiumViewer"
@@ -40,10 +27,10 @@ class App {
     this.scene = new Scene(this.engine)
 
     // INPUT MANAGER
-    this.inputs = new InputManager(this.scene, this.engine)
+    this.inputs = new InputManager(this.engine)
     new Midi()
     // CESIUM VIEWER
-    new CesiumViewer(this.inputs)
+    new CesiumViewer()
     // SETUP SCENE
     this.cameras()
     this.lights()
@@ -55,7 +42,7 @@ class App {
   }
 
   cameras() {
-    let camera = new FreeCamera("camera1", new Vector3(0, 5, -10), this.scene)
+    let camera: FreeCamera = new FreeCamera("camera1", new Vector3(0, 5, -10), this.scene)
     camera.setTarget(Vector3.Zero())
     camera.attachControl(this.canvas, true)
   }

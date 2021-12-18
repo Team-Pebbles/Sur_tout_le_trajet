@@ -13,12 +13,14 @@
   "devDependencies": {
     "@babylonjs/core": "^4.2.0",
     "@babylonjs/inspector": "^4.2.0",
+    "@types/webmidi": "^2.0.6",
     "autoprefixer": "^10.4.0",
     "cesium": "^1.87.1",
     "copy-webpack-plugin": "^10.0.0",
     "css-loader": "^6.5.1",
     "extract-loader": "^5.1.0",
     "file-loader": "^6.2.0",
+    "howler": "^2.2.3",
     "html-webpack-plugin": "^5.5.0",
     "postcss-loader": "^6.2.0",
     "resolve-url-loader": "^4.0.0",
@@ -31,8 +33,5 @@
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.5.0"
   },
-  "dependencies": {
-    "@types/webmidi": "^2.0.6",
-    "howler": "^2.2.3"
-  }
+  "dependencies": {}
 }

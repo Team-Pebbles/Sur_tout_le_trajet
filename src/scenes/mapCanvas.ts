@@ -11,6 +11,11 @@ import {
   Vector3,
 } from "@babylonjs/core"
 
+type Size = {
+  x: number
+  y: number
+}
+
 export class MapCanvas {
   private mapCanvasTexture: HtmlElementTexture
   private scene: Scene
@@ -23,9 +28,13 @@ export class MapCanvas {
       this.scene.activeCameras.push(this.scene.activeCamera)
     }
 
-    let size = { x: window.innerWidth, y: window.innerHeight }
+    let size: Size = { x: window.innerWidth, y: window.innerHeight }
 
-    var secondCamera = new FreeCamera("mapCanvasCamera", new Vector3(0, 0, -50), this.scene)
+    const secondCamera: FreeCamera = new FreeCamera(
+      "mapCanvasCamera",
+      new Vector3(0, 0, -50),
+      this.scene
+    )
     secondCamera.mode = Camera.ORTHOGRAPHIC_CAMERA
     secondCamera.layerMask = 0x20000000
     this.scene.activeCameras?.push(secondCamera)
@@ -36,7 +45,7 @@ export class MapCanvas {
       this.scene
     )
 
-    let shaderMaterial = new ShaderMaterial("shader", this.scene, "./stream", {
+    let shaderMaterial: ShaderMaterial = new ShaderMaterial("shader", this.scene, "./stream", {
       attributes: ["position", "normal", "uv"],
       uniforms: ["world", "worldView", "worldViewProjection", "view", "projection", "time"],
     })
@@ -44,7 +53,7 @@ export class MapCanvas {
     let mapCanvas: any = document.getElementById("cesiumCanvas")
     if (mapCanvas == null && mapCanvas == undefined) return
 
-    let e = new ThinEngine(mapCanvas)
+    let e: ThinEngine = new ThinEngine(mapCanvas)
 
     this.mapCanvasTexture = new HtmlElementTexture("mapCanvas", mapCanvas, {
       scene: this.scene,

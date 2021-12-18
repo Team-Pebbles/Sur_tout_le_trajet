@@ -7,22 +7,23 @@ import {
   ScreenSpaceEventType,
   Cartesian3,
 } from "cesium"
-import { InputManager } from "./inputs/inputManager"
+import CesiumTerrainProvider from "cesium/Source/Core/CesiumTerrainProvider"
+import Ellipsoid from "cesium/Source/Core/Ellipsoid"
+import Camera from "cesium/Source/Scene/Camera"
+import Scene from "cesium/Source/Scene/Scene"
 import { IACesiumCamera } from "./inputs/inputActions"
 
 export class CesiumViewer {
   private viewer: Viewer
   private handler: ScreenSpaceEventHandler
-  private viewerCanvas: HTMLCanvasElement | null
-  private inputManager: InputManager
+  private viewerCanvas: HTMLCanvasElement
 
-  constructor(inputManager: InputManager) {
-    this.inputManager = inputManager
+  constructor() {
     //console.log(IACesiumCamera.FORWARD)
     Ion.defaultAccessToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw"
 
-    var worldTerrain = createWorldTerrain({
+    var worldTerrain: CesiumTerrainProvider = createWorldTerrain({
       requestWaterMask: true,
       // requestVertexNormals: true,
     })
@@ -54,15 +55,15 @@ export class CesiumViewer {
   }
 
   controller() {
-    var scene = this.viewer.scene
-    var canvas = this.viewer.canvas
+    const scene: Scene = this.viewer.scene
+    const canvas: HTMLCanvasElement = this.viewer.canvas
 
     canvas.setAttribute("tabindex", "0") // needed to put focus on the canvas
     canvas.onclick = function () {
       canvas.focus()
     }
 
-    var ellipsoid = this.viewer.scene.globe.ellipsoid
+    const ellipsoid: Ellipsoid = this.viewer.scene.globe.ellipsoid
 
     // disable the default event handlers
     scene.screenSpaceCameraController.enableRotate = false
@@ -71,9 +72,9 @@ export class CesiumViewer {
     scene.screenSpaceCameraController.enableTilt = false
     scene.screenSpaceCameraController.enableLook = false
 
-    var startMousePosition
-    var mousePosition
-    var looking = false
+    let startMousePosition: Cartesian3
+    let mousePosition: Cartesian3
+    let looking: boolean = false
 
     this.handler.setInputAction(function (movement) {
       looking = true
@@ -85,66 +86,43 @@ export class CesiumViewer {
       mousePosition = movement.endPosition
     }, ScreenSpaceEventType.MOUSE_MOVE)
 
-    this.handler.setInputAction(function (position) {
+    this.handler.setInputAction(function () {
       looking = false
     }, ScreenSpaceEventType.LEFT_UP)
 
-    this.viewer.clock.onTick.addEventListener((clock) => {
+    this.viewer.clock.onTick.addEventListener(() => {
       // OLD CONTROLLER
-      let camera = this.viewer.camera
+      let camera: Camera = this.viewer.camera
 
       if (looking) {
-        let width = canvas.clientWidth
-        let height = canvas.clientHeight
+        let width: number = canvas.clientWidth
+        let height: number = canvas.clientHeight
 
         // Coordinate (0.0, 0.0) will be where the mouse was clicked.
-        let x = (mousePosition.x - startMousePosition.x) / width
-        let y = -(mousePosition.y - startMousePosition.y) / height
+        let x: number = (mousePosition.x - startMousePosition.x) / width
+        let y: number = -(mousePosition.y - startMousePosition.y) / height
 
-        let lookFactor = 0.05
+        let lookFactor: number = 0.05
         camera.lookRight(x * lookFactor)
         camera.lookUp(y * lookFactor)
       }
 
       // Change movement speed based on the distance of the camera to the surface of the ellipsoid.
-      let cameraHeight = ellipsoid.cartesianToCartographic(camera.position).height
-      let moveRate = cameraHeight / 100.0
+      let cameraHeight: number = ellipsoid.cartesianToCartographic(camera.position).height
+      let moveRate: number = cameraHeight / 100.0
 
       // // Z
-      if (IACesiumCamera.FORWARD) {
-        camera.moveForward(moveRate)
-        //document.getElementById('audioDDerive').play();
-      }
+      if (IACesiumCamera.FORWARD) camera.moveForward(moveRate)
       // S
-      if (IACesiumCamera.BACKWARD) {
-        camera.moveBackward(moveRate)
-        //document.getElementById('audioDDerive').play();
-      }
-
+      if (IACesiumCamera.BACKWARD) camera.moveBackward(moveRate)
       // A
-      if (IACesiumCamera.UP) {
-        camera.moveUp(moveRate)
-        //document.getElementById('audioDLeftRight').play();
-      }
-
+      if (IACesiumCamera.UP) camera.moveUp(moveRate)
       // E
-      if (IACesiumCamera.DOWN) {
-        camera.moveDown(moveRate)
-        //document.getElementById('audioDLeftRight').play();
-      }
-
+      if (IACesiumCamera.DOWN) camera.moveDown(moveRate)
       // Q
-      if (IACesiumCamera.LEFT) {
-        camera.moveLeft(moveRate)
-        //document.getElementById('audioDLeftRight').play();
-      }
-
+      if (IACesiumCamera.LEFT) camera.moveLeft(moveRate)
       // D
-      if (IACesiumCamera.RIGHT) {
-        camera.moveRight(moveRate)
-        //document.getElementById('audioDLeftRight').play();
-      }
-
+      if (IACesiumCamera.RIGHT) camera.moveRight(moveRate)
       // M
       // if () {
       //   console.log("mActive", mActive)
