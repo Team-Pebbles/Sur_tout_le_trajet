@@ -8,10 +8,16 @@
 - [x] keyboard
 - [ ] mouse
 - [ ] xbox
+- [ ] Shader Controller
+  - [ ] Map Shader
+  - [ ] PostProcessing Shader
 
 ## Rendering
 
-- [ ] GLSL color filter
+- [ ] BabylonJS PostProcessing integration
+  - [ ] Image processing
+  - [ ] Build-in PP
+  - [ ] Custom PP
 - [ ] search for fx
   - [ ] Kaleidoscope
   - [ ] Noise

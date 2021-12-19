@@ -11,7 +11,7 @@ export class Midi {
     console.log(midiAccess)
 
     const inputs: WebMidi.MIDIInputMap = midiAccess.inputs
-    const outputs: WebMidi.MIDIOutputMap = midiAccess.outputs
+    //const outputs: WebMidi.MIDIOutputMap = midiAccess.outputs
     for (let input of inputs.values()) {
       console.log(input)
       input.onmidimessage = (m) => {

@@ -1,4 +1,6 @@
-precision highp float;
+#ifdef GL_ES
+    precision highp float;
+#endif
 
 varying vec2 vUV;
 uniform sampler2D textureSampler;

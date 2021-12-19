@@ -7,6 +7,7 @@ import { Midi } from "./inputs/midi"
 import { CesiumViewer } from "./cesiumViewer"
 import { InputManager } from "./inputs/inputManager"
 import { MapCanvas } from "./scenes/mapCanvas"
+import { ScenePostProcess } from "./scenes/scenePostProcess"
 
 class App {
   private scene: Scene
@@ -35,6 +36,7 @@ class App {
     this.cameras()
     this.lights()
     this.mapCanvas = new MapCanvas(this.scene)
+    new ScenePostProcess(this.mapCanvas.camera)
     //RENDER
     this.rendering()
     // dev things

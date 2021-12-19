@@ -17,6 +17,7 @@ type Size = {
 }
 
 export class MapCanvas {
+  public camera: FreeCamera
   private mapCanvasTexture: HtmlElementTexture
   private scene: Scene
   constructor(scene: Scene) {
@@ -30,20 +31,12 @@ export class MapCanvas {
 
     let size: Size = { x: window.innerWidth, y: window.innerHeight }
 
-    const secondCamera: FreeCamera = new FreeCamera(
-      "mapCanvasCamera",
-      new Vector3(0, 0, -50),
-      this.scene
-    )
-    secondCamera.mode = Camera.ORTHOGRAPHIC_CAMERA
-    secondCamera.layerMask = 0x20000000
-    this.scene.activeCameras?.push(secondCamera)
+    this.camera = new FreeCamera("mapCanvasCamera", new Vector3(0, 0, -50), this.scene)
+    this.camera.mode = Camera.ORTHOGRAPHIC_CAMERA
+    this.camera.layerMask = 0x20000000
+    this.scene.activeCameras?.push(this.camera)
 
-    let plane: Mesh = MeshBuilder.CreatePlane(
-      "plane",
-      { width: size.x, height: size.y },
-      this.scene
-    )
+    let plane = MeshBuilder.CreatePlane("plane", { width: size.x, height: size.y }, this.scene)
 
     let shaderMaterial: ShaderMaterial = new ShaderMaterial("shader", this.scene, "./stream", {
       attributes: ["position", "normal", "uv"],
