@@ -17,7 +17,7 @@
 - [ ] BabylonJS PostProcessing integration
   - [ ] Image processing
   - [ ] Build-in PP
-  - [ ] Custom PP
+  - [x] Custom PP
 - [ ] search for fx
   - [ ] Kaleidoscope
   - [ ] Noise
