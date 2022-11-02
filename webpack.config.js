@@ -8,6 +8,8 @@ const CopywebpackPlugin = require("copy-webpack-plugin")
 const appDirectory = fs.realpathSync(process.cwd())
 
 module.exports = {
+  //target: 'node',
+  devtool: "source-map",
   context: __dirname,
   entry: path.resolve(appDirectory, "src/app.ts"), //path to the main .ts file
   output: {
@@ -17,6 +19,18 @@ module.exports = {
     sourcePrefix: "",
   },
   resolve: {
+    fallback: {
+      "fs": false,
+      "tls": false,
+      "net": false,
+      "path": false,
+      "zlib": false,
+      "http": false,
+      "https": false,
+      "stream": false,
+      "crypto": false,
+      "url": false
+    },
     extensions: [".tsx", ".ts", ".js"],
     alias: {
       // CesiumJS module name
@@ -42,7 +56,7 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        use: ["ts-loader"],
         exclude: /node_modules/,
       },
       {
@@ -52,7 +66,11 @@ module.exports = {
       {
         test: /\.(png|gif|jpg|jpeg|svg|xml|json)$/,
         use: ["url-loader"],
-      },
+      }
+      // {
+      //   test: /\.js$/,
+      //   use: ["source-map-loader"],
+      // }
     ],
   },
   plugins: [

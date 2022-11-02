@@ -28,7 +28,7 @@ class App {
     this.scene = new Scene(this.engine)
 
     // INPUT MANAGER
-    this.inputs = new InputManager(this.engine)
+    this.inputs = new InputManager(this.scene)
     new Midi()
     // CESIUM VIEWER
     new CesiumViewer()

@@ -46,8 +46,6 @@ export class MapCanvas {
     let mapCanvas: any = document.getElementById("cesiumCanvas")
     if (mapCanvas == null && mapCanvas == undefined) return
 
-    let e: ThinEngine = new ThinEngine(mapCanvas)
-
     this.mapCanvasTexture = new HtmlElementTexture("mapCanvas", mapCanvas, {
       scene: this.scene,
       engine: this.scene.getEngine(),
