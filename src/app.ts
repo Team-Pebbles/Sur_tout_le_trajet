@@ -22,11 +22,11 @@ class App {
     this.canvas.style.height = "100%"
     this.canvas.id = "gameCanvas"
     document.body.appendChild(this.canvas)
-
+    
     // initialize babylon scene and engine
     this.engine = new Engine(this.canvas, true)
     this.scene = new Scene(this.engine)
-
+    
     // INPUT MANAGER
     this.inputs = new InputManager(this.scene)
     new Midi()
@@ -41,6 +41,7 @@ class App {
     this.rendering()
     // dev things
     this.debug()
+    this.canvas.focus()
   }
 
   cameras() {
@@ -54,9 +55,9 @@ class App {
   }
 
   rendering() {
-    this.scene.registerBeforeRender(() => {
-      this.inputs.registerBeforeRender()
-    })
+    // this.scene.registerBeforeRender(() => {
+    //  // this.inputs.registerBeforeRender()
+    // })
 
     // run the main render loop
     this.engine.runRenderLoop(() => {

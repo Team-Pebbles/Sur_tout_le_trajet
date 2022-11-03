@@ -23,8 +23,8 @@ body {
   width: 100vw;
   height: 100vh;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: -100vh;
+  left: -100vw;
   z-index: 950;
   overflow: hidden;
   filter: opacity(0);

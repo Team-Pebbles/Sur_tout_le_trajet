@@ -11,7 +11,7 @@ import CesiumTerrainProvider from "cesium/Source/Core/CesiumTerrainProvider"
 import Ellipsoid from "cesium/Source/Core/Ellipsoid"
 import Camera from "cesium/Source/Scene/Camera"
 import Scene from "cesium/Source/Scene/Scene"
-import { IACesiumCamera } from "./inputs/inputActions"
+import { IACesiumCamera, IACesiumCameraLooking } from "./inputs/inputActions"
 
 export class CesiumViewer {
   private viewer: Viewer
@@ -72,39 +72,42 @@ export class CesiumViewer {
     scene.screenSpaceCameraController.enableTilt = false
     scene.screenSpaceCameraController.enableLook = false
 
-    let startMousePosition: Cartesian3
-    let mousePosition: Cartesian3
-    let looking: boolean = false
+    // let startMousePosition: Cartesian3
+    // let mousePosition: Cartesian3
+    // let looking: boolean = true
 
-    this.handler.setInputAction(function (movement) {
-      looking = true
-      mousePosition = startMousePosition = Cartesian3.clone(movement.position)
-    }, ScreenSpaceEventType.LEFT_DOWN)
+    // this.handler.setInputAction(function (movement) {
+    //   looking = true
+    //   mousePosition = startMousePosition = Cartesian3.clone(movement.position)
+    // }, ScreenSpaceEventType.LEFT_DOWN)
 
-    this.handler.setInputAction(function (movement) {
-      // scene.requestRender();
-      mousePosition = movement.endPosition
-    }, ScreenSpaceEventType.MOUSE_MOVE)
+    // this.handler.setInputAction(function (movement) {
+    //   // scene.requestRender();
+    //   mousePosition = movement.endPosition
+    // }, ScreenSpaceEventType.MOUSE_MOVE)
 
-    this.handler.setInputAction(function () {
-      looking = false
-    }, ScreenSpaceEventType.LEFT_UP)
+    // this.handler.setInputAction(function () {
+    //   looking = false
+    // }, ScreenSpaceEventType.LEFT_UP)
 
     this.viewer.clock.onTick.addEventListener(() => {
       // OLD CONTROLLER
       let camera: Camera = this.viewer.camera
-
-      if (looking) {
+//console.log(IACesiumCameraLooking.LOOKING.isActive)
+      if (IACesiumCameraLooking.LOOKING.isActive) {
         let width: number = canvas.clientWidth
         let height: number = canvas.clientHeight
 
         // Coordinate (0.0, 0.0) will be where the mouse was clicked.
-        let x: number = (mousePosition.x - startMousePosition.x) / width
-        let y: number = -(mousePosition.y - startMousePosition.y) / height
+        // let x: number = (mousePosition.x - startMousePosition.x) / width
+        // let y: number = -(mousePosition.y - startMousePosition.y) / height
+        console.log(IACesiumCameraLooking.LOOKING)
+        let x: number = IACesiumCameraLooking.LOOKING.mouseMove.x
+        let y: number = - IACesiumCameraLooking.LOOKING.mouseMove.y
 
         let lookFactor: number = 0.05
-        camera.lookRight(x * lookFactor)
-        camera.lookUp(y * lookFactor)
+        camera.lookRight((x / width) * lookFactor)
+        camera.lookUp((y / height) * lookFactor)
       }
 
       // Change movement speed based on the distance of the camera to the surface of the ellipsoid.
