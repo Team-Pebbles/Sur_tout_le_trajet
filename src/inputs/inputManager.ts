@@ -12,9 +12,17 @@ export class InputManager {
   private dsm: DeviceSourceManager
   private kbInputList: string[]
   private mouseInputList: string[]
+  private startMousePosition: {
+    x: number,
+    y: number
+  }
   constructor(scene: Scene) {
     this.kbInputList = []
     this.mouseInputList = []
+    this.startMousePosition = {
+      x: 500,
+      y: 500,
+    }
     InputActions.maps.forEach((map: IAMaps) => {
       let actions: IAControlList = map["actions"]
       for (const key in actions) {
@@ -63,10 +71,13 @@ export class InputManager {
                 if (Object.prototype.hasOwnProperty.call(actions, key)) {
                   const inputControl: ILAControl = actions[key]
                   if(eventData.type == "pointerdown") {
-                    console.log("on -> ", eventData)
+                    console.log("on")
                     inputControl.isActive = true
-                    inputControl.mouseMove.x = eventData.movementX
-                    inputControl.mouseMove.y = eventData.clientY
+                    this.startMousePosition.x = inputControl.mouseMove.x
+                    this.startMousePosition.y = inputControl.mouseMove.y
+                  } else if (eventData.type == "pointermove") {
+                    inputControl.mouseMove.x = eventData.clientX - this.startMousePosition.x
+                    inputControl.mouseMove.y = - eventData.clientY - this.startMousePosition.y
                   } else if(eventData.type == "pointerup"){
                     console.log("off")
                     inputControl.isActive = false

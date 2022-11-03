@@ -101,9 +101,9 @@ export class CesiumViewer {
         // Coordinate (0.0, 0.0) will be where the mouse was clicked.
         // let x: number = (mousePosition.x - startMousePosition.x) / width
         // let y: number = -(mousePosition.y - startMousePosition.y) / height
-        console.log(IACesiumCameraLooking.LOOKING)
+        //console.log(IACesiumCameraLooking.LOOKING)
         let x: number = IACesiumCameraLooking.LOOKING.mouseMove.x
-        let y: number = - IACesiumCameraLooking.LOOKING.mouseMove.y
+        let y: number = IACesiumCameraLooking.LOOKING.mouseMove.y
 
         let lookFactor: number = 0.05
         camera.lookRight((x / width) * lookFactor)
