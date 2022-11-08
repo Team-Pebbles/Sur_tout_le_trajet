@@ -17,6 +17,7 @@ import {
     private analyser: Analyser;
     private audioReady: boolean;
     private debug: Debug;
+    private kicks: [Kick];
     constructor(scene: Scene) {
         this.audioReady = false;
         this.scene = scene;
@@ -50,7 +51,7 @@ import {
         this.analyser = new Analyser(this.scene);
         
         soundTrack.connectToAnalyser(this.analyser);
-        this.analyser.FFT_SIZE = 512;
+        this.analyser.FFT_SIZE = 2048;
         this.analyser.SMOOTHING = 0.9;
         this.debug = new Debug(this.analyser)
         // this.analyser.DEBUGCANVASSIZE.width = 500;
@@ -92,8 +93,6 @@ import {
         }
 
     }
-
-
   }
 
 class Debug {
@@ -141,12 +140,38 @@ class Debug {
         let spectrumLength = this.analyser.getFrequencyBinCount();
         let spectrumWidth = this.canvas.width / spectrumLength;
         let spectrumHeight = this.canvas.height - borderHeight;
+        const split1 = 300
+        const split2 = 630
+        const lowGain = .5
+        const midGain = 1.
+        const highGain = 2.
         for (let i = 0; i < spectrumLength; i++) {
+
             let spectrumValue = spectrum[i] / 256;
             this.ctx.rect(i * spectrumWidth, spectrumHeight - spectrumHeight * spectrumValue, spectrumWidth / 2, spectrumHeight * spectrumValue);
         }
         this.ctx.fillStyle = '#ffffff';
         this.ctx.fill();
+
+
+        this.ctx.beginPath();
+        this.ctx.globalAlpha = .3
+        for (let i = 0; i < spectrumLength; i++) {
+
+            let spectrumValue = spectrum[i] / 256;
+            if(i <= split1 ) {
+                spectrumValue *= lowGain
+            } else if (i > split1 && i < split2) {
+                spectrumValue *= midGain
+            } else {
+                // >= split2
+                spectrumValue *= highGain
+            }
+            this.ctx.rect(i * spectrumWidth, spectrumHeight - spectrumHeight * spectrumValue, spectrumWidth / 2, spectrumHeight * spectrumValue);
+        }
+        this.ctx.fillStyle = '#e4e';
+        this.ctx.fill();
+        this.ctx.globalAlpha = 1
 
         // draw frequency
         this.ctx.beginPath();
@@ -164,17 +189,14 @@ class Debug {
         this.ctx.fill();
 
         // // draw kick
-        // let kicks = this.sound._kicks;
-        // let kick = null;
+        // let kicks = this.kicks;
         // let kickLength = kicks.length;
-        // let kickFrequencyStart = null;
-        // let kickFrequencyLength = null;
         // for (let i = 0, len = kickLength; i < len; i++) {
 
-        //     kick = kicks[i];
+        //     const kick = kicks[i];
         //     if (kick.isOn) {
-        //         kickFrequencyStart = (kick.frequency.length ? kick.frequency[0] : kick.frequency);
-        //         kickFrequencyLength = (kick.frequency.length ? kick.frequency[1] - kick.frequency[0] + 1 : 1);
+        //         const kickFrequencyStart = (kick.frequency.length ? kick.frequency[0] : kick.frequency);
+        //         const kickFrequencyLength = (kick.frequency.length ? kick.frequency[1] - kick.frequency[0] + 1 : 1);
         //         this.ctx.beginPath();
         //         this.ctx.rect(kickFrequencyStart * spectrumWidth, spectrumHeight - spectrumHeight * (kick.threshold / 256), kickFrequencyLength * spectrumWidth - (spectrumWidth * .5), 2);
         //         this.ctx.rect(kickFrequencyStart * spectrumWidth, spectrumHeight - spectrumHeight * (kick.currentThreshold / 256), kickFrequencyLength * spectrumWidth - (spectrumWidth * .5), 5);
@@ -191,7 +213,7 @@ class Debug {
         let waveformHeight = this.canvas.height - borderHeight;
         for (let i = 0; i < waveformLength; i++) {
 
-            const waveformValue = waveform[i] / 256;
+            let waveformValue = waveform[i] / 256;
             if (i == 0) this.ctx.moveTo(i * waveformWidth, waveformHeight * waveformValue);
             else this.ctx.lineTo(i * waveformWidth, waveformHeight * waveformValue);
         }
@@ -222,5 +244,117 @@ class Debug {
         // if (sectionLabels.length > 0) sectionLabels = sectionLabels.substr(0, sectionLabels.length - 3);
         // this.ctx.fillText(sectionLabels, this.canvas.width - 5, 25);
         // this.ctx.fill();
+    }
+}
+
+class Kick {
+    frequency: any;
+    threshold: any;
+    decay: any;
+    onKick: any;
+    offKick: any;
+    isOn: boolean;
+    isKick: boolean;
+    currentThreshold: any;
+
+    constructor({frequency, threshold, decay, onKick, offKick}) {
+
+        this.frequency = frequency !== undefined ? frequency : [ 0, 10 ];
+        this.threshold = threshold !== undefined ? threshold :  0.3;
+        this.decay     = decay     !== undefined ? decay     :  0.02;
+        this.onKick    = onKick;
+        this.offKick   = offKick;
+        this.isOn      = false;
+        this.isKick    = false;
+        this.currentThreshold = this.threshold;
+    }
+
+    on() {
+        this.isOn = true;
+    }
+
+    off() {
+
+        this.isOn = false;
+    }
+
+    set({frequency, threshold, decay, onKick, offKick}) {
+
+        this.frequency = frequency !== undefined ? frequency : this.frequency;
+        this.threshold = threshold !== undefined ? threshold : this.threshold;
+        this.decay     = decay     !== undefined ? decay : this.decay;
+        this.onKick    = onKick    || this.onKick;
+        this.offKick   = offKick   || this.offKick;
+    }
+
+    calc(spectrum) {
+
+        if ( !this.isOn ) { return; }
+        let magnitude = this.maxAmplitude(spectrum, this.frequency);
+        if ( magnitude >= this.currentThreshold && magnitude >= this.threshold ) {
+            this.currentThreshold = magnitude;
+            this.onKick && this.onKick(magnitude);
+            this.isKick = true;
+        } else {
+            this.offKick && this.offKick(magnitude);
+            this.currentThreshold -= this.decay;
+            this.isKick = false;
+        }
+    }
+
+    maxAmplitude(fft, frequency) {
+
+        let max = 0;
+
+        // Sloppy array check
+        if ( !frequency.length ) {
+            return frequency < fft.length ? fft[ ~~frequency ] : null;
+        }
+
+        for ( var i = frequency[ 0 ], l = frequency[ 1 ]; i <= l; i++ ) {
+            if ( fft[ i ] > max ) { max = fft[ i ]; }
+        }
+
+        return max;
+    }
+};
+
+class Beat {
+    onBeat: any;
+    factor: any;
+    isOn: boolean;
+    currentTime: number;
+
+    constructor({factor, onBeat}) {
+
+        this.factor = factor !== undefined ? factor : 1;
+        this.onBeat = onBeat;
+        this.isOn   = false;
+        this.currentTime = 0;
+    }
+
+    on() {
+
+        this.isOn = true;
+    }
+
+    off() {
+
+        this.isOn = false;
+    }
+
+    set({factor, onBeat}) {
+
+        this.factor = factor !== undefined ? factor : this.factor;
+        this.onBeat = onBeat || this.onBeat;
+    }
+
+    calc(time, beatDuration) {
+        if ( time == 0 ) { return; }
+        let beatDurationFactored = beatDuration * this.factor;
+        if (time >= this.currentTime + beatDurationFactored) {
+            if ( this.isOn ) this.onBeat && this.onBeat();
+            this.currentTime += beatDurationFactored;
+        }
     }
 }
