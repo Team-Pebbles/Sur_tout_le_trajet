@@ -89,6 +89,7 @@ export type ILAControl = {
   isActive: boolean
   xbox: string
   mouse: string
+  speedFactor: number
   mouseMove: {
     x: number,
     y:number
@@ -105,6 +106,7 @@ export const InputLookingActions: InputLookingActions = {
           isActive: false,
           xbox: "",
           mouse: "LeftClick",
+          speedFactor: 0,
           mouseMove: {
             x: 0,
             y: 0
@@ -132,7 +134,14 @@ export const IACesiumCamera: IAControlList = new Proxy(
 
 const IACesiumCameraLookingHandler: ProxyHandler<any> = {
   get: (target: ILAMaps, prop) => {
-    return {isActive:target[prop].isActive, mouseMove: {x: target[prop].mouseMove.x, y: target[prop].mouseMove.y}}
+    return {
+      isActive:target[prop].isActive,
+      speedFactor:target[prop].speedFactor ,
+      mouseMove: {
+        x: target[prop].mouseMove.x,
+        y: target[prop].mouseMove.y
+      }
+    }
   },
   set: (target: ILAMaps, prop, newVal: boolean) => {
     target[prop].isActive = newVal

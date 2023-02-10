@@ -105,7 +105,7 @@ export class CesiumViewer {
         let x: number = IACesiumCameraLooking.LOOKING.mouseMove.x
         let y: number = IACesiumCameraLooking.LOOKING.mouseMove.y
 
-        let lookFactor: number = 0.05
+        let lookFactor: number = IACesiumCameraLooking.LOOKING.speedFactor
         camera.lookRight((x / width) * lookFactor)
         camera.lookUp((y / height) * lookFactor)
       }

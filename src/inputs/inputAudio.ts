@@ -142,9 +142,9 @@ class Debug {
         let spectrumHeight = this.canvas.height - borderHeight;
         const split1 = 300
         const split2 = 630
-        const lowGain = .5
+        const lowGain = .2
         const midGain = 1.
-        const highGain = 2.
+        const highGain = 3.
         for (let i = 0; i < spectrumLength; i++) {
 
             let spectrumValue = spectrum[i] / 256;
@@ -158,16 +158,25 @@ class Debug {
         this.ctx.globalAlpha = .3
         for (let i = 0; i < spectrumLength; i++) {
 
-            let spectrumValue = spectrum[i] / 256;
+            let spectrumValue = spectrum[i] / 256
+            let sectionWidth = split1
+            let sectionStart = 0
             if(i <= split1 ) {
+                sectionWidth = spectrumWidth * split1
+                sectionStart = 0
                 spectrumValue *= lowGain
+                
             } else if (i > split1 && i < split2) {
+                sectionWidth = spectrumWidth * (split2 - split1)
+                sectionStart = spectrumWidth * split1
                 spectrumValue *= midGain
-            } else {
+            } else if(i >= split2){
                 // >= split2
+                sectionWidth = this.canvas.width - (split2 * spectrumWidth)
+                sectionStart = spectrumWidth * split2
                 spectrumValue *= highGain
             }
-            this.ctx.rect(i * spectrumWidth, spectrumHeight - spectrumHeight * spectrumValue, spectrumWidth / 2, spectrumHeight * spectrumValue);
+            this.ctx.rect(sectionStart, spectrumHeight - spectrumHeight * spectrumValue, sectionWidth, spectrumHeight * spectrumValue);
         }
         this.ctx.fillStyle = '#e4e';
         this.ctx.fill();

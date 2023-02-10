@@ -20,8 +20,8 @@ export class InputManager {
     this.kbInputList = []
     this.mouseInputList = []
     this.startMousePosition = {
-      x: 500,
-      y: 500,
+      x: window.innerHeight / 2,
+      y: window.innerWidth / 2,
     }
     InputActions.maps.forEach((map: IAMaps) => {
       let actions: IAControlList = map["actions"]
@@ -70,16 +70,16 @@ export class InputManager {
               for (const key in actions) {
                 if (Object.prototype.hasOwnProperty.call(actions, key)) {
                   const inputControl: ILAControl = actions[key]
+                  inputControl.speedFactor = 0.5
                   if(eventData.type == "pointerdown") {
-                    console.log("on")
                     inputControl.isActive = true
-                    this.startMousePosition.x = inputControl.mouseMove.x
-                    this.startMousePosition.y = inputControl.mouseMove.y
+                    this.startMousePosition.x += inputControl.mouseMove.x
+                    this.startMousePosition.y += inputControl.mouseMove.y
                   } else if (eventData.type == "pointermove") {
+                    inputControl.speedFactor = scene.getAnimationRatio() / 10
                     inputControl.mouseMove.x = eventData.clientX - this.startMousePosition.x
                     inputControl.mouseMove.y = - eventData.clientY - this.startMousePosition.y
                   } else if(eventData.type == "pointerup"){
-                    console.log("off")
                     inputControl.isActive = false
                   }
                 }
