@@ -112,20 +112,18 @@ export class CesiumViewer {
 
       // Change movement speed based on the distance of the camera to the surface of the ellipsoid.
       let cameraHeight: number = ellipsoid.cartesianToCartographic(camera.position).height
-      let moveRate: number = cameraHeight / 100.0
 
-      // // Z
-      if (IACesiumCamera.FORWARD) camera.moveForward(moveRate)
-      // S
-      if (IACesiumCamera.BACKWARD) camera.moveBackward(moveRate)
-      // A
-      if (IACesiumCamera.UP) camera.moveUp(moveRate)
-      // E
-      if (IACesiumCamera.DOWN) camera.moveDown(moveRate)
-      // Q
-      if (IACesiumCamera.LEFT) camera.moveLeft(moveRate)
-      // D
-      if (IACesiumCamera.RIGHT) camera.moveRight(moveRate)
+      if (IACesiumCamera.FORWARD.isActive) camera.moveForward(cameraHeight / IACesiumCamera.FORWARD.speedFactor)
+
+      if (IACesiumCamera.BACKWARD.isActive) camera.moveBackward(cameraHeight / IACesiumCamera.BACKWARD.speedFactor)
+
+      if (IACesiumCamera.UP.isActive) camera.moveUp(cameraHeight / IACesiumCamera.UP.speedFactor)
+
+      if (IACesiumCamera.DOWN.isActive) camera.moveDown(cameraHeight / IACesiumCamera.DOWN.speedFactor)
+
+      if (IACesiumCamera.LEFT.isActive) camera.moveLeft(cameraHeight / IACesiumCamera.LEFT.speedFactor)
+
+      if (IACesiumCamera.RIGHT.isActive) camera.moveRight(cameraHeight / IACesiumCamera.RIGHT.speedFactor)
       // M
       // if () {
       //   console.log("mActive", mActive)

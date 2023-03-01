@@ -2,6 +2,7 @@
 
 ## Inputs Management
 
+- [ ] Refactor naming 
 - [ ] midi
   - [x] MIDI access
   - [ ] MIDI shader interface
@@ -9,7 +10,7 @@
   - [ ] MIDI Remap
   - [ ] MIDI file
 - [x] keyboard
-- [-] mouse
+- [ ] mouse (WIP)
 - [ ] xbox
 - [ ] Shader Controller
   - [ ] Map Shader

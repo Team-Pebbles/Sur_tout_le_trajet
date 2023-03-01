@@ -64,30 +64,28 @@ export class InputManager {
       // MOUSE
       this.dsm.getDeviceSource(DeviceType.Mouse)?.onInputChangedObservable.add((eventData) => {
         //console.log("device -> ", eventData)
-       // if(PointerInput[eventData.inputIndex] === "Move") {
-          this.mouseInputList.forEach((input: string) => {
-            InputLookingActions.maps.forEach((map: ILAMaps) => {
-              let actions: ILAControlList = map["actions"]
-              for (const key in actions) {
-                if (Object.prototype.hasOwnProperty.call(actions, key)) {
-                  const inputControl: ILAControl = actions[key]
-                  inputControl.speedFactor = 0.5
-                  if(eventData.type == "pointerdown") {
-                    inputControl.isActive = true
-                    this.startMousePosition.x += inputControl.mouseMove.x
-                    this.startMousePosition.y += inputControl.mouseMove.y
-                  } else if (eventData.type == "pointermove") {
-                    inputControl.speedFactor = scene.getAnimationRatio() / 100
-                    inputControl.mouseMove.x = eventData.clientX - this.startMousePosition.x
-                    inputControl.mouseMove.y = - eventData.clientY - this.startMousePosition.y
-                  } else if(eventData.type == "pointerup"){
-                    inputControl.isActive = false
-                  }
+        this.mouseInputList.forEach((input: string) => {
+          InputLookingActions.maps.forEach((map: ILAMaps) => {
+            let actions: ILAControlList = map["actions"]
+            for (const key in actions) {
+              if (Object.prototype.hasOwnProperty.call(actions, key)) {
+                const inputControl: ILAControl = actions[key]
+                inputControl.speedFactor = 0.5
+                if(eventData.type == "pointerdown") {
+                  inputControl.isActive = true
+                  this.startMousePosition.x += inputControl.mouseMove.x
+                  this.startMousePosition.y += inputControl.mouseMove.y
+                } else if (eventData.type == "pointermove") {
+                  inputControl.speedFactor = scene.getAnimationRatio() / 100
+                  inputControl.mouseMove.x = eventData.clientX - this.startMousePosition.x
+                  inputControl.mouseMove.y = - eventData.clientY - this.startMousePosition.y
+                } else if(eventData.type == "pointerup"){
+                  inputControl.isActive = false
                 }
               }
-            })
+            }
           })
-       // }
+        })
       })
 
       //  KEYBOARD

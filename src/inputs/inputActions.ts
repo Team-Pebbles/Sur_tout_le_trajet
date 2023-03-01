@@ -1,8 +1,10 @@
 export type IAControl = {
   isActive: boolean
+  speedFactor: number
   keyboard: string
   xbox: string
   mouse: string
+  midi: number
 }
 
 export type IAControlList = {
@@ -32,39 +34,51 @@ export const InputActions: InputActions = {
       actions: {
         FORWARD: {
           isActive: false,
+          speedFactor: 250,
           keyboard: "Z",
           xbox: "A",
           mouse: "",
+          midi: 74
         },
         BACKWARD: {
           isActive: false,
+          speedFactor: 250,
           keyboard: "S",
           xbox: "B",
           mouse: "",
+          midi: 18
         },
         LEFT: {
           isActive: false,
+          speedFactor: 250,
           keyboard: "Q",
           xbox: "B",
           mouse: "",
+          midi: 114
         },
         RIGHT: {
           isActive: false,
+          speedFactor: 250,
           keyboard: "D",
           xbox: "B",
           mouse: "",
+          midi: 19
         },
         UP: {
           isActive: false,
+          speedFactor: 250,
           keyboard: "A",
           xbox: "B",
           mouse: "",
+          midi: 112
         },
         DOWN: {
           isActive: false,
+          speedFactor: 250,
           keyboard: "E",
           xbox: "B",
           mouse: "",
+          midi: 71
         },
       },
     },
@@ -119,7 +133,10 @@ export const InputLookingActions: InputLookingActions = {
 
 const IACesiumCameraHandler: ProxyHandler<any> = {
   get: (target: IAMaps, prop) => {
-    return target[prop].isActive
+    return {
+      isActive:target[prop].isActive,
+      speedFactor:target[prop].speedFactor
+    }
   },
   set: (target: IAMaps, prop, newVal: boolean) => {
     target[prop].isActive = newVal
