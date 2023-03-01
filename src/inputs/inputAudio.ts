@@ -53,12 +53,9 @@ import {
         soundTrack.connectToAnalyser(this.analyser);
         this.analyser.FFT_SIZE = 2048;
         this.analyser.SMOOTHING = 0.9;
+        
         this.debug = new Debug(this.analyser)
-        // this.analyser.DEBUGCANVASSIZE.width = 500;
-        // this.analyser.DEBUGCANVASSIZE.height = 300;
-        // this.analyser.DEBUGCANVASPOS.x = 40;
-        // this.analyser.DEBUGCANVASPOS.y = 30;
-        // this.analyser.drawDebugCanvas();
+        
         console.log(this.analyser)
         this.audioReady = true
         // Low Gain 0-500 Hz
@@ -80,7 +77,9 @@ import {
         //var workingArrayFreq = myAnalyser.getByteFrequencyData();
         
         if(this.audioReady) {
-            this.debug.draw()
+            // UNCOMMENT TO SHOW DEBUG
+            //this.debug.draw()
+            
             var workingArrayTime = this.analyser.getByteFrequencyData();
         
             //loop scales mesh with each value

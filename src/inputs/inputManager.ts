@@ -61,6 +61,7 @@ export class InputManager {
           break
       }
 
+      // MOUSE
       this.dsm.getDeviceSource(DeviceType.Mouse)?.onInputChangedObservable.add((eventData) => {
         //console.log("device -> ", eventData)
        // if(PointerInput[eventData.inputIndex] === "Move") {
@@ -76,7 +77,7 @@ export class InputManager {
                     this.startMousePosition.x += inputControl.mouseMove.x
                     this.startMousePosition.y += inputControl.mouseMove.y
                   } else if (eventData.type == "pointermove") {
-                    inputControl.speedFactor = scene.getAnimationRatio() / 10
+                    inputControl.speedFactor = scene.getAnimationRatio() / 100
                     inputControl.mouseMove.x = eventData.clientX - this.startMousePosition.x
                     inputControl.mouseMove.y = - eventData.clientY - this.startMousePosition.y
                   } else if(eventData.type == "pointerup"){
@@ -89,8 +90,8 @@ export class InputManager {
        // }
       })
 
+      //  KEYBOARD
       this.dsm.getDeviceSource(DeviceType.Keyboard)?.onInputChangedObservable.add((eventData) => {
-        console.log("device -> ", eventData.inputIndex)
         this.kbInputList.forEach((input: string) => {
           if (device?.getInput(input.charCodeAt(0)) == 1) {
             this.setInputSate(input, true)
@@ -100,8 +101,9 @@ export class InputManager {
         })
       })
 
+      // XBOX
       this.dsm.getDeviceSource(DeviceType.Xbox)?.onInputChangedObservable.add((eventData) => {
-
+          // Xbox controller
       })
   
 
@@ -113,7 +115,6 @@ export class InputManager {
   }
 
   setInputSate(input: string, state: boolean) {
-    // console.log(input)
     // return input
     InputActions.maps.forEach((map: IAMaps) => {
       let actions: IAControlList = map["actions"]

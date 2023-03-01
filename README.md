@@ -4,9 +4,12 @@
 
 - [ ] midi
   - [x] MIDI access
-  - [ ] MIDI interface
+  - [ ] MIDI shader interface
+  - [ ] MIDI controller (navigation)
+  - [ ] MIDI Remap
+  - [ ] MIDI file
 - [x] keyboard
-- [ ] mouse
+- [-] mouse
 - [ ] xbox
 - [ ] Shader Controller
   - [ ] Map Shader
@@ -24,6 +27,10 @@
 
 ## Audio
 
-- [ ] live audio reactive
+- [X] live audio reactive
   - [ ] Library
   - [ ] interface w/ GLSL
+
+## Feature
+- [ ] Twitch Inputs
+- [ ] MIDI Output
