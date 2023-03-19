@@ -7,10 +7,10 @@ import {
   ScreenSpaceEventType,
   Cartesian3,
 } from "cesium"
-import CesiumTerrainProvider from "cesium/Source/Core/CesiumTerrainProvider"
-import Ellipsoid from "cesium/Source/Core/Ellipsoid"
-import Camera from "cesium/Source/Scene/Camera"
-import Scene from "cesium/Source/Scene/Scene"
+import CesiumTerrainProvider from "@cesium/engine/Source/Core/CesiumTerrainProvider"
+import Ellipsoid from "@cesium/engine/Source/Core/Ellipsoid"
+import Camera from "@cesium/engine/Source/Scene/Camera"
+import Scene from "@cesium/engine/Source/Scene/Scene"
 import { IACesiumCamera, IACesiumCameraLooking } from "./inputs/inputActions"
 
 export class CesiumViewer {
@@ -93,7 +93,7 @@ export class CesiumViewer {
     this.viewer.clock.onTick.addEventListener(() => {
       // OLD CONTROLLER
       let camera: Camera = this.viewer.camera
-//console.log(IACesiumCameraLooking.LOOKING.isActive)
+      //console.log(IACesiumCameraLooking.LOOKING.isActive)
       if (IACesiumCameraLooking.LOOKING.isActive) {
         let width: number = canvas.clientWidth
         let height: number = canvas.clientHeight
@@ -113,17 +113,22 @@ export class CesiumViewer {
       // Change movement speed based on the distance of the camera to the surface of the ellipsoid.
       let cameraHeight: number = ellipsoid.cartesianToCartographic(camera.position).height
 
-      if (IACesiumCamera.FORWARD.isActive) camera.moveForward(cameraHeight / IACesiumCamera.FORWARD.speedFactor)
+      if (IACesiumCamera.FORWARD.isActive)
+        camera.moveForward(cameraHeight / IACesiumCamera.FORWARD.speedFactor)
 
-      if (IACesiumCamera.BACKWARD.isActive) camera.moveBackward(cameraHeight / IACesiumCamera.BACKWARD.speedFactor)
+      if (IACesiumCamera.BACKWARD.isActive)
+        camera.moveBackward(cameraHeight / IACesiumCamera.BACKWARD.speedFactor)
 
       if (IACesiumCamera.UP.isActive) camera.moveUp(cameraHeight / IACesiumCamera.UP.speedFactor)
 
-      if (IACesiumCamera.DOWN.isActive) camera.moveDown(cameraHeight / IACesiumCamera.DOWN.speedFactor)
+      if (IACesiumCamera.DOWN.isActive)
+        camera.moveDown(cameraHeight / IACesiumCamera.DOWN.speedFactor)
 
-      if (IACesiumCamera.LEFT.isActive) camera.moveLeft(cameraHeight / IACesiumCamera.LEFT.speedFactor)
+      if (IACesiumCamera.LEFT.isActive)
+        camera.moveLeft(cameraHeight / IACesiumCamera.LEFT.speedFactor)
 
-      if (IACesiumCamera.RIGHT.isActive) camera.moveRight(cameraHeight / IACesiumCamera.RIGHT.speedFactor)
+      if (IACesiumCamera.RIGHT.isActive)
+        camera.moveRight(cameraHeight / IACesiumCamera.RIGHT.speedFactor)
       // M
       // if () {
       //   console.log("mActive", mActive)

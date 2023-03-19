@@ -13,7 +13,7 @@ import { ScenePostProcess } from "./scenes/scenePostProcess"
 class App {
   private scene: Scene
   private inputs: InputManager
-  private audio: InputAudio;
+  private audio: InputAudio
   private engine: Engine
   private mapCanvas: MapCanvas
   private canvas: HTMLCanvasElement
@@ -24,11 +24,11 @@ class App {
     this.canvas.style.height = "100%"
     this.canvas.id = "gameCanvas"
     document.body.appendChild(this.canvas)
-    
+
     // initialize babylon scene and engine
     this.engine = new Engine(this.canvas, true)
     this.scene = new Scene(this.engine)
-    
+
     // INPUT MANAGER
     this.inputs = new InputManager(this.scene)
     new Midi()
@@ -59,8 +59,8 @@ class App {
 
   rendering() {
     this.scene.registerBeforeRender(() => {
-     // this.inputs.registerBeforeRender()
-     this.audio.registerBeforeRender()
+      // this.inputs.registerBeforeRender()
+      this.audio.registerBeforeRender()
     })
 
     // run the main render loop

@@ -20,16 +20,16 @@ module.exports = {
   },
   resolve: {
     fallback: {
-      "fs": false,
-      "tls": false,
-      "net": false,
-      "path": false,
-      "zlib": false,
-      "http": false,
-      "https": false,
-      "stream": false,
-      "crypto": false,
-      "url": false
+      fs: false,
+      tls: false,
+      net: false,
+      path: false,
+      zlib: false,
+      http: false,
+      https: false,
+      stream: false,
+      crypto: false,
+      url: false,
     },
     extensions: [".tsx", ".ts", ".js"],
     alias: {
@@ -66,7 +66,7 @@ module.exports = {
       {
         test: /\.(png|gif|jpg|jpeg|svg|xml|json)$/,
         use: ["url-loader"],
-      }
+      },
       // {
       //   test: /\.js$/,
       //   use: ["source-map-loader"],
