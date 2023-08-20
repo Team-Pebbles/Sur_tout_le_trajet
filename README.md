@@ -1,5 +1,8 @@
 # Sur_tout_le_trajet
 
+Cesium 1.103
+attention breaking change sur les versions suivantes
+
 ## Inputs Management
 
 - [ ] Refactor naming 
