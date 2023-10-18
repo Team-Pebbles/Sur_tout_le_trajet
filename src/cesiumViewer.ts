@@ -106,8 +106,8 @@ export class CesiumViewer {
         let y: number = IACesiumCameraLooking.LOOKING.mouseMove.y
 
         let lookFactor: number = IACesiumCameraLooking.LOOKING.speedFactor
-        camera.lookRight((x / width) * lookFactor)
-        camera.lookUp((y / height) * lookFactor)
+        camera.lookRight(((x - width / 2) / width) * lookFactor)
+        camera.lookUp(((y + height / 2) / height) * lookFactor)
       }
 
       // Change movement speed based on the distance of the camera to the surface of the ellipsoid.

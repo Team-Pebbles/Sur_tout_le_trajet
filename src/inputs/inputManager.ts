@@ -73,12 +73,15 @@ export class InputManager {
                 inputControl.speedFactor = 0.5
                 if(eventData.type == "pointerdown") {
                   inputControl.isActive = true
-                  this.startMousePosition.x += inputControl.mouseMove.x
-                  this.startMousePosition.y += inputControl.mouseMove.y
+                  console.log("pointer down")
+                  // inputControl.mouseMove.x = inputControl.mouseMove.x
+                  // inputControl.mouseMove.y = inputControl.mouseMove.y
+                 // inputControl.mouseMove.y = 0
                 } else if (eventData.type == "pointermove") {
+                  console.log("pointermove")
                   inputControl.speedFactor = scene.getAnimationRatio() / 100
-                  inputControl.mouseMove.x = eventData.clientX - this.startMousePosition.x
-                  inputControl.mouseMove.y = - eventData.clientY - this.startMousePosition.y
+                  inputControl.mouseMove.x = eventData.clientX
+                  inputControl.mouseMove.y = - eventData.clientY
                 } else if(eventData.type == "pointerup"){
                   inputControl.isActive = false
                 }
