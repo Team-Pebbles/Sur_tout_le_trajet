@@ -2,10 +2,10 @@ import {
   Viewer,
   Ion,
   MapboxImageryProvider,
-  createWorldTerrain,
   ScreenSpaceEventHandler,
-  ScreenSpaceEventType,
+  ImageryLayer,
   Cartesian3,
+  createWorldTerrainAsync,
 } from "cesium"
 import CesiumTerrainProvider from "@cesium/engine/Source/Core/CesiumTerrainProvider"
 import Ellipsoid from "@cesium/engine/Source/Core/Ellipsoid"
@@ -14,27 +14,37 @@ import Scene from "@cesium/engine/Source/Scene/Scene"
 import { IACesiumCamera, IACesiumCameraLooking } from "./inputs/inputActions"
 
 export class CesiumViewer {
-  private viewer: Viewer
-  private handler: ScreenSpaceEventHandler
-  private viewerCanvas: HTMLCanvasElement
+  //private viewer: Viewer
+  static handler: ScreenSpaceEventHandler
+  static viewerCanvas: HTMLCanvasElement
+  static viewer: Viewer
 
-  constructor() {
+  constructor() {}
+
+  public static async build(): Promise<CesiumViewer> {
+    let worldTerrain: CesiumTerrainProvider
+    try {
+      worldTerrain = await createWorldTerrainAsync({
+        requestWaterMask: true,
+        // requestVertexNormals: true,
+      })
+    } catch (error) {
+      console.error
+    }
+    console.log("init viewer")
     //console.log(IACesiumCamera.FORWARD)
     Ion.defaultAccessToken =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw"
 
-    var worldTerrain: CesiumTerrainProvider = createWorldTerrain({
-      requestWaterMask: true,
-      // requestVertexNormals: true,
+    let mapBoxProvider = new MapboxImageryProvider({
+      url: "https://api.mapbox.com/v4/",
+      mapId: "mapbox.satellite",
+      accessToken:
+        "pk.eyJ1IjoiaWNoYmlucm9iIiwiYSI6ImNqZGtrbHYzMDAxbGUzM254ODY3MXA1dm4ifQ.2-TYG46620MlH6XmwYs4Jw",
     })
 
     this.viewer = new Viewer("cesiumContainer", {
-      imageryProvider: new MapboxImageryProvider({
-        url: "https://api.mapbox.com/v4/",
-        mapId: "mapbox.satellite",
-        accessToken:
-          "pk.eyJ1IjoiaWNoYmlucm9iIiwiYSI6ImNqZGtrbHYzMDAxbGUzM254ODY3MXA1dm4ifQ.2-TYG46620MlH6XmwYs4Jw",
-      }),
+      baseLayer: new ImageryLayer(mapBoxProvider),
       terrainProvider: worldTerrain,
       scene3DOnly: true,
       selectionIndicator: false,
@@ -45,6 +55,12 @@ export class CesiumViewer {
       // requestRenderMode : true,
       // maximumRenderTimeChange : Infinity
     })
+
+    // var worldTerrain: CesiumTerrainProvider = createWorldTerrain({
+    //   requestWaterMask: true,
+    //   // requestVertexNormals: true,
+    // })
+
     this.viewer.scene.globe.depthTestAgainstTerrain = true
     this.viewer.scene.globe.enableLighting = true
 
@@ -52,9 +68,11 @@ export class CesiumViewer {
     this.viewerCanvas.id = "cesiumCanvas"
     this.handler = new ScreenSpaceEventHandler(this.viewerCanvas)
     this.controller()
+
+    return new CesiumViewer()
   }
 
-  controller() {
+  static controller() {
     const scene: Scene = this.viewer.scene
     const canvas: HTMLCanvasElement = this.viewer.canvas
 

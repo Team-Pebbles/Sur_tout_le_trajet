@@ -11,13 +11,15 @@ import { MapCanvas } from "./scenes/mapCanvas"
 import { ScenePostProcess } from "./scenes/scenePostProcess"
 
 class App {
-  private scene: Scene
-  private inputs: InputManager
-  private audio: InputAudio
-  private engine: Engine
-  private mapCanvas: MapCanvas
-  private canvas: HTMLCanvasElement
-  constructor() {
+  static scene: Scene
+  static inputs: InputManager
+  static audio: InputAudio
+  static engine: Engine
+  static mapCanvas: MapCanvas
+  static canvas: HTMLCanvasElement
+  constructor() {}
+
+  public static async build(): Promise<App> {
     // create the canvas html element and attach it to the webpage
     this.canvas = document.createElement("canvas")
     this.canvas.style.width = "100%"
@@ -34,7 +36,7 @@ class App {
     new Midi()
     this.audio = new InputAudio(this.scene)
     // CESIUM VIEWER
-    new CesiumViewer()
+    await CesiumViewer.build()
     // SETUP SCENE
     this.cameras()
     this.lights()
@@ -45,19 +47,21 @@ class App {
     // dev things
     this.debug()
     this.canvas.focus()
+
+    return new App()
   }
 
-  cameras() {
+  static cameras() {
     let camera: FreeCamera = new FreeCamera("camera1", new Vector3(0, 5, -10), this.scene)
     camera.setTarget(Vector3.Zero())
     camera.attachControl(this.canvas, true)
   }
 
-  lights() {
+  static lights() {
     let light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), this.scene)
   }
 
-  rendering() {
+  static rendering() {
     this.scene.registerBeforeRender(() => {
       // this.inputs.registerBeforeRender()
       this.audio.registerBeforeRender()
@@ -70,7 +74,7 @@ class App {
     })
   }
 
-  debug() {
+  static debug() {
     // hide/show the Inspector
     window.addEventListener("keydown", (ev) => {
       // Shift+Ctrl+Alt+I
@@ -84,4 +88,5 @@ class App {
     })
   }
 }
-new App()
+
+App.build()
