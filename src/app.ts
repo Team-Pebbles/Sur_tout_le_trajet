@@ -4,7 +4,6 @@ import "@babylonjs/loaders/glTF"
 import { Engine, Scene, FreeCamera, Vector3 } from "@babylonjs/core"
 
 import { AudioAnalyser } from "./audio/audioAnalyser"
-import { InputMidi } from "./inputs/inputMidi"
 import { CesiumViewer } from "./cesiumViewer"
 import { InputManager } from "./inputs/inputManager"
 import { MapCanvas } from "./scenes/mapCanvas"
@@ -14,7 +13,6 @@ class App {
   static scene: Scene
   static inputs: InputManager
   static audio: AudioAnalyser
-  static midi: InputMidi
   static engine: Engine
   static mapCanvas: MapCanvas
   static canvas: HTMLCanvasElement
@@ -31,9 +29,6 @@ class App {
     // initialize babylon scene and engine
     this.engine = new Engine(this.canvas, true)
     this.scene = new Scene(this.engine)
-
-    // INPUT MANAGER
-    this.midi = new  InputMidi()
     this.inputs = new InputManager(this.scene)
     this.audio = new AudioAnalyser(this.scene, true)
     // CESIUM VIEWER

@@ -1,10 +1,21 @@
 import { PointerInput, XboxInput } from "@babylonjs/core"
 
+export enum MidiInputType{
+  KEY,
+  CONTROL
+}
+
+export interface MidiMapping { 
+  type: MidiInputType, 
+  channel: number, 
+  id: number 
+}
+
 export interface InputMapping {
   xbox?: XboxInput | [XboxInput, XboxInput]
   mouse?: PointerInput | [PointerInput, PointerInput]
   keyboard?: number | [number, number]
-  midi?: number | [number, number]
+  midi?: MidiMapping
 }
   
   export interface InputAction {
@@ -20,6 +31,8 @@ export interface InputMapping {
     
     LOOK_X: InputAction
     LOOK_Y: InputAction
+
+    CONTINUOUS_FWD: InputAction;
   }
   
   export interface IAMaps {

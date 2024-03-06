@@ -6,6 +6,7 @@ import {
 } from "@babylonjs/core"
 import { Inputs } from "./inputActions"
 import { InputAction } from "./inputActionsTypes"
+import { InputMidi } from "./inputMidi"
 
 export class InputManager {
 
@@ -14,6 +15,7 @@ export class InputManager {
     x: number,
     y: number
   }
+  private midi: InputMidi
 
   constructor(scene: Scene) {
     this.startMousePosition = {
@@ -21,7 +23,7 @@ export class InputManager {
       y: window.innerWidth / 2,
     }
  
-
+    this.midi = new InputMidi()
     this.dsm = new DeviceSourceManager(scene.getEngine())
 
     this.dsm.onDeviceConnectedObservable.add((device: DeviceSource<DeviceType>) => {
@@ -80,10 +82,14 @@ export class InputManager {
         if(xbox && action.mapping.xbox != undefined){
           const m = action.mapping.xbox;
           action.value += Array.isArray(m) ? xbox.getInput(m[1] as number) - xbox.getInput(m[0] as number) : xbox.getInput(m as number);
+          //Deadzone
+          if(Math.abs(action.value) < 0.05) action.value = 0;
         }
-        //Deadzone
-        if(Math.abs(action.value) < 0.05) action.value = 0;
-        //TODO MIDI
+
+        if(action.mapping.midi != undefined){
+          const m = action.mapping.midi;
+          action.value += m ? this.midi.get(m) : 0;
+        }
       });
     });
 

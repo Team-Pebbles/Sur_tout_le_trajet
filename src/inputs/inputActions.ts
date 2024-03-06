@@ -1,5 +1,5 @@
 import { PointerInput, XboxInput } from "@babylonjs/core"
-import { InputActions, IAMaps, InputActionList  } from "./inputActionsTypes"
+import { InputActions, IAMaps, InputActionList, MidiInputType  } from "./inputActionsTypes"
 
 export const Inputs : InputActions = {
   name: "inputsAction",
@@ -39,6 +39,16 @@ export const Inputs : InputActions = {
           mapping: {
            // mouse: PointerInput.Vertical,
             xbox: XboxInput.RStickYAxis
+          },
+          value: 0
+        },
+        CONTINUOUS_FWD: {
+          mapping: {
+            midi:{
+              type: MidiInputType.CONTROL,
+              channel: 0,
+              id: 70,
+            }
           },
           value: 0
         },

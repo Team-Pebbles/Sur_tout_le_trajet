@@ -132,14 +132,16 @@ export class CesiumViewer {
       cameraData.pitch -= ly * ToRad(90) * deltaTime;
       cameraData.heading += lx * ToRad(90) * deltaTime;
 
-      const imove = rotateVector({x: IACesiumCamera.MOVE_X.value, y: IACesiumCamera.MOVE_Z.value }, cameraData.heading);
-
       const flipValue = cameraData.flip ? -1 : 1;
+      const imove = rotateVector({x: IACesiumCamera.MOVE_X.value, y: IACesiumCamera.MOVE_Z.value }, cameraData.heading);
 
       const speedXZ:number = (0.01 * cameraData.height/1000 + 0.001) * deltaTime;
       cameraData.longitude += flipValue * imove.x * speedXZ;
       cameraData.latitude += flipValue * imove.y * -speedXZ;
 
+      const cmove = rotateVector({x: 0, y: IACesiumCamera.CONTINUOUS_FWD.value }, cameraData.heading);
+      cameraData.longitude += flipValue * cmove.x * speedXZ * 10;
+      cameraData.latitude += flipValue * cmove.y * speedXZ * 10;
 
       if(cameraData.latitude > 90){
         cameraData.flip = !cameraData.flip;
