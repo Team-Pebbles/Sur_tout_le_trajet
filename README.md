@@ -1,8 +1,5 @@
 # Sur_tout_le_trajet
 
-Cesium 1.103
-attention breaking change sur les versions suivantes
-
 ## Inputs Management
 
 - [ ] Refactor naming 
@@ -13,8 +10,8 @@ attention breaking change sur les versions suivantes
   - [ ] MIDI Remap
   - [ ] MIDI file
 - [x] keyboard
-- [ ] mouse (WIP)
-- [ ] xbox
+- [ ] mouse (canceled)
+- [x] xbox
 - [ ] Shader Controller
   - [ ] Map Shader
   - [ ] PostProcessing Shader

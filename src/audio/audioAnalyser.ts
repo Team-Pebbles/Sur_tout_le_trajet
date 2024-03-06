@@ -97,7 +97,7 @@ export class AudioAnalyser {
                 Audio.actions.SPECTRUM_MID.value = spectrumValue
             } else if (i >= split2) {
                 spectrumValue *= highGain;
-                Audio.actions.SPECTRUM_LOW.value = spectrumValue
+                Audio.actions.SPECTRUM_HIGH.value = spectrumValue
             }
         }
     }

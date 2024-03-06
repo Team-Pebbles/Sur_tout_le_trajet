@@ -14,6 +14,7 @@ import Ellipsoid from "@cesium/engine/Source/Core/Ellipsoid"
 import Camera from "@cesium/engine/Source/Scene/Camera"
 import Scene from "@cesium/engine/Source/Scene/Scene"
 import { IACesiumCamera } from "./inputs/inputActions"
+import { AudioAGraph } from "./audio/audioActions"
 
 export class CesiumViewer {
   //private viewer: Viewer
@@ -110,7 +111,8 @@ export class CesiumViewer {
       const deltaTime = (performance.now() / 1000) - time;
       time = performance.now() / 1000;
 
-      scene.verticalExaggeration = 1;// (Math.sin(time) + 1) * 0.5 * 10;
+      // scene.verticalExaggeration = 1 + AudioAGraph.SPECTRUM_MID.value * 10;
+      scene.verticalExaggeration = 1 // (Math.sin(time) + 1) * 0.5 * 10;
 
      /* let material = Material.fromType("ElevationContour");
       const shadingUniforms = material.uniforms;
