@@ -1,9 +1,9 @@
 import "@babylonjs/core/Debug/debugLayer"
 import "@babylonjs/inspector"
 import "@babylonjs/loaders/glTF"
-import { Engine, Scene, FreeCamera, Vector3, HemisphericLight } from "@babylonjs/core"
+import { Engine, Scene, FreeCamera, Vector3 } from "@babylonjs/core"
 
-import { Midi } from "./inputs/midi"
+import { InputMidi } from "./inputs/inputMidi"
 import { InputAudio } from "./inputs/inputAudio"
 import { CesiumViewer } from "./cesiumViewer"
 import { InputManager } from "./inputs/inputManager"
@@ -14,6 +14,7 @@ class App {
   static scene: Scene
   static inputs: InputManager
   static audio: InputAudio
+  static midi: InputMidi
   static engine: Engine
   static mapCanvas: MapCanvas
   static canvas: HTMLCanvasElement
@@ -33,13 +34,12 @@ class App {
 
     // INPUT MANAGER
     this.inputs = new InputManager(this.scene)
-    new Midi()
+    this.midi = new  InputMidi()
     this.audio = new InputAudio(this.scene)
     // CESIUM VIEWER
     await CesiumViewer.build()
     // SETUP SCENE
     this.cameras()
-    this.lights()
     this.mapCanvas = new MapCanvas(this.scene)
     new ScenePostProcess(this.mapCanvas.camera)
     //RENDER
@@ -55,10 +55,6 @@ class App {
     let camera: FreeCamera = new FreeCamera("camera1", new Vector3(0, 5, -10), this.scene)
     camera.setTarget(Vector3.Zero())
     camera.attachControl(this.canvas, true)
-  }
-
-  static lights() {
-    let light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), this.scene)
   }
 
   static rendering() {
