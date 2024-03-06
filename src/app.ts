@@ -63,12 +63,12 @@ class App {
 
   static rendering() {
     this.scene.registerBeforeRender(() => {
-      // this.inputs.registerBeforeRender()
       this.audio.registerBeforeRender()
     })
 
     // run the main render loop
     this.engine.runRenderLoop(() => {
+      this.inputs.update()
       this.mapCanvas.update()
       this.scene.render()
     })

@@ -2,149 +2,93 @@ import {
   DeviceSourceManager,
   Scene,
   DeviceType,
-  PointerInput,
-  XboxInput,
-  DeviceSource
+  DeviceSource,
 } from "@babylonjs/core"
-import { IAControl, IAControlList, IAMaps, InputActions, InputLookingActions, ILAMaps, ILAControlList, ILAControl } from "./inputActions"
+import { Inputs } from "./inputActions"
+import { InputAction } from "./inputActionsTypes"
 
 export class InputManager {
+
   private dsm: DeviceSourceManager
-  private kbInputList: string[]
-  private mouseInputList: string[]
   private startMousePosition: {
     x: number,
     y: number
   }
+
   constructor(scene: Scene) {
-    this.kbInputList = []
-    this.mouseInputList = []
     this.startMousePosition = {
       x: window.innerHeight / 2,
       y: window.innerWidth / 2,
     }
-    InputActions.maps.forEach((map: IAMaps) => {
-      let actions: IAControlList = map["actions"]
-      for (const key in actions) {
-        if (Object.prototype.hasOwnProperty.call(actions, key)) {
-          const inputControl: IAControl = actions[key]
-          this.kbInputList.push(inputControl.keyboard)
-        }
-      }
-    })
-
-    InputLookingActions.maps.forEach((map: ILAMaps) => {
-      let actions: ILAControlList = map["actions"]
-      for (const key in actions) {
-        if (Object.prototype.hasOwnProperty.call(actions, key)) {
-          const inputControl: ILAControl = actions[key]
-          this.mouseInputList.push(inputControl.mouse)
-        }
-      }
-    })
+ 
 
     this.dsm = new DeviceSourceManager(scene.getEngine())
 
     this.dsm.onDeviceConnectedObservable.add((device: DeviceSource<DeviceType>) => {
       switch (device.deviceType) {
         case DeviceType.Keyboard:
-          console.log("Keyboard")
+          console.log("Keyboard connected")
           break
         case DeviceType.Xbox:
-          console.log("Xbox")
+          console.log("Xbox connected")
           break
         case DeviceType.DualShock:
-          console.log("Dualshock")
+          console.log("Dualshock connected")
           break
         case DeviceType.Mouse:
-          console.log("Mouse")
+          console.log("Mouse connected")
           break
       }
-
-      // MOUSE
-      this.dsm.getDeviceSource(DeviceType.Mouse)?.onInputChangedObservable.add((eventData) => {
-        //console.log("device -> ", eventData)
-        this.mouseInputList.forEach((input: string) => {
-          InputLookingActions.maps.forEach((map: ILAMaps) => {
-            let actions: ILAControlList = map["actions"]
-            for (const key in actions) {
-              if (Object.prototype.hasOwnProperty.call(actions, key)) {
-                const inputControl: ILAControl = actions[key]
-                inputControl.speedFactor = 0.5
-                if(eventData.type == "pointerdown") {
-                  inputControl.isActive = true
-                  console.log("pointer down")
-                  // inputControl.mouseMove.x = inputControl.mouseMove.x
-                  // inputControl.mouseMove.y = inputControl.mouseMove.y
-                 // inputControl.mouseMove.y = 0
-                } else if (eventData.type == "pointermove") {
-                  console.log("pointermove")
-                  inputControl.speedFactor = scene.getAnimationRatio() / 100
-                  inputControl.mouseMove.x = eventData.clientX
-                  inputControl.mouseMove.y = - eventData.clientY
-                } else if(eventData.type == "pointerup"){
-                  inputControl.isActive = false
-                }
-              }
-            }
-          })
-        })
-      })
-
-      //  KEYBOARD
-      this.dsm.getDeviceSource(DeviceType.Keyboard)?.onInputChangedObservable.add((eventData) => {
-        this.kbInputList.forEach((input: string) => {
-          if (device?.getInput(input.charCodeAt(0)) == 1) {
-            this.setInputSate(input, true)
-          } else {
-            this.setInputSate(input, false)
-          }
-        })
-      })
-
-      // XBOX
-      this.dsm.getDeviceSource(DeviceType.Xbox)?.onInputChangedObservable.add((eventData) => {
-          // Xbox controller
-      })
-  
-
     })
 
     this.dsm.onDeviceDisconnectedObservable.add((device) => {
-      console.log("Lost Connection")
-    })
-  }
-
-  setInputSate(input: string, state: boolean) {
-    // return input
-    InputActions.maps.forEach((map: IAMaps) => {
-      let actions: IAControlList = map["actions"]
-      for (const key in actions) {
-        if (Object.prototype.hasOwnProperty.call(actions, key)) {
-          const inputControl: IAControl = actions[key]
-          if (inputControl.keyboard == input) {
-            inputControl.isActive = state
-          }
-        }
+      switch (device.deviceType) {
+        case DeviceType.Keyboard:
+          console.log("Keyboard disconnected")
+          break
+        case DeviceType.Xbox:
+          console.log("Xbox disconnected")
+          break
+        case DeviceType.DualShock:
+          console.log("Dualshock disconnected")
+          break
+        case DeviceType.Mouse:
+          console.log("Mouse disconnected")
+          break
       }
     })
   }
 
-  // registerBeforeRender() {
-  //   const xInput: Nullable<DeviceSource<DeviceType.Xbox>> = this.dsm.getDeviceSource(
-  //     DeviceType.Xbox
-  //   )
 
-  //   // if (this.dsm.getDeviceSource(DeviceType.Xbox)) {
-  //   //   if (this.dsm.getDeviceSource(DeviceType.Xbox)!.getInput(XboxInput.A) == 1) {
-  //   //   }
-  //   //   if (this.dsm.getDeviceSource(DeviceType.Xbox)!.getInput(XboxInput.LStickXAxis) < -0.25) {
-  //   //     console.log("left")
-  //   //   } else if (
-  //   //     this.dsm.getDeviceSource(DeviceType.Xbox)!.getInput(XboxInput.LStickXAxis) > 0.25
-  //   //   ) {
-  //   //     console.log("right")
-  //   //   }
-  //   // }
-  // }
+  update(){
+    const mouse = this.dsm.getDeviceSource(DeviceType.Mouse);
+    const keyboard = this.dsm.getDeviceSource(DeviceType.Keyboard);
+    const xbox = this.dsm.getDeviceSource(DeviceType.Xbox);
+
+    Inputs.maps.forEach( map =>{
+      Object.keys(map.actions).forEach(actionKey =>{
+        const action : InputAction = map.actions[actionKey];
+        action.value = 0;
+        if(mouse && action.mapping.mouse != undefined) {
+          const m = action.mapping.mouse;
+          action.value += Array.isArray(m) ? mouse.getInput(m[1] as number) - mouse.getInput(m[0] as number) : mouse.getInput(m as number);
+        }
+        if(keyboard && action.mapping.keyboard != undefined) {
+          const m = action.mapping.keyboard;
+          action.value += Array.isArray(m) ? keyboard.getInput(m[1] as number) - keyboard.getInput(m[0] as number) : keyboard.getInput(m as number);
+        }
+        if(xbox && action.mapping.xbox != undefined){
+          const m = action.mapping.xbox;
+          action.value += Array.isArray(m) ? xbox.getInput(m[1] as number) - xbox.getInput(m[0] as number) : xbox.getInput(m as number);
+        }
+        //Deadzone
+        if(Math.abs(action.value) < 0.05) action.value = 0;
+        //TODO MIDI
+      });
+    });
+
+    if(xbox){
+      //  console.log(xbox.getInput(XboxInput.A));
+    }
+  }
 }

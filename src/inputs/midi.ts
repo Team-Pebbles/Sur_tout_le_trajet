@@ -1,30 +1,30 @@
 export class Midi {
   constructor() {
-    this.initMidi()
+    this.init()
   }
 
-  initMidi() {
-    navigator.requestMIDIAccess().then(this.onMIDISuccess.bind(this), this.onMIDIFailure)
+  init() {
+    navigator.requestMIDIAccess().then( (access : WebMidi.MIDIAccess) => this.onSuccess(access), () => this.onFailure())
   }
 
-  onMIDISuccess(midiAccess: WebMidi.MIDIAccess) {
-    console.log(midiAccess)
+  onSuccess(access: WebMidi.MIDIAccess) {
+    console.log(access)
 
-    const inputs: WebMidi.MIDIInputMap = midiAccess.inputs
+    const inputs: WebMidi.MIDIInputMap = access.inputs
     //const outputs: WebMidi.MIDIOutputMap = midiAccess.outputs
     for (let input of inputs.values()) {
       console.log(input)
-      input.onmidimessage = (m) => {
-        this.getMIDIMessage(m)
-      }
+      input.onmidimessage = (m) => this.onMessage(m);
     }
   }
 
-  getMIDIMessage(m: WebMidi.MIDIMessageEvent) {
+  onMessage(m: WebMidi.MIDIMessageEvent) {
+    const [command, key, velocity] = m.data;
+
     console.log(m)
   }
 
-  onMIDIFailure() {
+  onFailure() {
     console.log("Could not access your MIDI devices.")
   }
 }

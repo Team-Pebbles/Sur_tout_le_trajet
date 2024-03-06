@@ -6,12 +6,14 @@ import {
   ImageryLayer,
   Cartesian3,
   createWorldTerrainAsync,
+  Material,
+  Color,
 } from "cesium"
 import CesiumTerrainProvider from "@cesium/engine/Source/Core/CesiumTerrainProvider"
 import Ellipsoid from "@cesium/engine/Source/Core/Ellipsoid"
 import Camera from "@cesium/engine/Source/Scene/Camera"
 import Scene from "@cesium/engine/Source/Scene/Scene"
-import { IACesiumCamera, IACesiumCameraLooking } from "./inputs/inputActions"
+import { IACesiumCamera } from "./inputs/inputActions"
 
 export class CesiumViewer {
   //private viewer: Viewer
@@ -64,6 +66,7 @@ export class CesiumViewer {
     this.viewer.scene.globe.depthTestAgainstTerrain = true
     this.viewer.scene.globe.enableLighting = true
 
+
     this.viewerCanvas = this.viewer.canvas
     this.viewerCanvas.id = "cesiumCanvas"
     this.handler = new ScreenSpaceEventHandler(this.viewerCanvas)
@@ -90,68 +93,107 @@ export class CesiumViewer {
     scene.screenSpaceCameraController.enableTilt = false
     scene.screenSpaceCameraController.enableLook = false
 
-    // let startMousePosition: Cartesian3
-    // let mousePosition: Cartesian3
-    // let looking: boolean = true
+    let time = performance.now() / 1000;
 
-    // this.handler.setInputAction(function (movement) {
-    //   looking = true
-    //   mousePosition = startMousePosition = Cartesian3.clone(movement.position)
-    // }, ScreenSpaceEventType.LEFT_DOWN)
-
-    // this.handler.setInputAction(function (movement) {
-    //   // scene.requestRender();
-    //   mousePosition = movement.endPosition
-    // }, ScreenSpaceEventType.MOUSE_MOVE)
-
-    // this.handler.setInputAction(function () {
-    //   looking = false
-    // }, ScreenSpaceEventType.LEFT_UP)
+    const cameraData = {
+      longitude: -75.5847,
+      latitude: 40.0397,
+      height: 1000,
+      heading: 0,
+      pitch: -Math.PI * 0.25,
+      roll: 0.0,
+      flip: false,
+    }
 
     this.viewer.clock.onTick.addEventListener(() => {
+
+      const deltaTime = (performance.now() / 1000) - time;
+      time = performance.now() / 1000;
+
+      scene.verticalExaggeration = 1;// (Math.sin(time) + 1) * 0.5 * 10;
+
+     /* let material = Material.fromType("ElevationContour");
+      const shadingUniforms = material.uniforms;
+      shadingUniforms.width = 1.0;
+      shadingUniforms.spacing = 1* scene.verticalExaggeration;
+      shadingUniforms.color = Color.BLACK;
+      scene.globe.material = material;*/
+
       // OLD CONTROLLER
       let camera: Camera = this.viewer.camera
-      //console.log(IACesiumCameraLooking.LOOKING.isActive)
-      if (IACesiumCameraLooking.LOOKING.isActive) {
-        let width: number = canvas.clientWidth
-        let height: number = canvas.clientHeight
 
-        // Coordinate (0.0, 0.0) will be where the mouse was clicked.
-        // let x: number = (mousePosition.x - startMousePosition.x) / width
-        // let y: number = -(mousePosition.y - startMousePosition.y) / height
-        //console.log(IACesiumCameraLooking.LOOKING)
-        let x: number = IACesiumCameraLooking.LOOKING.mouseMove.x
-        let y: number = IACesiumCameraLooking.LOOKING.mouseMove.y
+      let width: number = canvas.clientWidth
+      let height: number = canvas.clientHeight
 
-        let lookFactor: number = IACesiumCameraLooking.LOOKING.speedFactor
-        camera.lookRight(((x - width / 2) / width) * lookFactor)
-        camera.lookUp(((y + height / 2) / height) * lookFactor)
+
+      const lx: number = IACesiumCamera.LOOK_X.value;
+      const ly: number = IACesiumCamera.LOOK_Y.value;
+
+      cameraData.pitch -= ly * ToRad(90) * deltaTime;
+      cameraData.heading += lx * ToRad(90) * deltaTime;
+
+      const imove = rotateVector({x: IACesiumCamera.MOVE_X.value, y: IACesiumCamera.MOVE_Z.value }, cameraData.heading);
+
+      const flipValue = cameraData.flip ? -1 : 1;
+
+      const speedXZ:number = (0.01 * cameraData.height/1000 + 0.001) * deltaTime;
+      cameraData.longitude += flipValue * imove.x * speedXZ;
+      cameraData.latitude += flipValue * imove.y * -speedXZ;
+
+
+      if(cameraData.latitude > 90){
+        cameraData.flip = !cameraData.flip;
+        cameraData.longitude += 180;
+        cameraData.latitude = 90;
+      }
+      if(cameraData.latitude < -90){
+        cameraData.flip = !cameraData.flip;
+        cameraData.longitude += 180;
+        cameraData.latitude = -90;
       }
 
-      // Change movement speed based on the distance of the camera to the surface of the ellipsoid.
-      let cameraHeight: number = ellipsoid.cartesianToCartographic(camera.position).height
+      cameraData.longitude = (cameraData.longitude + 180) % 360 - 180;
 
-      if (IACesiumCamera.FORWARD.isActive)
-        camera.moveForward(cameraHeight / IACesiumCamera.FORWARD.speedFactor)
+      cameraData.heading = cameraData.heading % (Math.PI * 2);
+      cameraData.pitch = cameraData.pitch % (Math.PI * 2);
+      cameraData.roll = cameraData.roll % (Math.PI * 2);
 
-      if (IACesiumCamera.BACKWARD.isActive)
-        camera.moveBackward(cameraHeight / IACesiumCamera.BACKWARD.speedFactor)
 
-      if (IACesiumCamera.UP.isActive) camera.moveUp(cameraHeight / IACesiumCamera.UP.speedFactor)
+      const speedY:number = (cameraData.height + 1) * deltaTime;
+      cameraData.height += IACesiumCamera.MOVE_Y.value * speedY;
+      if(cameraData.height < 0) cameraData.height = 0; 
 
-      if (IACesiumCamera.DOWN.isActive)
-        camera.moveDown(cameraHeight / IACesiumCamera.DOWN.speedFactor)
+      //console.log(cameraData);
 
-      if (IACesiumCamera.LEFT.isActive)
-        camera.moveLeft(cameraHeight / IACesiumCamera.LEFT.speedFactor)
+      camera.setView({
+        destination: Cartesian3.fromDegrees(
+          cameraData.longitude,
+          cameraData.latitude,
+          cameraData.height
+        ),
+        orientation: {
+          heading: cameraData.flip ? cameraData.heading + Math.PI : cameraData.heading,
+          pitch: cameraData.pitch,
+          roll: cameraData.roll,
+        },
+      });
 
-      if (IACesiumCamera.RIGHT.isActive)
-        camera.moveRight(cameraHeight / IACesiumCamera.RIGHT.speedFactor)
-      // M
-      // if () {
-      //   console.log("mActive", mActive)
-      //   // map().setLocation();
-      // }
     })
   }
+}
+
+function rotateVector(vector, angle) {
+  const x = vector.x;
+  const y = vector.y;
+  const cosAngle = Math.cos(angle);
+  const sinAngle = Math.sin(angle);
+
+  const rotatedX = x * cosAngle - y * sinAngle;
+  const rotatedY = x * sinAngle + y * cosAngle;
+
+  return { x: rotatedX, y: rotatedY };
+}
+
+function ToRad(degrees) {
+  return degrees * Math.PI / 180;
 }

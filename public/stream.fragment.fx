@@ -38,4 +38,5 @@ void main(void) {
     mainImage(fragColor, vUV.xy);
     //gl_FragColor = vec4(vec2(normUv), 0. ,0.);
     gl_FragColor = vec4(1.0 - fragColor.rgb, fragColor.a); 
+   // gl_FragColor = texture2D(textureSampler, vUV.xy);;
 }

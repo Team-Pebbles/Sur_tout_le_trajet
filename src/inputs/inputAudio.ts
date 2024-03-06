@@ -71,7 +71,7 @@ export class InputAudio {
 
     if (this.audioReady) {
       // UNCOMMENT TO SHOW DEBUG
-      // this.debug.draw();
+       this.debug.draw();
 
       var workingArrayTime = this.analyser.getByteFrequencyData();
 
@@ -113,6 +113,7 @@ class Debug {
   }
 
   draw() {
+
     let borderHeight = 10;
 
     // draw background
