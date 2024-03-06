@@ -1,18 +1,24 @@
 import { Analyser, Scene, Engine, Sound, SoundTrack } from "@babylonjs/core";
+import { Audio } from "./audioActions";
+import { AudioAction } from "./audioActionsTypes";
+
 declare global {
   interface Window {
     stream: MediaStream;
     constraints: MediaStreamConstraints;
   }
 }
-export class InputAudio {
+
+export class AudioAnalyser {
   private _scene: Scene;
   private _constraints: MediaStreamConstraints;
   private _analyser: Analyser;
   private _audioReady: boolean;
-  private _debug: Debug;
+  private _debugGraph: Debug;
+  private _debug: boolean;
 
-  constructor(scene: Scene) {
+  constructor(scene: Scene, debug:boolean) {
+    this._debug = debug
     this._audioReady = false;
     this._scene = scene;
     this._constraints = window.constraints = {
@@ -47,7 +53,7 @@ export class InputAudio {
     this._analyser.FFT_SIZE = 2048;
     this._analyser.SMOOTHING = 0.9;
 
-    this._debug = new Debug(this._analyser);
+    if(this._debug) this._debugGraph = new Debug(this._analyser);
 
     console.log(this._analyser);
     this._audioReady = true;
@@ -56,23 +62,46 @@ export class InputAudio {
     // High Gain 4500 +
   }
 
-  handleError(error) {
+  handleError(error: string) {
     console.log("navigator.getUserMedia error: ", error);
   }
 
   registerBeforeRender() {
     if (this._audioReady) {
-      // UNCOMMENT TO SHOW DEBUG
-       this._debug.draw();
+        // UNCOMMENT TO SHOW DEBUG
+        if(this._debug) this._debugGraph.draw();
 
-      var workingArrayTime = this._analyser.getByteFrequencyData();
-      //loop scales mesh with each value
-      for (var i = 0; i < this._analyser.getFrequencyBinCount(); i++) {
-        //frequency bin count is 1/2 of FFT_SIZE
-        var size = workingArrayTime[i];
-      }
+        let waveform = this._analyser.getByteTimeDomainData();
+        let waveformLength = this._analyser.getFrequencyBinCount();
+
+        for (let i = 0; i < waveformLength; i++) {
+            let waveformValue = waveform[i] / 256;
+            Audio.actions.WAVEFORM.value = waveformValue
+        }
+
+        let spectrum = this._analyser.getByteFrequencyData();
+        let spectrumLength = this._analyser.getFrequencyBinCount();
+        const split1 = 300;
+        const split2 = 630;
+        const lowGain = 0.2;
+        const midGain = 1;
+        const highGain = 3;
+        for (let i = 0; i < spectrumLength; i++) {
+            let spectrumValue = spectrum[i] / 256;
+            Audio.actions.SPECTRUM_CURRENT.value = spectrumValue
+            if (i <= split1) {
+                spectrumValue *= lowGain;
+                Audio.actions.SPECTRUM_LOW.value = spectrumValue
+            } else if (i > split1 && i < split2) {
+                spectrumValue *= midGain;
+                Audio.actions.SPECTRUM_MID.value = spectrumValue
+            } else if (i >= split2) {
+                spectrumValue *= highGain;
+                Audio.actions.SPECTRUM_LOW.value = spectrumValue
+            }
+        }
     }
-  }
+}
 }
 
 class Debug {
@@ -220,131 +249,8 @@ class Debug {
     this._ctx.stroke();
   }
 
-  // drawKick() {
-  //   let kicks = this.kicks;
-  //   let kickLength = kicks.length;
-  //   for (let i = 0, len = kickLength; i < len; i++) {
-
-  //       const kick = kicks[i];
-  //       if (kick.isOn) {
-  //           const kickFrequencyStart = (kick.frequency.length ? kick.frequency[0] : kick.frequency);
-  //           const kickFrequencyLength = (kick.frequency.length ? kick.frequency[1] - kick.frequency[0] + 1 : 1);
-  //           this._ctx.beginPath();
-  //           this._ctx.rect(kickFrequencyStart * this._spectrumWidth, this._spectrumHeight - this._spectrumHeight * (kick.threshold / 256), kickFrequencyLength * this._spectrumWidth - (this._spectrumWidth * .5), 2);
-  //           this._ctx.rect(kickFrequencyStart * this._spectrumWidth, this._spectrumHeight - this._spectrumHeight * (kick.currentThreshold / 256), kickFrequencyLength * this._spectrumWidth - (this._spectrumWidth * .5), 5);
-  //           this._ctx.fillStyle = kick.isKick ? '#00ff00' : '#ff0000';
-  //           this._ctx.fill();
-  //       }
-  //   }
-  // }
-
-}
-
-class Kick {
-  frequency: number[];
-  threshold: number;
-  decay: number;
-  onKick: any;
-  offKick: any;
-  isOn: boolean;
-  isKick: boolean;
-  currentThreshold: any;
-
-  constructor({ frequency, threshold, decay, onKick, offKick }) {
-    this.frequency = frequency !== undefined ? frequency : [0, 10];
-    this.threshold = threshold !== undefined ? threshold : 0.3;
-    this.decay = decay !== undefined ? decay : 0.02;
-    this.onKick = onKick;
-    this.offKick = offKick;
-    this.isOn = false;
-    this.isKick = false;
-    this.currentThreshold = this.threshold;
+  registerBeforeRender() {
+    
   }
 
-  on() {
-    this.isOn = true;
-  }
-
-  off() {
-    this.isOn = false;
-  }
-
-  set({ frequency, threshold, decay, onKick, offKick }) {
-    this.frequency = frequency !== undefined ? frequency : this.frequency;
-    this.threshold = threshold !== undefined ? threshold : this.threshold;
-    this.decay = decay !== undefined ? decay : this.decay;
-    this.onKick = onKick || this.onKick;
-    this.offKick = offKick || this.offKick;
-  }
-
-  calc(spectrum) {
-    if (!this.isOn) {
-      return;
-    }
-    let magnitude = this.maxAmplitude(spectrum, this.frequency);
-    if (magnitude >= this.currentThreshold && magnitude >= this.threshold) {
-      this.currentThreshold = magnitude;
-      this.onKick && this.onKick(magnitude);
-      this.isKick = true;
-    } else {
-      this.offKick && this.offKick(magnitude);
-      this.currentThreshold -= this.decay;
-      this.isKick = false;
-    }
-  }
-
-  maxAmplitude(fft, frequency) {
-    let max = 0;
-
-    // Sloppy array check
-    if (!frequency.length) {
-      return frequency < fft.length ? fft[~~frequency] : null;
-    }
-
-    for (var i = frequency[0], l = frequency[1]; i <= l; i++) {
-      if (fft[i] > max) {
-        max = fft[i];
-      }
-    }
-
-    return max;
-  }
-}
-
-class Beat {
-  onBeat: any;
-  factor: any;
-  isOn: boolean;
-  currentTime: number;
-
-  constructor({ factor, onBeat }) {
-    this.factor = factor !== undefined ? factor : 1;
-    this.onBeat = onBeat;
-    this.isOn = false;
-    this.currentTime = 0;
-  }
-
-  on() {
-    this.isOn = true;
-  }
-
-  off() {
-    this.isOn = false;
-  }
-
-  set({ factor, onBeat }) {
-    this.factor = factor !== undefined ? factor : this.factor;
-    this.onBeat = onBeat || this.onBeat;
-  }
-
-  calc(time, beatDuration) {
-    if (time == 0) {
-      return;
-    }
-    let beatDurationFactored = beatDuration * this.factor;
-    if (time >= this.currentTime + beatDurationFactored) {
-      if (this.isOn) this.onBeat && this.onBeat();
-      this.currentTime += beatDurationFactored;
-    }
-  }
 }
