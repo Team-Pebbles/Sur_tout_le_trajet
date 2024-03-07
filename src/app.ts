@@ -30,7 +30,7 @@ class App {
     this.engine = new Engine(this.canvas, true)
     this.scene = new Scene(this.engine)
     this.inputs = new InputManager(this.scene)
-    this.audio = new AudioAnalyser(this.scene, true)
+    this.audio = new AudioAnalyser(this.scene, false)
     // CESIUM VIEWER
     await CesiumViewer.build()
     // SETUP SCENE
