@@ -8,7 +8,7 @@ import {
     createWorldTerrainAsync,
     Material,
     Color,
-    OpenStreetMapImageryProvider,
+    IonImageryProvider,
 } from "cesium"
 import CesiumTerrainProvider from "@cesium/engine/Source/Core/CesiumTerrainProvider"
 import Ellipsoid from "@cesium/engine/Source/Core/Ellipsoid"
@@ -40,16 +40,15 @@ export class CesiumViewer {
         Ion.defaultAccessToken =
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw"
 
-        let mapBoxProvider = new MapboxImageryProvider({
-            url: "https://api.mapbox.com/v4/",
-            mapId: "mapbox.satellite",
-            accessToken:
-                "pk.eyJ1IjoiaWNoYmlucm9iIiwiYSI6ImNqZGtrbHYzMDAxbGUzM254ODY3MXA1dm4ifQ.2-TYG46620MlH6XmwYs4Jw",
-        })
-
+        // let mapBoxProvider = new MapboxImageryProvider({
+        //   url: "https://api.mapbox.com/v4/",
+        //   mapId: "mapbox.satellite",
+        //   accessToken:
+        //     "pk.eyJ1IjoiaWNoYmlucm9iIiwiYSI6ImNqZGtrbHYzMDAxbGUzM254ODY3MXA1dm4ifQ.2-TYG46620MlH6XmwYs4Jw",
+        // })
 
         this.viewer = new Viewer("cesiumContainer", {
-            baseLayer: new ImageryLayer(mapBoxProvider),
+            baseLayer: ImageryLayer.fromProviderAsync(IonImageryProvider.fromAssetId(2), {}),
             terrainProvider: worldTerrain,
             scene3DOnly: true,
             selectionIndicator: false,

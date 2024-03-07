@@ -3,7 +3,7 @@ import { MidiInputType, MidiMapping } from "./inputTypes";
 
 
 
-export class MidiSourceManager {
+export class MidiSource {
 
     private keys: number[][];
     private controls: number[][];

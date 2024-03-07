@@ -26,6 +26,8 @@ class App {
     this.canvas.id = "gameCanvas"
     document.body.appendChild(this.canvas)
 
+
+
     // initialize babylon scene and engine
     this.engine = new Engine(this.canvas, true)
     this.scene = new Scene(this.engine)

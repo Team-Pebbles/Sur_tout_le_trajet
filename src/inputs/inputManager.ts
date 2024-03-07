@@ -4,7 +4,7 @@ import {
     DeviceType,
     DeviceSource,
 } from "@babylonjs/core"
-import { MidiSourceManager } from "./midiSourceManager"
+import { MidiSource } from "./midiSource"
 import { Inputs } from "./inputs"
 import { InputAction, InputValue } from "./inputTypes"
 
@@ -15,7 +15,7 @@ export class InputManager {
         x: number,
         y: number
     }
-    private midi: MidiSourceManager
+    private midi: MidiSource
 
     constructor(scene: Scene) {
         this.startMousePosition = {
@@ -23,7 +23,7 @@ export class InputManager {
             y: window.innerWidth / 2,
         }
 
-        this.midi = new MidiSourceManager()
+        this.midi = new MidiSource()
         this.dsm = new DeviceSourceManager(scene.getEngine())
 
         this.dsm.onDeviceConnectedObservable.add((device: DeviceSource<DeviceType>) => {
@@ -93,6 +93,7 @@ export class InputManager {
 
             data.once = data.value == 0 && value != 0;
             data.value = value;
+            data.smoothValue += (value - data.smoothValue) * 0.05;
         });
     }
 
