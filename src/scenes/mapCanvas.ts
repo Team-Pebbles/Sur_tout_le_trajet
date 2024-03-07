@@ -1,5 +1,6 @@
 import {
   Camera,
+  DefaultRenderingPipeline,
   FreeCamera,
   HtmlElementTexture,
   Mesh,
@@ -38,11 +39,12 @@ export class MapCanvas {
 
     let plane = MeshBuilder.CreatePlane("plane", { width: size.x, height: size.y }, this.scene)
 
-    let shaderMaterial: ShaderMaterial = new ShaderMaterial("shader", this.scene, "./stream", {
+    let shaderMaterial: ShaderMaterial = new ShaderMaterial("shader", this.scene, "./shaders/stream", {
       attributes: ["position", "normal", "uv"],
       uniforms: ["world", "worldView", "worldViewProjection", "view", "projection", "time"],
     })
     shaderMaterial.setVector2("u_resolution", new Vector2(window.innerWidth, window.innerHeight))
+
     let mapCanvas: any = document.getElementById("cesiumCanvas")
     if (mapCanvas == null && mapCanvas == undefined) return
 

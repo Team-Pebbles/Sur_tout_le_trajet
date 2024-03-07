@@ -81,20 +81,28 @@ export class InputManager {
         }
         if(xbox && action.mapping.xbox != undefined){
           const m = action.mapping.xbox;
-          action.value += Array.isArray(m) ? xbox.getInput(m[1] as number) - xbox.getInput(m[0] as number) : xbox.getInput(m as number);
-          //Deadzone
-          if(Math.abs(action.value) < 0.05) action.value = 0;
+          action.value += Array.isArray(m) ? this.deadzone(xbox.getInput(m[1] as number)) - this.deadzone(xbox.getInput(m[0] as number)) : this.deadzone(xbox.getInput(m as number));
         }
-
         if(action.mapping.midi != undefined){
           const m = action.mapping.midi;
           action.value += m ? this.midi.get(m) : 0;
         }
+
+        /*const action.value != 0;
+        if(!action.once){
+          action.once = 
+        }*/
+   
+
+        action.smoothValue += (action.value - action.smoothValue) * 0.05
       });
     });
+  }
 
-    if(xbox){
-      //  console.log(xbox.getInput(XboxInput.A));
-    }
+  deadzone(value: number){
+    const deadzone = 0.1;
+    const abs = Math.abs(value);
+    const sign = Math.sign(value);
+    return abs > deadzone ? sign * (abs - deadzone) / 1 - deadzone : 0;
   }
 }

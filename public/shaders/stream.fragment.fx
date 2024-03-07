@@ -30,13 +30,14 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
 
 void main(void) {
-    //gl_FragColor = vec4(1.,1. , 1., 1.);
     vec2 translatedUV = (vUV.xy - .5 );
-    // vec2 normUv = vec2(translatedUV.y, translatedUV.x * (u_resolution.x/u_resolution.y));
     vec4 originalTex = texture2D(textureSampler, translatedUV);
     vec4 fragColor;
     mainImage(fragColor, vUV.xy);
-    //gl_FragColor = vec4(vec2(normUv), 0. ,0.);
-    gl_FragColor = vec4(1.0 - fragColor.rgb, fragColor.a); 
-   // gl_FragColor = texture2D(textureSampler, vUV.xy);;
+    vec3 color = 1.0 - fragColor.rgb;
+
+    color = color + color * (sin(time) + 1.) * 0.5 * 1.;
+
+    gl_FragColor = vec4(color, fragColor.a); 
+    gl_FragColor = texture2D(textureSampler, vUV.xy);
 }

@@ -14,7 +14,7 @@ import Ellipsoid from "@cesium/engine/Source/Core/Ellipsoid"
 import Camera from "@cesium/engine/Source/Scene/Camera"
 import Scene from "@cesium/engine/Source/Scene/Scene"
 import { IACesiumCamera } from "./inputs/inputActions"
-import { AudioAGraph } from "./audio/audioActions"
+import { Audio } from "./audio/audioActions"
 
 export class CesiumViewer {
   //private viewer: Viewer
@@ -106,44 +106,41 @@ export class CesiumViewer {
       flip: false,
     }
 
+
     this.viewer.clock.onTick.addEventListener(() => {
 
       const deltaTime = (performance.now() / 1000) - time;
       time = performance.now() / 1000;
+  
+      const targetExaggeration = 1 + IACesiumCamera.HEIGHT.value * 10;
+      scene.verticalExaggeration = targetExaggeration // (Math.sin(time) + 1) * 0.5 * 10;
 
-      // scene.verticalExaggeration = 1 + AudioAGraph.SPECTRUM_MID.value * 10;
-      scene.verticalExaggeration = 1 // (Math.sin(time) + 1) * 0.5 * 10;
-
-     /* let material = Material.fromType("ElevationContour");
+      let material = Material.fromType("ElevationContour");
       const shadingUniforms = material.uniforms;
       shadingUniforms.width = 1.0;
-      shadingUniforms.spacing = 1* scene.verticalExaggeration;
+      shadingUniforms.spacing = 5* scene.verticalExaggeration;
       shadingUniforms.color = Color.BLACK;
-      scene.globe.material = material;*/
+      scene.globe.material = material;
 
       // OLD CONTROLLER
       let camera: Camera = this.viewer.camera
 
-      let width: number = canvas.clientWidth
-      let height: number = canvas.clientHeight
-
-
-      const lx: number = IACesiumCamera.LOOK_X.value;
-      const ly: number = IACesiumCamera.LOOK_Y.value;
+      const lx: number = IACesiumCamera.LOOK_X.smoothValue;
+      const ly: number = IACesiumCamera.LOOK_Y.smoothValue;
 
       cameraData.pitch -= ly * ToRad(90) * deltaTime;
       cameraData.heading += lx * ToRad(90) * deltaTime;
 
       const flipValue = cameraData.flip ? -1 : 1;
-      const imove = rotateVector({x: IACesiumCamera.MOVE_X.value, y: IACesiumCamera.MOVE_Z.value }, cameraData.heading);
+      const imove = rotateVector({x: IACesiumCamera.MOVE_X.smoothValue, y: IACesiumCamera.MOVE_Z.smoothValue }, cameraData.heading);
+      const cmove = rotateVector({x: 0, y: IACesiumCamera.CONTINUOUS_FWD.smoothValue * Math.abs(Audio.actions.SPECTRUM_CURRENT.value) * 100 }, cameraData.heading);
 
       const speedXZ:number = (0.01 * cameraData.height/1000 + 0.001) * deltaTime;
       cameraData.longitude += flipValue * imove.x * speedXZ;
-      cameraData.latitude += flipValue * imove.y * -speedXZ;
+      cameraData.latitude -= flipValue * imove.y * speedXZ;
 
-      const cmove = rotateVector({x: 0, y: IACesiumCamera.CONTINUOUS_FWD.value }, cameraData.heading);
-      cameraData.longitude += flipValue * cmove.x * speedXZ * 10;
-      cameraData.latitude += flipValue * cmove.y * speedXZ * 10;
+      cameraData.longitude -= flipValue * cmove.x * speedXZ;
+      cameraData.latitude += flipValue * cmove.y * speedXZ; 
 
       if(cameraData.latitude > 90){
         cameraData.flip = !cameraData.flip;
@@ -164,10 +161,12 @@ export class CesiumViewer {
 
 
       const speedY:number = (cameraData.height + 1) * deltaTime;
-      cameraData.height += IACesiumCamera.MOVE_Y.value * speedY;
+      cameraData.height += IACesiumCamera.MOVE_Y.smoothValue * speedY;
       if(cameraData.height < 0) cameraData.height = 0; 
 
       //console.log(cameraData);
+
+      //console.log(IACesiumCamera.MOVE_Y.once);
 
       camera.setView({
         destination: Cartesian3.fromDegrees(
@@ -189,11 +188,11 @@ export class CesiumViewer {
 function rotateVector(vector, angle) {
   const x = vector.x;
   const y = vector.y;
-  const cosAngle = Math.cos(angle);
-  const sinAngle = Math.sin(angle);
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
 
-  const rotatedX = x * cosAngle - y * sinAngle;
-  const rotatedY = x * sinAngle + y * cosAngle;
+  const rotatedX = x * cos - y * sin;
+  const rotatedY = x * sin + y * cos;
 
   return { x: rotatedX, y: rotatedY };
 }

@@ -20,7 +20,9 @@ export interface InputMapping {
   
   export interface InputAction {
     mapping: InputMapping
-    value: number
+    value: number,
+    smoothValue: number,
+    once: boolean
   }
   
   
@@ -33,6 +35,9 @@ export interface InputMapping {
     LOOK_Y: InputAction
 
     CONTINUOUS_FWD: InputAction;
+    HEIGHT: InputAction;
+    SLICE: InputAction;
+    SLICE_ROTATE: InputAction;
   }
   
   export interface IAMaps {
@@ -42,6 +47,7 @@ export interface InputMapping {
   
   export interface InputActions {
     name: string
+    mapIndex: number
     maps: Array<IAMaps>
   }
   

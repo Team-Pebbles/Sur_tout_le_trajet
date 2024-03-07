@@ -17,6 +17,10 @@ export class AudioAnalyser {
   private _debugGraph: Debug;
   private _debug: boolean;
 
+  private _raw: number;
+  private _intensity: number;
+  private _difference: number;
+
   constructor(scene: Scene, debug:boolean) {
     this._debug = debug
     this._audioReady = false;
@@ -60,6 +64,10 @@ export class AudioAnalyser {
     // Low Gain 0-500 Hz
     // Mid Gain 500-4500Hz
     // High Gain 4500 +
+
+    this._raw = 0
+    this._intensity = 0
+    this._difference = 0
   }
 
   handleError(error: string) {
@@ -86,20 +94,35 @@ export class AudioAnalyser {
         const lowGain = 0.2;
         const midGain = 1;
         const highGain = 3;
-        for (let i = 0; i < spectrumLength; i++) {
+
+        this._raw = 0;
+
+
+        Audio.actions.SPECTRUM_LOW.value = 0;
+        Audio.actions.SPECTRUM_MID.value  = 0;
+        Audio.actions.SPECTRUM_HIGH.value =  0;
+
+        for (let i = 0; i < 300; i++) {
             let spectrumValue = spectrum[i] / 256;
-            Audio.actions.SPECTRUM_CURRENT.value = spectrumValue
-            if (i <= split1) {
+            this._raw += spectrumValue;
+            /*if (i <= split1) {
                 spectrumValue *= lowGain;
-                Audio.actions.SPECTRUM_LOW.value = spectrumValue
+                Audio.actions.SPECTRUM_LOW.value = Math.max(spectrumValue, Audio.actions.SPECTRUM_LOW.value);
             } else if (i > split1 && i < split2) {
                 spectrumValue *= midGain;
-                Audio.actions.SPECTRUM_MID.value = spectrumValue
+                Audio.actions.SPECTRUM_MID.value = Math.max(spectrumValue, Audio.actions.SPECTRUM_MID.value);;
             } else if (i >= split2) {
                 spectrumValue *= highGain;
-                Audio.actions.SPECTRUM_HIGH.value = spectrumValue
-            }
+                Audio.actions.SPECTRUM_HIGH.value = Math.max(spectrumValue, Audio.actions.SPECTRUM_HIGH.value);;
+            }*/
         }
+
+        this._raw /= 300;
+
+        this._intensity += (this._raw - this._intensity) * 0.01;
+        this._difference += ((this._raw - this._intensity) * 10.0 - this._difference) * 0.2
+
+        Audio.actions.SPECTRUM_CURRENT.value = this._difference;
     }
 }
 }

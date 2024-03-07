@@ -1,3 +1,4 @@
+import { Inputs } from "./inputActions";
 import { MidiInputType, MidiMapping } from "./inputActionsTypes";
 
 
@@ -48,6 +49,11 @@ export class InputMidi {
   onMessage(m: WebMidi.MIDIMessageEvent) {
     const [command, key, velocity] = m.data;
     const device = m.target ? m.target["name"] : "unknown";
+
+    if(device == "MPK mini 3") Inputs.mapIndex = 0;
+    if(device == "Arturia MiniLab mkII") Inputs.mapIndex = 1;
+
+
     const value = velocity/127;
     //Note OFF
     if(command >= 128 && command < 144){
