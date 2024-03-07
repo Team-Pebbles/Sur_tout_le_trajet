@@ -8,6 +8,19 @@ declare global {
     constraints: MediaStreamConstraints;
   }
 }
+/* Split based on Spectrum Length (1024). Split create spectrum sections
+ * Split1 : Low Frequency
+ * between split 1 and split2 : Mid Frequency
+ * Split 2 : High Frequency
+ * Gain : Adjust section sensivity
+ */
+interface AudioConfig {
+  split1: number,
+  split2: number;
+  lowGain: number;
+  midGain: number;
+  highGain: number;
+}
 
 export class AudioAnalyser {
   private _scene: Scene;
@@ -17,10 +30,21 @@ export class AudioAnalyser {
   private _debugGraph: Debug;
   private _debug: boolean;
 
+  private _conf: AudioConfig
+
   constructor(scene: Scene, debug:boolean) {
     this._debug = debug
     this._audioReady = false;
     this._scene = scene;
+    
+    this._conf = {
+     split1: 300,
+     split2: 630,
+     lowGain: 0.2,
+     midGain: 1,
+     highGain: 3,
+    }
+
     this._constraints = window.constraints = {
       audio: true,
       video: false,
@@ -53,7 +77,7 @@ export class AudioAnalyser {
     this._analyser.FFT_SIZE = 2048;
     this._analyser.SMOOTHING = 0.9;
 
-    if(this._debug) this._debugGraph = new Debug(this._analyser);
+    if(this._debug) this._debugGraph = new Debug(this._analyser, this._conf);
 
     console.log(this._analyser);
     this._audioReady = true;
@@ -81,22 +105,17 @@ export class AudioAnalyser {
 
         let spectrum = this._analyser.getByteFrequencyData();
         let spectrumLength = this._analyser.getFrequencyBinCount();
-        const split1 = 300;
-        const split2 = 630;
-        const lowGain = 0.2;
-        const midGain = 1;
-        const highGain = 3;
         for (let i = 0; i < spectrumLength; i++) {
             let spectrumValue = spectrum[i] / 256;
             Audio.actions.SPECTRUM_CURRENT.value = spectrumValue
-            if (i <= split1) {
-                spectrumValue *= lowGain;
+            if (i <= this._conf.split1) {
+                spectrumValue *= this._conf.lowGain;
                 Audio.actions.SPECTRUM_LOW.value = spectrumValue
-            } else if (i > split1 && i < split2) {
-                spectrumValue *= midGain;
+            } else if (i > this._conf.split1 && i < this._conf.split2) {
+                spectrumValue *= this._conf.midGain;
                 Audio.actions.SPECTRUM_MID.value = spectrumValue
-            } else if (i >= split2) {
-                spectrumValue *= highGain;
+            } else if (i >= this._conf.split2) {
+                spectrumValue *= this._conf.highGain;
                 Audio.actions.SPECTRUM_HIGH.value = spectrumValue
             }
         }
@@ -113,9 +132,19 @@ class Debug {
   private _spectrumWidth:number;
   private _spectrumHeight:number;
   private _spectrum:Uint8Array;
+  private _conf: AudioConfig
+
   
-  constructor(analyser: Analyser) {
+  constructor(analyser: Analyser, conf:AudioConfig) {
     this._analyser = analyser;
+
+    this._conf = {
+      split1: conf.split1,
+      split2: conf.split2,
+      lowGain: conf.lowGain,
+      midGain: conf.midGain,
+      highGain: conf.highGain,
+     }
 
     this._canvas = document.createElement("canvas");
     this._canvas.width = 512;
@@ -152,8 +181,6 @@ class Debug {
 
     // draw frequency
     this.drawFrequency();
-    // draw kick
-    // this.drawKick();
 
     // draw waveform
     this.drawWaveForm();
@@ -170,11 +197,6 @@ class Debug {
 
   drawSpectrum() {
     this._ctx.beginPath();
-    const split1 = 300;
-    const split2 = 630;
-    const lowGain = 0.2;
-    const midGain = 1;
-    const highGain = 3;
     for (let i = 0; i < this._spectrumLength; i++) {
       let spectrumValue = this._spectrum[i] / 256;
       this._ctx.rect(
@@ -191,21 +213,21 @@ class Debug {
     this._ctx.globalAlpha = 0.3;
     for (let i = 0; i < this._spectrumLength; i++) {
       let spectrumValue = this._spectrum[i] / 256;
-      let sectionWidth = split1;
+      let sectionWidth = this._conf.split1;
       let sectionStart = 0;
-      if (i <= split1) {
-        sectionWidth = this._spectrumWidth * split1;
+      if (i <= this._conf.split1) {
+        sectionWidth = this._spectrumWidth * this._conf.split1;
         sectionStart = 0;
-        spectrumValue *= lowGain;
-      } else if (i > split1 && i < split2) {
-        sectionWidth = this._spectrumWidth * (split2 - split1);
-        sectionStart = this._spectrumWidth * split1;
-        spectrumValue *= midGain;
-      } else if (i >= split2) {
+        spectrumValue *= this._conf.lowGain;
+      } else if (i > this._conf.split1 && i < this._conf.split2) {
+        sectionWidth = this._spectrumWidth * (this._conf.split2 - this._conf.split1);
+        sectionStart = this._spectrumWidth * this._conf.split1;
+        spectrumValue *= this._conf.midGain;
+      } else if (i >= this._conf.split2) {
         // >= split2
-        sectionWidth = this._canvas.width - split2 * this._spectrumWidth;
-        sectionStart = this._spectrumWidth * split2;
-        spectrumValue *= highGain;
+        sectionWidth = this._canvas.width - this._conf.split2 * this._spectrumWidth;
+        sectionStart = this._spectrumWidth * this._conf.split2;
+        spectrumValue *= this._conf.highGain;
       }
       this._ctx.rect(
         sectionStart,
