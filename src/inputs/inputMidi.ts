@@ -53,7 +53,7 @@ export class InputMidi {
     if(device == "MPK mini 3") Inputs.mapIndex = 0;
     if(device == "Arturia MiniLab mkII") Inputs.mapIndex = 1;
 
-
+    console.log(command + " / " + key + " / " + velocity)
     const value = velocity/127;
     //Note OFF
     if(command >= 128 && command < 144){

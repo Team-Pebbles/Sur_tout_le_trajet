@@ -156,7 +156,7 @@ export const Inputs : InputActions = {
             midi:{
               type: MidiInputType.CONTROL,
               channel: 0,
-              id: 70,
+              id: 71,
             }
           },
           value: 0,
@@ -168,7 +168,7 @@ export const Inputs : InputActions = {
             midi:{
               type: MidiInputType.CONTROL,
               channel: 0,
-              id: 71,
+              id: 76,
             }
           },
           value: 0,
@@ -180,7 +180,7 @@ export const Inputs : InputActions = {
             midi:{
               type: MidiInputType.CONTROL,
               channel: 0,
-              id: 72,
+              id: 77,
             }
           },
           value: 0,
@@ -192,7 +192,7 @@ export const Inputs : InputActions = {
             midi:{
               type: MidiInputType.CONTROL,
               channel: 0,
-              id: 73,
+              id: 93,
             }
           },
           value: 0,
