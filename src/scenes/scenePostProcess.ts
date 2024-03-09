@@ -13,12 +13,16 @@ export class ScenePostProcess {
             1,
             camera
         )
+        let slice = 0;
         ko.onApply = (effect) => {
+            let targetSlice = Math.floor(Inputs.values.SLICE.value * 6);
+            slice += (targetSlice - slice) * 0.02;
+
             effect.setFloat("u_difference", Audio.actions.SPECTRUM_CURRENT.value * 1);
-            effect.setFloat("u_rotate", -Math.PI * 2 * Inputs.values.SLICE_ROTATE.smoothValue);
-            effect.setFloat("u_slices", Inputs.values.SLICE.smoothValue * 6 + 2);
+            effect.setFloat("u_rotate", Math.PI * Inputs.values.SLICE_ROTATE.smoothValue);
+            effect.setFloat("u_slices", slice);
             effect.setFloat("u_zoom", 1);
-            effect.setFloat("u_aber", 0.02);
+            effect.setFloat("u_aber", 0.01);
         }
 
         const invert = new PostProcess(

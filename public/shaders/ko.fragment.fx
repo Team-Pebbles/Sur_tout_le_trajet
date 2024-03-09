@@ -26,25 +26,38 @@ vec2 rotateUV(vec2 uv, float rotation)
 }
 
 vec2 ko(vec2 textureCoord,float strength){
-    vec2 uv = rotateUV(textureCoord, pi * 0.5);
+    vec2 uv = textureCoord;
+    //uv.y = abs(uv.y - 0.5);
     vec2 dir = vec2(0.5) - uv;
     uv = uv + dir * length(dir) *  strength;
-    uv -= 0.5;
 
-    float r = length(uv);
-    float angle = atan(uv.y, uv.x);
+    vec2 baseUV = rotateUV(uv,u_rotate);
+    vec2 mUV = baseUV;
+    mUV.y =  abs(fract(mUV.y + 0.5) - 0.5);
 
-    float slice = (pi * 2.) / u_slices;
+
+    vec2 angleUV = rotateUV(uv, pi * 0.5) - 0.5;
     
+    float r = length(angleUV);
+    float angle = atan(angleUV.y, angleUV.x);
+
+    float slice = (pi * 2.) / max(u_slices,2.);
+
     angle = mod(angle, slice);
     angle = angle - 0.5 * slice;
     angle = abs(angle);
 
-    vec2 angleUv = vec2(cos(angle), sin(angle)) * r;
-    angleUv = fract(angleUv * u_zoom);
-    angleUv = rotateUV(angleUv, u_rotate);
+    vec2 koUV = (vec2(sin(angle), cos(angle))) * r;
+    koUV = rotateUV(koUV, u_rotate - pi * 0.5);
+    koUV = abs((0.5 - koUV) * u_zoom);
 
-    return angleUv;
+
+
+
+    vec2 a = mix(baseUV, mUV, clamp(u_slices,0.,1.));
+    vec2 b = mix(a, koUV, clamp(u_slices - 1.,0.,1.));
+
+    return b;
 }
 
 void main() {

@@ -116,12 +116,12 @@ export class CesiumViewer {
             const targetExaggeration = 1 + Inputs.values.HEIGHT.value * 10;
             scene.verticalExaggeration = targetExaggeration // (Math.sin(time) + 1) * 0.5 * 10;
 
-            let material = Material.fromType("ElevationContour");
+           /* let material = Material.fromType("ElevationContour");
             const shadingUniforms = material.uniforms;
             shadingUniforms.width = 1.0;
             shadingUniforms.spacing = 5 * scene.verticalExaggeration;
             shadingUniforms.color = Color.BLACK;
-            scene.globe.material = material;
+            scene.globe.material = material;*/
 
             // OLD CONTROLLER
             let camera: Camera = this.viewer.camera
