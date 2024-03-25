@@ -29,28 +29,28 @@ export const mapRob: InputActionMap = {
             midi: {
                 type: MidiInputType.CONTROL,
                 channel: 0,
-                id: 70,
+                id: 71,
             }
         },
         HEIGHT: {
             midi: {
                 type: MidiInputType.CONTROL,
                 channel: 0,
-                id: 71,
+                id: 76,
             }
         },
         SLICE: {
             midi: {
                 type: MidiInputType.CONTROL,
                 channel: 0,
-                id: 72,
+                id: 77,
             }
         },
         SLICE_ROTATE: {
             midi: {
                 type: MidiInputType.CONTROL,
                 channel: 0,
-                id: 73,
+                id: 93,
             }
         },
     },
