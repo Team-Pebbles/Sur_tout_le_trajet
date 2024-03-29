@@ -28,13 +28,15 @@ export class ScenePostProcess {
         const invert = new PostProcess(
             "invert",
             "./shaders/invertColor",
-            [],
+            ["u_vibrance", "u_contrast"],
             null,
             1,
             camera
         )
         invert.onApply = (effect) => {
-            effect.setFloat("u_time", performance.now() / 1000);
+            //effect.setFloat("u_time", performance.now() / 1000);
+            effect.setFloat("u_vibrance", 2.);
+            effect.setFloat("u_contrast", 1.5);
         }
 
         const vignette = new PostProcess(
