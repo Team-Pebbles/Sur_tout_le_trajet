@@ -5,6 +5,7 @@
 varying vec2 vUV;
 uniform sampler2D textureSampler;
 uniform float u_time;
+uniform float u_noiseIntensity;
 
 
 float random (vec2 uv) {
@@ -14,5 +15,5 @@ float random (vec2 uv) {
 void main(void) {
     vec2 uv = vUV.xy;
     vec4 color = texture2D(textureSampler, uv);
-    gl_FragColor = vec4(color.rgb + (random(uv + fract(u_time)) - 0.5) * 0.1, color.a);
+    gl_FragColor = vec4(color.rgb + (random(uv + fract(u_time)) - 0.5) * u_noiseIntensity, color.a);
 }

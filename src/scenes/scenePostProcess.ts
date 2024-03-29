@@ -55,13 +55,14 @@ export class ScenePostProcess {
         const noise = new PostProcess(
             "noise",
             "./shaders/noise",
-            ["u_time"],
+            ["u_time", "u_noiseIntensity"],
             null,
             1,
             camera
         )
         noise.onApply = (effect) => {
             effect.setFloat("u_time", performance.now() / 1000);
+            effect.setFloat("u_noiseIntensity", Audio.actions.SPECTRUM_CURRENT.value * .7);
         }
 
     }
