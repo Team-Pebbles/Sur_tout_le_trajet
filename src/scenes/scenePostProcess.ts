@@ -1,4 +1,4 @@
-import { Camera, PostProcess } from "@babylonjs/core"
+import { Camera, PostProcess, Vector2 } from "@babylonjs/core"
 import { Audio } from "../audio/audioActions";
 import { Inputs } from "../inputs/inputs";
 
@@ -37,6 +37,19 @@ export class ScenePostProcess {
             effect.setFloat("u_time", performance.now() / 1000);
         }
 
+        const vignette = new PostProcess(
+            "vignette",
+            "./shaders/vignette",
+            ["u_resolution"],
+            null,
+            1,
+            camera
+        )
+        
+        vignette.onApply = (effect) => {
+            effect.setVector2("u_resolution", new Vector2(window.innerWidth, window.innerHeight))
+        }
+
         const noise = new PostProcess(
             "noise",
             "./shaders/noise",
@@ -48,5 +61,6 @@ export class ScenePostProcess {
         noise.onApply = (effect) => {
             effect.setFloat("u_time", performance.now() / 1000);
         }
+
     }
 }
