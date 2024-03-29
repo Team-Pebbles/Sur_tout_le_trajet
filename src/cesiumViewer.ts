@@ -6,7 +6,7 @@ import {
     ImageryLayer,
     Cartesian3,
     createWorldTerrainAsync,
-    Material,
+    HeadingPitchRoll,
     Color,
     IonImageryProvider,
 } from "cesium"
@@ -97,16 +97,35 @@ export class CesiumViewer {
 
         let time = performance.now() / 1000;
 
+        const initialOrientation = HeadingPitchRoll.fromDegrees(7.1077496389876024807, -31.987223091598949054, 0.025883251314954971306);
+
+        const placesDB = [
+            {lat: 41, long: -74, height: 2000},
+            {lat: 10, long: 41, height: 2000},
+            {lat: 45.756, long: 6.538, height: 2000},
+            {lat: 35.686, long: 139.752, height: 2000},
+            {lat: -25.143, long: 129.619, height: 2000},
+            {lat: -4.353, long:  -69.897, height: 2000},
+            {lat: 35.366, long:  138.730, height: 3900},
+            {lat: 42.953543, long:  1.540730, height: 2000},
+            {lat: 14.459600, long:  17.057279, height: 2000},
+            {lat: 14.351484, long:  14.981578, height: 2000},
+            {lat: 35.025009, long:  135.762046, height: 2000},
+            {lat: 29.959225, long:  90.064776, height: 7000},
+            {lat: 44.147868, long:  3.730320, height: 2000}
+        ];
+
         const cameraData = {
-            longitude: -75.5847,
-            latitude: 40.0397,
-            height: 1000,
-            heading: 0,
-            pitch: -Math.PI * 0.25,
-            roll: 0.0,
+            longitude: placesDB[0].long,
+            latitude: placesDB[0].lat,
+            height: placesDB[0].height,
+            heading: initialOrientation.heading,
+            pitch: initialOrientation.pitch,
+            roll: initialOrientation.roll,
             flip: false,
         }
 
+        let currentPlaceIndex = 0
 
         this.viewer.clock.onTick.addEventListener(() => {
 
@@ -128,13 +147,14 @@ export class CesiumViewer {
 
             const lx: number = Inputs.values.LOOK_X.smoothValue;
             const ly: number = Inputs.values.LOOK_Y.smoothValue;
+            const c_fw: number = Inputs.values.CONTINUOUS_FWD.smoothValue * .5;
 
             cameraData.pitch -= ly * ToRad(90) * deltaTime;
             cameraData.heading += lx * ToRad(90) * deltaTime;
 
             const flipValue = cameraData.flip ? -1 : 1;
             const imove = rotateVector({ x: Inputs.values.MOVE_X.smoothValue, y: Inputs.values.MOVE_Z.smoothValue }, cameraData.heading);
-            const cmove = rotateVector({ x: 0, y: Inputs.values.CONTINUOUS_FWD.smoothValue * Math.abs(Audio.actions.SPECTRUM_CURRENT.value) * 100 }, cameraData.heading);
+            const cmove = rotateVector({ x: 0, y: c_fw * Math.abs(Audio.actions.SPECTRUM_CURRENT.value) * 100 }, cameraData.heading);
 
             const speedXZ: number = (0.01 * cameraData.height / 1000 + 0.001) * deltaTime;
             cameraData.longitude += flipValue * imove.x * speedXZ;
@@ -168,6 +188,21 @@ export class CesiumViewer {
             //console.log(cameraData);
 
             //console.log(IACesiumCamera.MOVE_Y.once);
+            if(Inputs.values.SWITCH_MAP.once) {
+                currentPlaceIndex++;
+                if(currentPlaceIndex >= placesDB.length) {
+                    currentPlaceIndex = 0;
+                }
+                console.log(currentPlaceIndex)
+                cameraData.longitude = placesDB[currentPlaceIndex].long;
+                cameraData.latitude = placesDB[currentPlaceIndex].lat;
+                cameraData.height = placesDB[currentPlaceIndex].height
+                cameraData.heading = initialOrientation.heading;
+                cameraData.pitch = initialOrientation.pitch;
+                cameraData.roll = initialOrientation.roll;
+
+                Inputs.values.SWITCH_MAP.once = false;
+            }
 
             camera.setView({
                 destination: Cartesian3.fromDegrees(

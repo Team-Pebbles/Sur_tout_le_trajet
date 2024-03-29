@@ -48,6 +48,7 @@ export class MidiSource {
 
     onMessage(m: WebMidi.MIDIMessageEvent) {
         const [command, key, velocity] = m.data;
+        //console.log(m.data)
         const device = m.target ? m.target["name"] : "unknown";
 
         if (device == "MPK mini 3") Inputs.activeMap = 0;
