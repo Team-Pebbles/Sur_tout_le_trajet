@@ -33,6 +33,7 @@ vec2 ko(vec2 textureCoord,float strength){
 
     vec2 baseUV = rotateUV(uv,u_rotate);
     vec2 mUV = baseUV;
+    mUV.y = mUV.y + .17; // offset y
     mUV.y =  abs(fract(mUV.y + 0.5) - 0.5);
 
 
@@ -50,7 +51,6 @@ vec2 ko(vec2 textureCoord,float strength){
     vec2 koUV = (vec2(sin(angle), cos(angle))) * r;
     koUV = rotateUV(koUV, u_rotate - pi * 0.5);
     koUV = abs((0.5 - koUV) * u_zoom);
-
 
 
 
