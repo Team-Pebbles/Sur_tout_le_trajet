@@ -115,17 +115,18 @@ export class CesiumViewer {
             {lat: 44.147868, long:  3.730320, height: 2000}
         ];
 
+        let currentPlaceIndex = 11
+        
         const cameraData = {
-            longitude: placesDB[0].long,
-            latitude: placesDB[0].lat,
-            height: placesDB[0].height,
+            longitude: placesDB[currentPlaceIndex].long,
+            latitude: placesDB[currentPlaceIndex].lat,
+            height: placesDB[currentPlaceIndex].height,
             heading: initialOrientation.heading,
             pitch: initialOrientation.pitch,
             roll: initialOrientation.roll,
             flip: false,
         }
 
-        let currentPlaceIndex = 0
 
         this.viewer.clock.onTick.addEventListener(() => {
 
@@ -135,7 +136,7 @@ export class CesiumViewer {
             const targetExaggeration = 1 + Inputs.values.HEIGHT.value * 10;
             scene.verticalExaggeration = targetExaggeration // (Math.sin(time) + 1) * 0.5 * 10;
 
-           /* let material = Material.fromType("ElevationContour");
+            /* let material = Material.fromType("ElevationContour");
             const shadingUniforms = material.uniforms;
             shadingUniforms.width = 1.0;
             shadingUniforms.spacing = 5 * scene.verticalExaggeration;
