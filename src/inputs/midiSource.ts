@@ -15,7 +15,6 @@ export class MidiSource {
 
     init() {
         navigator.requestMIDIAccess().then((access) => {
-
             //Baise tes morts typescript
             this.onSuccess(access as unknown as WebMidi.MIDIAccess)
         }, () => this.onFailure())
@@ -48,8 +47,9 @@ export class MidiSource {
 
     onMessage(m: WebMidi.MIDIMessageEvent) {
         const [command, key, velocity] = m.data;
-        //console.log(m.data)
         const device = m.target ? m.target["name"] : "unknown";
+
+        const debug = true;
 
         if (device == "MPK mini 3") Inputs.activeMap = 0;
         if (device == "Arturia MiniLab mkII") Inputs.activeMap = 1;
@@ -60,15 +60,18 @@ export class MidiSource {
         if (command >= 128 && command < 144) {
             const channel = command - 128;
             this.keys[channel][key] = value;
+            if(debug) console.log(`%cNote OFF [${channel},${key}]`, 'color: red');
         }
         //Note ON
         else if (command >= 144 && command < 160) {
             const channel = command - 144;
             this.keys[channel][key] = value;
+            if(debug) console.log(`%cNote ON [${channel},${key}] ${value}`, 'color: lightgreen');
         }//Controls
         else if (command >= 176 && command < 192) {
             const channel = command - 176;
             this.controls[channel][key] = value;
+            if(debug) console.log(`%cControl [${channel},${key}] ${value}`, 'color: cyan');
         }
     }
 

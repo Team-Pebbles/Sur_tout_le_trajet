@@ -26,6 +26,8 @@ vec2 rotateUV(vec2 uv, float rotation)
 }
 
 vec2 ko(vec2 textureCoord,float strength){
+    vec2 offset = vec2(0.,.17);
+
     vec2 uv = textureCoord;
     //uv.y = abs(uv.y - 0.5);
     vec2 dir = vec2(0.5) - uv;
@@ -33,12 +35,13 @@ vec2 ko(vec2 textureCoord,float strength){
 
     vec2 baseUV = rotateUV(uv,u_rotate);
     vec2 mUV = baseUV;
-    mUV.y = mUV.y + .17; // offset y
+    mUV = mUV * (1. - offset) + offset; // offset y
     mUV.y =  abs(fract(mUV.y + 0.5) - 0.5);
 
+    vec2 baseUV2 = uv;
+    baseUV2 = baseUV2 * (1. - offset) + offset;
+    vec2 angleUV = rotateUV(baseUV2, pi * 0.5) - 0.5;
 
-    vec2 angleUV = rotateUV(uv, pi * 0.5) - 0.5;
-    
     float r = length(angleUV);
     float angle = atan(angleUV.y, angleUV.x);
 

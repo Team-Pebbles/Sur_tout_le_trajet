@@ -17,7 +17,6 @@ export class ScenePostProcess {
         ko.onApply = (effect) => {
             let targetSlice = Math.floor(Inputs.values.SLICE.value * 6);
             slice += (targetSlice - slice) * 0.02;
-            console.log(slice)
             effect.setFloat("u_difference", Audio.actions.SPECTRUM_CURRENT.value * 1);
             effect.setFloat("u_rotate", Math.PI * Inputs.values.SLICE_ROTATE.smoothValue);
             effect.setFloat("u_slices", slice);

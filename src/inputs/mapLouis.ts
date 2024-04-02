@@ -58,7 +58,7 @@ export const mapLouis: InputActionMap = {
             midi: {
                 type: MidiInputType.KEY,
                 channel: 9,
-                id: 41,
+                id: 40,
             }
         },
         CONTROL_SENSITIVITY_PLUS: {
