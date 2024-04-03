@@ -55,6 +55,7 @@ export const mapLouis: InputActionMap = {
             }
         },
         SWITCH_MAP: {
+            keyboard: 77, //m
             midi: {
                 type: MidiInputType.KEY,
                 channel: 9,

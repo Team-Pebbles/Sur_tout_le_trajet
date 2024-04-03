@@ -22,6 +22,32 @@ export class CesiumViewer {
     handler: ScreenSpaceEventHandler
     canvas: HTMLCanvasElement
     viewer: Viewer
+    placesDB = [
+        {lat: 41, long: -74, height: 2000},
+        {lat: 10, long: 41, height: 2000},
+        {lat: 45.756, long: 6.538, height: 2000},
+        {lat: 35.686, long: 139.752, height: 2000},
+        {lat: -25.143, long: 129.619, height: 2000},
+        {lat: -4.353, long:  -69.897, height: 2000},
+        {lat: 35.366, long:  138.730, height: 3900},
+        {lat: 42.953543, long:  1.540730, height: 2000},
+        {lat: 14.459600, long:  17.057279, height: 2000},
+        {lat: 14.351484, long:  14.981578, height: 2000},
+        {lat: 35.025009, long:  135.762046, height: 2000},
+        {lat: 29.959225, long:  90.064776, height: 7000},
+        {lat: 44.147868, long:  3.730320, height: 2000}
+    ];
+    initialOrientation = HeadingPitchRoll.fromDegrees(7.1077496389876024807, -31.987223091598949054, 0.025883251314954971306);
+    currentPlaceIndex = 11
+    cameraData: {
+        longitude: number,
+        latitude: number,
+        height: number,
+        heading: number,
+        pitch: number,
+        roll: number,
+        flip: boolean,
+    }
 
     private constructor() {}
     public static async build(){
@@ -75,9 +101,32 @@ export class CesiumViewer {
         this.canvas = this.viewer.canvas
         this.canvas.id = "cesiumCanvas"
         this.handler = new ScreenSpaceEventHandler(this.canvas)
+        this.cameraData = {
+            longitude: this.placesDB[this.currentPlaceIndex].long,
+            latitude: this.placesDB[this.currentPlaceIndex].lat,
+            height: this.placesDB[this.currentPlaceIndex].height,
+            heading: this.initialOrientation.heading,
+            pitch: this.initialOrientation.pitch,
+            roll: this.initialOrientation.roll,
+            flip: false,
+        }
         this.controller()
 
         return this;
+    }
+
+    mapSwitch() {
+        this.currentPlaceIndex++;
+        if(this.currentPlaceIndex >= this.placesDB.length) {
+            this.currentPlaceIndex = 0;
+        }
+        console.log(this.currentPlaceIndex)
+        this.cameraData.longitude = this.placesDB[this.currentPlaceIndex].long;
+        this.cameraData.latitude = this.placesDB[this.currentPlaceIndex].lat;
+        this.cameraData.height = this.placesDB[this.currentPlaceIndex].height
+        this.cameraData.heading = this.initialOrientation.heading;
+        this.cameraData.pitch = this.initialOrientation.pitch;
+        this.cameraData.roll = this.initialOrientation.roll;
     }
 
     controller() {
@@ -99,37 +148,7 @@ export class CesiumViewer {
         scene.screenSpaceCameraController.enableLook = false
 
         let time = performance.now() / 1000;
-
-        const initialOrientation = HeadingPitchRoll.fromDegrees(7.1077496389876024807, -31.987223091598949054, 0.025883251314954971306);
-
-        const placesDB = [
-            {lat: 41, long: -74, height: 2000},
-            {lat: 10, long: 41, height: 2000},
-            {lat: 45.756, long: 6.538, height: 2000},
-            {lat: 35.686, long: 139.752, height: 2000},
-            {lat: -25.143, long: 129.619, height: 2000},
-            {lat: -4.353, long:  -69.897, height: 2000},
-            {lat: 35.366, long:  138.730, height: 3900},
-            {lat: 42.953543, long:  1.540730, height: 2000},
-            {lat: 14.459600, long:  17.057279, height: 2000},
-            {lat: 14.351484, long:  14.981578, height: 2000},
-            {lat: 35.025009, long:  135.762046, height: 2000},
-            {lat: 29.959225, long:  90.064776, height: 7000},
-            {lat: 44.147868, long:  3.730320, height: 2000}
-        ];
-
-        let currentPlaceIndex = 11
         
-        const cameraData = {
-            longitude: placesDB[currentPlaceIndex].long,
-            latitude: placesDB[currentPlaceIndex].lat,
-            height: placesDB[currentPlaceIndex].height,
-            heading: initialOrientation.heading,
-            pitch: initialOrientation.pitch,
-            roll: initialOrientation.roll,
-            flip: false,
-        }
-
 
         this.viewer.clock.onTick.addEventListener(() => {
 
@@ -153,71 +172,60 @@ export class CesiumViewer {
             const ly: number = Inputs.values.LOOK_Y.smoothValue;
             const c_fw: number = Inputs.values.CONTINUOUS_FWD.smoothValue * .5;
 
-            cameraData.pitch -= ly * ToRad(90) * deltaTime;
-            cameraData.heading += lx * ToRad(90) * deltaTime;
+            this.cameraData.pitch -= ly * ToRad(90) * deltaTime;
+            this.cameraData.heading += lx * ToRad(90) * deltaTime;
 
-            const flipValue = cameraData.flip ? -1 : 1;
-            const imove = rotateVector({ x: Inputs.values.MOVE_X.smoothValue, y: Inputs.values.MOVE_Z.smoothValue }, cameraData.heading);
-            const cmove = rotateVector({ x: 0, y: c_fw * Math.abs(Audio.actions.SPECTRUM_CURRENT.value) * 100 }, cameraData.heading);
+            const flipValue = this.cameraData.flip ? -1 : 1;
+            const imove = rotateVector({ x: Inputs.values.MOVE_X.smoothValue, y: Inputs.values.MOVE_Z.smoothValue }, this.cameraData.heading);
+            const cmove = rotateVector({ x: 0, y: c_fw * Math.abs(Audio.actions.SPECTRUM_CURRENT.value) * 100 }, this.cameraData.heading);
 
-            const speedXZ: number = (0.01 * cameraData.height / 1000 + 0.001) * deltaTime;
-            cameraData.longitude += flipValue * imove.x * speedXZ;
-            cameraData.latitude -= flipValue * imove.y * speedXZ;
+            const speedXZ: number = (0.01 * this.cameraData.height / 1000 + 0.001) * deltaTime;
+            this.cameraData.longitude += flipValue * imove.x * speedXZ;
+            this.cameraData.latitude -= flipValue * imove.y * speedXZ;
 
-            cameraData.longitude -= flipValue * cmove.x * speedXZ;
-            cameraData.latitude += flipValue * cmove.y * speedXZ;
+            this.cameraData.longitude -= flipValue * cmove.x * speedXZ;
+            this.cameraData.latitude += flipValue * cmove.y * speedXZ;
 
-            if (cameraData.latitude > 90) {
-                cameraData.flip = !cameraData.flip;
-                cameraData.longitude += 180;
-                cameraData.latitude = 90;
+            if (this.cameraData.latitude > 90) {
+                this.cameraData.flip = !this.cameraData.flip;
+                this.cameraData.longitude += 180;
+                this.cameraData.latitude = 90;
             }
-            if (cameraData.latitude < -90) {
-                cameraData.flip = !cameraData.flip;
-                cameraData.longitude += 180;
-                cameraData.latitude = -90;
+            if (this.cameraData.latitude < -90) {
+                this.cameraData.flip = !this.cameraData.flip;
+                this.cameraData.longitude += 180;
+                this.cameraData.latitude = -90;
             }
 
-            cameraData.longitude = (cameraData.longitude + 180) % 360 - 180;
+            this.cameraData.longitude = (this.cameraData.longitude + 180) % 360 - 180;
 
-            cameraData.heading = cameraData.heading % (Math.PI * 2);
-            cameraData.pitch = cameraData.pitch % (Math.PI * 2);
-            cameraData.roll = cameraData.roll % (Math.PI * 2);
+            this.cameraData.heading = this.cameraData.heading % (Math.PI * 2);
+            this.cameraData.pitch = this.cameraData.pitch % (Math.PI * 2);
+            this.cameraData.roll = this.cameraData.roll % (Math.PI * 2);
 
 
-            const speedY: number = (cameraData.height + 1) * deltaTime;
-            cameraData.height += Inputs.values.MOVE_Y.smoothValue * speedY;
-            if (cameraData.height < 0) cameraData.height = 0;
+            const speedY: number = (this.cameraData.height + 1) * deltaTime;
+            this.cameraData.height += Inputs.values.MOVE_Y.smoothValue * speedY;
+            if (this.cameraData.height < 0) this.cameraData.height = 0;
 
-            //console.log(cameraData);
+            //console.log(this.cameraData);
 
             //console.log(IACesiumCamera.MOVE_Y.once);
             if(Inputs.values.SWITCH_MAP.once) {
-                currentPlaceIndex++;
-                if(currentPlaceIndex >= placesDB.length) {
-                    currentPlaceIndex = 0;
-                }
-                console.log(currentPlaceIndex)
-                cameraData.longitude = placesDB[currentPlaceIndex].long;
-                cameraData.latitude = placesDB[currentPlaceIndex].lat;
-                cameraData.height = placesDB[currentPlaceIndex].height
-                cameraData.heading = initialOrientation.heading;
-                cameraData.pitch = initialOrientation.pitch;
-                cameraData.roll = initialOrientation.roll;
-
+                this.mapSwitch();
                 Inputs.values.SWITCH_MAP.once = false;
             }
 
             camera.setView({
                 destination: Cartesian3.fromDegrees(
-                    cameraData.longitude,
-                    cameraData.latitude,
-                    cameraData.height
+                    this.cameraData.longitude,
+                    this.cameraData.latitude,
+                    this.cameraData.height
                 ),
                 orientation: {
-                    heading: cameraData.flip ? cameraData.heading + Math.PI : cameraData.heading,
-                    pitch: cameraData.pitch,
-                    roll: cameraData.roll,
+                    heading: this.cameraData.flip ? this.cameraData.heading + Math.PI : this.cameraData.heading,
+                    pitch: this.cameraData.pitch,
+                    roll: this.cameraData.roll,
                 },
             });
 

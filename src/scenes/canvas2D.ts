@@ -27,7 +27,7 @@ export class Canvas2D{
         this.texture.update();
     }
 
-    drawImage(src: string, duration: number){
+    drawImage(slug: string, src: string, duration: number){
         if(this.ctx == null) return;
 
         var img = new Image();
@@ -57,24 +57,35 @@ export class Canvas2D{
         };
     }
 
-    drawText(text: string[], fontSize: number, duration: number){
+    drawText(slug: string, text: string[], textAlign: string, fontSize: number, duration: number){
         if(this.ctx == null) return;
 
         const letterSpacing = fontSize * 1.2;
         this.clear();
+        let textPositionWidth: number = this.canvas.width * .5;
+        let textPositionHeight: number = this.canvas.height * .5;
 
         this.ctx.save();
-        this.ctx.translate(this.canvas.width * .5, this.canvas.height * .5);
+
+        switch (slug) {
+            case "credits":
+                textPositionHeight = this.canvas.height * .65;
+                textPositionWidth = this.canvas.width - 70;
+                break;
+            default:
+                break;
+        }
+
+        this.ctx.translate(textPositionWidth, textPositionHeight);
         this.ctx.font = `normal ${fontSize}px infini`;
         this.ctx.fillStyle = "white";
-        this.ctx.textAlign = "center";
+        this.ctx.textAlign = textAlign as CanvasTextAlign;
         this.ctx.textBaseline = "middle";
 
         for (var i = 0; i<text.length; i++){
-            this.ctx.fillText(text[i], 0,i * letterSpacing - Math.max(0,text.length-1) * 0.5 * letterSpacing);
+            this.ctx.fillText(text[i].toUpperCase(), 0,i * letterSpacing - Math.max(0,text.length-1) * 0.5 * letterSpacing);
         }
 
- 
         this.ctx.restore();
 
         this.texture.update();

@@ -54,6 +54,7 @@ export const mapRob: InputActionMap = {
             }
         },
         SWITCH_MAP: {
+            keyboard: 77,//M
             midi: {
                 type: MidiInputType.KEY,
                 channel: 9,

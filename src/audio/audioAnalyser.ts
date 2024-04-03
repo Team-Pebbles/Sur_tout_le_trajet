@@ -66,10 +66,10 @@ export class AudioAnalyser {
     };
     window.stream = stream; // make variable available to browser console
 
-    var bjsSound = new Sound("mic", stream, this._scene);
+    const bjsSound = new Sound("mic", stream, this._scene);
     //bjsSound.attachToMesh(sphere);
     bjsSound.play();
-    var soundTrack = new SoundTrack(this._scene);
+    const soundTrack = new SoundTrack(this._scene);
     soundTrack.addSound(bjsSound);
     this._analyser = new Analyser(this._scene);
 
