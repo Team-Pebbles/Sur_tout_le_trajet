@@ -44,6 +44,7 @@ export interface InputActions {
     SWITCH_MAP: InputAction;
     CONTROL_SENSITIVITY_PLUS: InputAction;
     CONTROL_SENSITIVITY_MINUS: InputAction;
+    DRAW_TITLE: InputAction;
 }
 
 export interface InputValues {
@@ -59,7 +60,8 @@ export interface InputValues {
     SLICE: InputValue;
     SLICE_ROTATE: InputValue;
     SWITCH_MAP: InputValue;
-    CONTROL_SENSITIVITY_PLUS: InputAction;
-    CONTROL_SENSITIVITY_MINUS: InputAction;
+    CONTROL_SENSITIVITY_PLUS: InputValue;
+    CONTROL_SENSITIVITY_MINUS: InputValue;
+    DRAW_TITLE: InputValue;
 }
 

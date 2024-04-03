@@ -19,13 +19,16 @@ import { Inputs } from "./inputs/inputs"
 
 export class CesiumViewer {
     //private viewer: Viewer
-    static handler: ScreenSpaceEventHandler
-    static viewerCanvas: HTMLCanvasElement
-    static viewer: Viewer
+    handler: ScreenSpaceEventHandler
+    canvas: HTMLCanvasElement
+    viewer: Viewer
 
-    constructor() { }
+    private constructor() {}
+    public static async build(){
+        return await new CesiumViewer().init();
+    }
 
-    public static async build(): Promise<CesiumViewer> {
+    public async init(): Promise<CesiumViewer> {
         let worldTerrain: CesiumTerrainProvider
         try {
             worldTerrain = await createWorldTerrainAsync({
@@ -69,15 +72,15 @@ export class CesiumViewer {
         this.viewer.scene.globe.enableLighting = true
 
 
-        this.viewerCanvas = this.viewer.canvas
-        this.viewerCanvas.id = "cesiumCanvas"
-        this.handler = new ScreenSpaceEventHandler(this.viewerCanvas)
+        this.canvas = this.viewer.canvas
+        this.canvas.id = "cesiumCanvas"
+        this.handler = new ScreenSpaceEventHandler(this.canvas)
         this.controller()
 
-        return new CesiumViewer()
+        return this;
     }
 
-    static controller() {
+    controller() {
         const scene: Scene = this.viewer.scene
         const canvas: HTMLCanvasElement = this.viewer.canvas
 

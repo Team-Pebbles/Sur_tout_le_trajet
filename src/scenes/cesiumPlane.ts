@@ -11,31 +11,21 @@ import {
     Vector2,
     Vector3,
 } from "@babylonjs/core"
+import { CesiumViewer } from "../cesiumViewer"
+import { Canvas2D } from "./canvas2D"
 
 type Size = {
     x: number
     y: number
 }
 
-export class MapCanvas {
-    public camera: FreeCamera
-    private mapCanvasTexture: HtmlElementTexture
+export class CesiumPlane {
+    private texture: HtmlElementTexture
     private scene: Scene
-    constructor(scene: Scene) {
+    constructor(scene: Scene, cesiumViewer: CesiumViewer, canvas2D: Canvas2D) {
         this.scene = scene
-        if (this.scene.activeCamera == null || this.scene.activeCamera == undefined) return
-        if (this.scene.activeCameras == null || this.scene.activeCameras == undefined) return
-
-        if (this.scene.activeCameras.length === 0) {
-            this.scene.activeCameras.push(this.scene.activeCamera)
-        }
 
         let size: Size = { x: window.innerWidth, y: window.innerHeight }
-
-        this.camera = new FreeCamera("mapCanvasCamera", new Vector3(0, 0, -50), this.scene)
-        this.camera.mode = Camera.ORTHOGRAPHIC_CAMERA
-        this.camera.layerMask = 0x20000000
-        this.scene.activeCameras?.push(this.camera)
 
         let plane = MeshBuilder.CreatePlane("plane", { width: size.x, height: size.y }, this.scene)
 
@@ -45,23 +35,21 @@ export class MapCanvas {
         })
         shaderMaterial.setVector2("u_resolution", new Vector2(window.innerWidth, window.innerHeight))
 
-        let mapCanvas: any = document.getElementById("cesiumCanvas")
-        if (mapCanvas == null && mapCanvas == undefined) return
-
-        this.mapCanvasTexture = new HtmlElementTexture("mapCanvas", mapCanvas, {
+        this.texture = new HtmlElementTexture("cesiumCanvas", cesiumViewer.canvas, {
             scene: this.scene,
             engine: this.scene.getEngine(),
         })
 
-        plane.name = "planeMapCanvas"
+        plane.name = "CesiumPlane"
         plane.layerMask = 0x20000000
         plane.freezeWorldMatrix()
 
-        shaderMaterial.setTexture("textureSampler", this.mapCanvasTexture)
+        shaderMaterial.setTexture("textureSampler", this.texture)
+        shaderMaterial.setTexture("canvas", canvas2D.texture)
         plane.material = shaderMaterial
     }
 
     update() {
-        this.mapCanvasTexture.update()
+        this.texture.update()
     }
 }

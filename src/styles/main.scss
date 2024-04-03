@@ -1,5 +1,40 @@
+@font-face {
+    font-family: infini;
+    src: url("../fonts/infini-romain.woff") format("woff"),
+         url("../fonts/infini-romain.otf"),
+         url("../fonts/infini-romain.ttf") format('truetype'),
+         url("../fonts/infini-romain.eot") format('embedded-opentype'),
+         url("../fonts/infini-romain.eot") format('svg');
+    font-style: normal;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: infini;
+    src: url("../fonts/infini-italique.woff") format("woff"),
+         url("../fonts/infini-italique.otf"),
+         url("../fonts/infini-italique.ttf") format('truetype'),
+         url("../fonts/infini-italique.eot") format('embedded-opentype'),
+         url("../fonts/infini-italique.eot") format('svg');
+    font-style: italic;
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: infini;
+    src: url("../fonts/infini-gras.woff") format("woff"),
+         url("../fonts/infini-gras.otf"),
+         url("../fonts/infini-gras.ttf") format('truetype'),
+         url("../fonts/infini-gras.eot") format('embedded-opentype'),
+         url("../fonts/infini-gras.eot") format('svg');
+    font-weight: bold;
+}
+
+
 @import "./cesium/cesium.reset";
 @import "./ui/ui";
+
+
 /*  Map */
 *,
 *::after,
@@ -33,4 +68,11 @@ body {
 
 #gameCanvas {
   clip-path: inset(6% 3% 6% 3% round 20px);
+}
+
+
+#canvas2D{
+    position: absolute;
+    left: 0;
+    top: 0;
 }

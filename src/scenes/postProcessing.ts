@@ -1,15 +1,16 @@
 import { Camera, PostProcess, Vector2 } from "@babylonjs/core"
 import { Audio } from "../audio/audioActions";
 import { Inputs } from "../inputs/inputs";
+import { Canvas2D } from "./canvas2D";
 
-export class ScenePostProcess {
-    constructor(camera: Camera) {
+export class PostProcessing {
+    constructor(camera: Camera, canvas2D: Canvas2D) {
 
         const ko = new PostProcess(
             "ko",
             "./shaders/ko",
             ["u_difference", "u_rotate", "u_slices", "u_zoom", "u_aber"],
-            null,
+            ["textureSampler"],
             1,
             camera
         )
@@ -27,24 +28,26 @@ export class ScenePostProcess {
         const color = new PostProcess(
             "color",
             "./shaders/color",
-            ["u_vibrance", "u_contrast","u_brightness","u_exposure"],
-            null,
+            ["u_time", "u_vibrance", "u_contrast","u_brightness","u_exposure"],
+            ["textureSampler", "canvas2D"],
             1,
             camera
         )
+        
         color.onApply = (effect) => {
-            //effect.setFloat("u_time", performance.now() / 1000);
+            effect.setFloat("u_time", performance.now() / 1000);
             effect.setFloat("u_vibrance", 2.);
             effect.setFloat("u_contrast", 1.5);
             effect.setFloat("u_brightness", 1.5);
             effect.setFloat("u_exposure", -0.4);
+            effect.setTexture("canvas2D", canvas2D.texture);
         }
 
         const vignette = new PostProcess(
             "vignette",
             "./shaders/vignette",
             ["u_resolution"],
-            null,
+            ["textureSampler"],
             1,
             camera
         )
@@ -57,7 +60,7 @@ export class ScenePostProcess {
             "noise",
             "./shaders/noise",
             ["u_time", "u_noiseIntensity"],
-            null,
+            ["textureSampler"],
             1,
             camera
         )

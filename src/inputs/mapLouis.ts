@@ -74,6 +74,9 @@ export const mapLouis: InputActionMap = {
                 channel: 0,
                 id: 42,
             }
+        },
+        DRAW_TITLE: {
+            keyboard: 80, //p
         }
     },
 }
