@@ -78,6 +78,39 @@ export const mapLouis: InputActionMap = {
         },
         DRAW_TITLE: {
             keyboard: 80, //p
-        }
+        },
+        DRAW_CREDITS: {
+            keyboard: 67, //c
+        },
+        DRAW_VIDES: {
+            keyboard: 68,
+        },
+        DRAW_SEULE: {
+            keyboard: 69,
+        },
+        DRAW_NULLEPART: {
+            keyboard: 74,
+        },
+        DRAW_MONCORPS: {
+            keyboard: 75,
+        },
+        DRAW_AILLEURS: {
+            keyboard: 76,
+        },
+        DRAW_REALITE: {
+            keyboard: 78,
+        },
+        DRAW_PLAGIAT: {
+            keyboard: 79,
+        },
+        DRAW_WHOAREYOU: {
+            keyboard: 83,
+        },
+        DRAW_REVE: {
+            keyboard: 81,
+        },
+        DRAW_REEL: {
+            keyboard: 82,
+        },
     },
 }

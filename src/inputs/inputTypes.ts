@@ -45,6 +45,17 @@ export interface InputActions {
     CONTROL_SENSITIVITY_PLUS: InputAction;
     CONTROL_SENSITIVITY_MINUS: InputAction;
     DRAW_TITLE: InputAction;
+    DRAW_CREDITS: InputAction;
+    DRAW_VIDES: InputAction;
+    DRAW_SEULE: InputAction;
+    DRAW_NULLEPART: InputAction;
+    DRAW_MONCORPS: InputAction;
+    DRAW_AILLEURS: InputAction;
+    DRAW_REALITE: InputAction;
+    DRAW_PLAGIAT: InputAction;
+    DRAW_WHOAREYOU: InputAction;
+    DRAW_REVE: InputAction;
+    DRAW_REEL: InputAction;
 }
 
 export interface InputValues {
@@ -63,5 +74,16 @@ export interface InputValues {
     CONTROL_SENSITIVITY_PLUS: InputValue;
     CONTROL_SENSITIVITY_MINUS: InputValue;
     DRAW_TITLE: InputValue;
+    DRAW_CREDITS: InputValue;
+    DRAW_VIDES: InputValue;
+    DRAW_SEULE: InputValue;
+    DRAW_NULLEPART: InputValue;
+    DRAW_MONCORPS: InputValue;
+    DRAW_AILLEURS: InputValue;
+    DRAW_REALITE: InputValue;
+    DRAW_PLAGIAT: InputValue;
+    DRAW_WHOAREYOU: InputValue;
+    DRAW_REVE: InputValue;
+    DRAW_REEL: InputValue;
 }
 
