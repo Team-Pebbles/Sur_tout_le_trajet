@@ -33,6 +33,7 @@ export interface InputActions {
     MOVE_Z: InputAction
     MOVE_X: InputAction
     MOVE_Y: InputAction
+    RECORD_MOVE: InputAction
 
     LOOK_X: InputAction
     LOOK_Y: InputAction
@@ -49,7 +50,10 @@ export interface InputActions {
     DRAW_VIDES: InputAction;
     DRAW_SEULE: InputAction;
     DRAW_NULLEPART: InputAction;
+    DRAW_AISJEDIT: InputAction;
     DRAW_MONCORPS: InputAction;
+    DRAW_TRAJET: InputAction;
+    DRAW_VOYAGE: InputAction;
     DRAW_AILLEURS: InputAction;
     DRAW_REALITE: InputAction;
     DRAW_PLAGIAT: InputAction;
@@ -63,6 +67,7 @@ export interface InputValues {
     MOVE_Z: InputValue
     MOVE_X: InputValue
     MOVE_Y: InputValue
+    RECORD_MOVE: InputValue
 
     LOOK_X: InputValue
     LOOK_Y: InputValue
@@ -74,12 +79,16 @@ export interface InputValues {
     SWITCH_MAP: InputValue;
     CONTROL_SENSITIVITY_PLUS: InputValue;
     CONTROL_SENSITIVITY_MINUS: InputValue;
+
     DRAW_TITLE: InputValue;
     DRAW_CREDITS: InputValue;
     DRAW_VIDES: InputValue;
     DRAW_SEULE: InputValue;
     DRAW_NULLEPART: InputValue;
+    DRAW_AISJEDIT: InputValue;
     DRAW_MONCORPS: InputValue;
+    DRAW_TRAJET: InputValue;
+    DRAW_VOYAGE: InputValue;
     DRAW_AILLEURS: InputValue;
     DRAW_REALITE: InputValue;
     DRAW_PLAGIAT: InputValue;

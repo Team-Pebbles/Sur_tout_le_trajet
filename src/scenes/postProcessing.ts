@@ -18,7 +18,7 @@ export class PostProcessing {
         ko.onApply = (effect) => {
             let targetSlice = Math.floor(Inputs.values.SLICE.value * 6);
             slice += (targetSlice - slice) * 0.02;
-            effect.setFloat("u_difference", Audio.actions.SPECTRUM_CURRENT.value * .5);
+            effect.setFloat("u_difference", Audio.actions.SPECTRUM_CURRENT.cool);
             effect.setFloat("u_rotate", Math.PI * Inputs.values.SLICE_ROTATE.smoothValue);
             effect.setFloat("u_slices", slice);
             effect.setFloat("u_zoom", 1);
@@ -66,7 +66,7 @@ export class PostProcessing {
         )
         noise.onApply = (effect) => {
             effect.setFloat("u_time", performance.now() / 1000);
-            effect.setFloat("u_noiseIntensity", Audio.actions.SPECTRUM_CURRENT.value * .7);
+            effect.setFloat("u_noiseIntensity", Audio.actions.SPECTRUM_CURRENT.cool);
         }
 
     }

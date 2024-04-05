@@ -151,6 +151,9 @@ export class CesiumViewer {
         scene.screenSpaceCameraController.enableLook = false
 
         let time = performance.now() / 1000;
+
+        let imove = {x: 0, y: 0};
+        let simove = {x: 0, y: 0};
         
 
         this.viewer.clock.onTick.addEventListener(() => {
@@ -173,21 +176,24 @@ export class CesiumViewer {
 
             const lx: number = Inputs.values.LOOK_X.smoothValue * .5;
             const ly: number = Inputs.values.LOOK_Y.smoothValue * .5;
-            const c_fw: number = Inputs.values.CONTINUOUS_FWD.smoothValue * .5;
+            const c_fw: number = Inputs.values.CONTINUOUS_FWD.smoothValue;
 
             this.cameraData.pitch -= ly * ToRad(90) * deltaTime;
             this.cameraData.heading += lx * ToRad(90) * deltaTime;
 
             const flipValue = this.cameraData.flip ? -1 : 1;
-            const imove = rotateVector({ x: Inputs.values.MOVE_X.smoothValue, y: Inputs.values.MOVE_Z.smoothValue }, this.cameraData.heading);
-            const cmove = rotateVector({ x: 0, y: c_fw * Math.abs(Audio.actions.SPECTRUM_CURRENT.value) }, this.cameraData.heading);
+      
+            if(Inputs.values.RECORD_MOVE.value > 0){
+                imove = rotateVector({ x: Inputs.values.MOVE_X.value, y: Inputs.values.MOVE_Z.value }, this.cameraData.heading);
+            }
 
-            const speedXZ: number = (0.01 * this.cameraData.height / 1000 + 0.001) * deltaTime;
-            this.cameraData.longitude += flipValue * imove.x * speedXZ;
-            this.cameraData.latitude -= flipValue * imove.y * speedXZ;
+            simove.x += (imove.x - simove.x) * 0.01;
+            simove.y += (imove.y - simove.y) * 0.01;
 
-            this.cameraData.longitude -= flipValue * cmove.x * speedXZ;
-            this.cameraData.latitude += flipValue * cmove.y * speedXZ;
+            const speedXZ: number = (0.01 * this.cameraData.height / 1000 + 0.001) * deltaTime * c_fw * (Audio.actions.SPECTRUM_CURRENT.cool  * 5 + 1);
+            this.cameraData.longitude += flipValue * simove.x * speedXZ;
+            this.cameraData.latitude -= flipValue * simove.y * speedXZ;
+
 
             if (this.cameraData.latitude > 90) {
                 this.cameraData.flip = !this.cameraData.flip;

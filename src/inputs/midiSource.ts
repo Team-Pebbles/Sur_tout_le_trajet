@@ -51,8 +51,8 @@ export class MidiSource {
 
         const debug = true;
 
-        if (device == "MPK mini 3") Inputs.activeMap = 0;
-        if (device == "Arturia MiniLab mkII") Inputs.activeMap = 1;
+        if (device == "MPK mini 3") Inputs.activeMap = 1;
+        if (device == "Arturia MiniLab mkII") Inputs.activeMap = 0;
 
 
         const value = velocity / 127;

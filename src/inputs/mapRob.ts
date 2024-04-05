@@ -16,6 +16,9 @@ export const mapRob: InputActionMap = {
             keyboard: [16, 32], //SHIFT, SPACE
             xbox: [XboxInput.LT, XboxInput.RT]
         },
+        RECORD_MOVE:{
+            xbox: XboxInput.RB
+        },
         LOOK_X: {
             //mouse: PointerInput.Horizontal,
             xbox: XboxInput.RStickXAxis
@@ -125,7 +128,7 @@ export const mapRob: InputActionMap = {
                 id: 53,
             }
         },
-        DRAW_MONCORPS: {
+        DRAW_AISJEDIT: {
             keyboard: 75,
             midi: {
                 type: MidiInputType.KEY,
@@ -133,12 +136,36 @@ export const mapRob: InputActionMap = {
                 id: 55,
             }
         },
+        DRAW_MONCORPS: {
+            keyboard: 75,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 57,
+            }
+        },
+        DRAW_TRAJET: {
+            keyboard: 75,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 59,
+            }
+        },
+        DRAW_VOYAGE: {
+            keyboard: 75,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 60,
+            }
+        },
         DRAW_AILLEURS: {
             keyboard: 76,
             midi: {
                 type: MidiInputType.KEY,
                 channel: 0,
-                id: 57,
+                id: 62,
             }
         },
         DRAW_REALITE: {
@@ -146,7 +173,7 @@ export const mapRob: InputActionMap = {
             midi: {
                 type: MidiInputType.KEY,
                 channel: 0,
-                id: 59,
+                id: 64,
             }
         },
         DRAW_PLAGIAT: {
@@ -154,7 +181,7 @@ export const mapRob: InputActionMap = {
             midi: {
                 type: MidiInputType.KEY,
                 channel: 0,
-                id: 60,
+                id: 65,
             }
         },
         DRAW_WHOAREYOU: {
@@ -162,7 +189,7 @@ export const mapRob: InputActionMap = {
             midi: {
                 type: MidiInputType.KEY,
                 channel: 0,
-                id: 62,
+                id: 67,
             }
         },
         DRAW_REVE: {
@@ -170,7 +197,7 @@ export const mapRob: InputActionMap = {
             midi: {
                 type: MidiInputType.KEY,
                 channel: 0,
-                id: 64,
+                id: 69,
             }
         },
         DRAW_REEL: {
@@ -178,7 +205,7 @@ export const mapRob: InputActionMap = {
             midi: {
                 type: MidiInputType.KEY,
                 channel: 0,
-                id: 65,
+                id: 71,
             }
         },
     },

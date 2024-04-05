@@ -12,8 +12,8 @@ class InputMaster{
     constructor(){
         this.activeMap = 0;
         this.maps = [
+            mapRob,
             mapLouis,
-            mapRob
         ];
         const values = {};
         Object.keys(this.getActiveMap().actions).forEach(key =>{
