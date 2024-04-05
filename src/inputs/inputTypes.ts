@@ -56,6 +56,7 @@ export interface InputActions {
     DRAW_WHOAREYOU: InputAction;
     DRAW_REVE: InputAction;
     DRAW_REEL: InputAction;
+    RESET_CAM: InputAction;
 }
 
 export interface InputValues {
@@ -85,5 +86,6 @@ export interface InputValues {
     DRAW_WHOAREYOU: InputValue;
     DRAW_REVE: InputValue;
     DRAW_REEL: InputValue;
+    RESET_CAM: InputValue;
 }
 

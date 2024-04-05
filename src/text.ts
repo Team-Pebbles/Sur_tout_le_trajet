@@ -36,13 +36,13 @@ export class Texts {
 
     displayCredits() {
         if (Inputs.values.DRAW_CREDITS.once) {
-            this.canvas2D.drawText("credits", ["&GUENILLE , &ROB À FLEURS 🌸, &RRRRROSE AZERTY"], "right", 32, 5000);
+            this.canvas2D.drawText("credits", ["&GUENILLE , &ROB À FLEURS 🌸, &RRRRROSE AZERTY"], "right", 50, 3000);
             setTimeout(() => {
-                this.canvas2D.drawText("credits", ["D'après une idée de Pier-re"], "right", 32, 5000);
+                this.canvas2D.drawText("credits", ["D'après une idée de Pier-re"], "right", 50, 3000);
                 setTimeout(() => {
-                    this.canvas2D.drawText("credits", ["Et avec l'aide de Louis pour le code !", "coucou Louis"], "right", 32, 5000);
-                }, 5000);
-            }, 5000);
+                    this.canvas2D.drawText("credits", ["Et avec l'aide de Louis pour le code !", "coucou Louis"], "right", 50, 3000);
+                }, 3000);
+            }, 3000);
         }
     }
 
@@ -60,7 +60,7 @@ export class Texts {
 
     nullepart() {
         if (Inputs.values.DRAW_NULLEPART.once) {
-            this.canvas2D.drawText("emphasis", ["Car ici, on est nulle part"], "center", 100, 5000);
+            this.canvas2D.drawText("emphasis", ["Car ici, on est nulle part"], "center", 90, 5000);
         }
     }
 

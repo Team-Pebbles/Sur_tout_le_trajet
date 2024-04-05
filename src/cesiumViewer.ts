@@ -120,10 +120,13 @@ export class CesiumViewer {
         if(this.currentPlaceIndex >= this.placesDB.length) {
             this.currentPlaceIndex = 0;
         }
-        console.log(this.currentPlaceIndex)
         this.cameraData.longitude = this.placesDB[this.currentPlaceIndex].long;
         this.cameraData.latitude = this.placesDB[this.currentPlaceIndex].lat;
         this.cameraData.height = this.placesDB[this.currentPlaceIndex].height
+
+    }
+
+    resetCam() {
         this.cameraData.heading = this.initialOrientation.heading;
         this.cameraData.pitch = this.initialOrientation.pitch;
         this.cameraData.roll = this.initialOrientation.roll;
@@ -168,8 +171,8 @@ export class CesiumViewer {
             // OLD CONTROLLER
             let camera: Camera = this.viewer.camera
 
-            const lx: number = Inputs.values.LOOK_X.smoothValue;
-            const ly: number = Inputs.values.LOOK_Y.smoothValue;
+            const lx: number = Inputs.values.LOOK_X.smoothValue * .5;
+            const ly: number = Inputs.values.LOOK_Y.smoothValue * .5;
             const c_fw: number = Inputs.values.CONTINUOUS_FWD.smoothValue * .5;
 
             this.cameraData.pitch -= ly * ToRad(90) * deltaTime;
@@ -177,7 +180,7 @@ export class CesiumViewer {
 
             const flipValue = this.cameraData.flip ? -1 : 1;
             const imove = rotateVector({ x: Inputs.values.MOVE_X.smoothValue, y: Inputs.values.MOVE_Z.smoothValue }, this.cameraData.heading);
-            const cmove = rotateVector({ x: 0, y: c_fw * Math.abs(Audio.actions.SPECTRUM_CURRENT.value) * 100 }, this.cameraData.heading);
+            const cmove = rotateVector({ x: 0, y: c_fw * Math.abs(Audio.actions.SPECTRUM_CURRENT.value) }, this.cameraData.heading);
 
             const speedXZ: number = (0.01 * this.cameraData.height / 1000 + 0.001) * deltaTime;
             this.cameraData.longitude += flipValue * imove.x * speedXZ;
@@ -213,6 +216,11 @@ export class CesiumViewer {
             //console.log(IACesiumCamera.MOVE_Y.once);
             if(Inputs.values.SWITCH_MAP.once) {
                 this.mapSwitch();
+                Inputs.values.SWITCH_MAP.once = false;
+            }
+
+            if(Inputs.values.RESET_CAM.once) {
+                this.resetCam();
                 Inputs.values.SWITCH_MAP.once = false;
             }
 

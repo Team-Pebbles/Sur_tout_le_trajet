@@ -63,13 +63,13 @@ export class Canvas2D{
         const letterSpacing = fontSize * 1.2;
         this.clear();
         let textPositionWidth: number = this.canvas.width * .5;
-        let textPositionHeight: number = this.canvas.height * .5;
+        let textPositionHeight: number = this.canvas.height * .60;
 
         this.ctx.save();
 
         switch (slug) {
             case "credits":
-                textPositionHeight = this.canvas.height * .65;
+                textPositionHeight = this.canvas.height * .60;
                 textPositionWidth = this.canvas.width - 70;
                 break;
             default:
@@ -77,7 +77,7 @@ export class Canvas2D{
         }
 
         this.ctx.translate(textPositionWidth, textPositionHeight);
-        this.ctx.font = `normal ${fontSize}px infini`;
+        this.ctx.font = `bold ${fontSize}px infini`;
         this.ctx.fillStyle = "white";
         this.ctx.textAlign = textAlign as CanvasTextAlign;
         this.ctx.textBaseline = "middle";

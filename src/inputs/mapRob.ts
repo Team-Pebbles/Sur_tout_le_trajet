@@ -44,7 +44,7 @@ export const mapRob: InputActionMap = {
                 type: MidiInputType.CONTROL,
                 channel: 0,
                 id: 77,
-            }
+            },
         },
         SLICE_ROTATE: {
             midi: {
@@ -59,7 +59,17 @@ export const mapRob: InputActionMap = {
                 type: MidiInputType.KEY,
                 channel: 9,
                 id: 36,
-            }
+            },
+            xbox: XboxInput.A
+        },
+        RESET_CAM: {
+            keyboard: 77,//M
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 9,
+                id: 37,
+            },
+            xbox: XboxInput.B
         },
         CONTROL_SENSITIVITY_PLUS: {
             midi: {
@@ -76,40 +86,100 @@ export const mapRob: InputActionMap = {
             }
         },
         DRAW_TITLE: {
-            keyboard: 80, //p
+            keyboard: 80,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 48,
+            }
         },
         DRAW_CREDITS: {
-            keyboard: 67, //c
+            keyboard: 67,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 72,
+            } //c
         },
         DRAW_VIDES: {
             keyboard: 68,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 50,
+            }
         },
         DRAW_SEULE: {
             keyboard: 69,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 52,
+            }
         },
         DRAW_NULLEPART: {
             keyboard: 74,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 53,
+            }
         },
         DRAW_MONCORPS: {
             keyboard: 75,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 55,
+            }
         },
         DRAW_AILLEURS: {
             keyboard: 76,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 57,
+            }
         },
         DRAW_REALITE: {
             keyboard: 78,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 59,
+            }
         },
         DRAW_PLAGIAT: {
             keyboard: 79,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 60,
+            }
         },
         DRAW_WHOAREYOU: {
             keyboard: 83,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 62,
+            }
         },
         DRAW_REVE: {
             keyboard: 81,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 64,
+            }
         },
         DRAW_REEL: {
             keyboard: 82,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 65,
+            }
         },
     },
 }

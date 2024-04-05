@@ -60,7 +60,17 @@ export const mapLouis: InputActionMap = {
                 type: MidiInputType.KEY,
                 channel: 9,
                 id: 40,
-            }
+            },
+            xbox: XboxInput.B
+        },
+        RESET_CAM: {
+            keyboard: 77,//M
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 9,
+                id: 36,
+            },
+            xbox: XboxInput.B
         },
         CONTROL_SENSITIVITY_PLUS: {
             midi: {
