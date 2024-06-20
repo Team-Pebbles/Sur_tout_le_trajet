@@ -66,9 +66,11 @@ export class CesiumViewer {
         }
         console.log("init viewer")
         //console.log(IACesiumCamera.FORWARD)
-        Ion.defaultAccessToken =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw"
-
+        // Token 1
+        // Ion.defaultAccessToken =
+        //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw"
+        // Token 2 : 
+        Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZmZiNjVjOC0yN2RlLTQ4MDQtOTZiZC0zNDA4MTI0NzlhYTEiLCJpZCI6MjA2OTMwLCJpYXQiOjE3MTI0MDcwNzl9.Pjp_GoeS_feA3aol6-7p9uRmIUqt4ElaMP0qfml3q9c"
         // let mapBoxProvider = new MapboxImageryProvider({
         //   url: "https://api.mapbox.com/v4/",
         //   mapId: "mapbox.satellite",
