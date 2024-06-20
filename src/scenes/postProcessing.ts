@@ -4,6 +4,11 @@ import { Inputs } from "../inputs/inputs";
 import { Canvas2D } from "./canvas2D";
 
 export class PostProcessing {
+    /*TODO Effects :
+    *    - Color Grading
+    *    - Lens Miror (surimpression de l'image )
+    *    _ 
+    */
     constructor(camera: Camera, canvas2D: Canvas2D) {
 
         const ko = new PostProcess(
@@ -28,7 +33,7 @@ export class PostProcessing {
         const color = new PostProcess(
             "color",
             "./shaders/color",
-            ["u_time", "u_vibrance", "u_contrast","u_brightness","u_exposure"],
+            ["u_time", "u_vibrance", "u_contrast","u_brightness","u_exposure", "u_red", "u_green", "u_blue", "u_invert"],
             ["textureSampler", "canvas2D"],
             1,
             camera
@@ -40,6 +45,10 @@ export class PostProcessing {
             effect.setFloat("u_contrast", 1.5);
             effect.setFloat("u_brightness", 1.5);
             effect.setFloat("u_exposure", -0.4);
+            effect.setFloat("u_red", 1.);
+            effect.setFloat("u_green", 1.);
+            effect.setFloat("u_blue", 1.);
+            effect.setBool("u_invert", true);
             effect.setTexture("canvas2D", canvas2D.texture);
         }
 
