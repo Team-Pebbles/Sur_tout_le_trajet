@@ -56,14 +56,6 @@ export class CesiumViewer {
 
     public async init(): Promise<CesiumViewer> {
         let worldTerrain: CesiumTerrainProvider
-        try {
-            worldTerrain = await createWorldTerrainAsync({
-                requestWaterMask: true,
-                // requestVertexNormals: true,
-            })
-        } catch (error) {
-            console.error
-        }
         console.log("init viewer")
         //console.log(IACesiumCamera.FORWARD)
         // Token 1
@@ -77,7 +69,14 @@ export class CesiumViewer {
         //   accessToken:
         //     "pk.eyJ1IjoiaWNoYmlucm9iIiwiYSI6ImNqZGtrbHYzMDAxbGUzM254ODY3MXA1dm4ifQ.2-TYG46620MlH6XmwYs4Jw",
         // })
-
+        try {
+            worldTerrain = await createWorldTerrainAsync({
+                requestWaterMask: true,
+                // requestVertexNormals: true,
+            })
+        } catch (error) {
+            console.error
+        }
         this.viewer = new Viewer("cesiumContainer", {
             baseLayer: ImageryLayer.fromProviderAsync(IonImageryProvider.fromAssetId(2), {}),
             terrainProvider: worldTerrain,

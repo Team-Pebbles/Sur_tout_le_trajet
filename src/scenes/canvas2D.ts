@@ -57,7 +57,7 @@ export class Canvas2D{
         };
     }
 
-    drawText(slug: string, text: string[], textAlign: string, fontSize: number, duration: number){
+    drawSimpleText(slug: string, text: string[], textAlign: string, fontSize: number, duration: number){
         if(this.ctx == null) return;
 
         const letterSpacing = fontSize * 1.2;
@@ -88,6 +88,37 @@ export class Canvas2D{
 
         this.ctx.restore();
 
+        this.texture.update();
+
+        if(this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => { this.clear() }, duration);
+    }
+
+    drawText(textArray: {text: {string:string, weight: string, style:string}[], x: number, y:number, fontSize: number}[], duration: number){
+        this.clear();
+        if(this.ctx == null) return;
+        textArray.forEach(textItem => {
+            const letterSpacing = textItem.fontSize * .3;
+            let textPositionWidth: number = textItem.x;
+            let textPositionHeight: number = textItem.y;
+            
+            if(this.ctx == null) return;
+            this.ctx.save();
+            console.log(textItem.text)
+            this.ctx.translate(textPositionWidth, textPositionHeight);
+            this.ctx.fillStyle = "white";
+            this.ctx.textBaseline = "middle";
+            
+            let textWidth = 0;
+            textItem.text.forEach(stringEl => {
+                if(this.ctx == null) return;
+                this.ctx.font = `${stringEl.style} ${stringEl.weight} ${textItem.fontSize}px infini`;
+                this.ctx.fillText(stringEl.string, textWidth,0);
+                textWidth = this.ctx.measureText(stringEl.string).width + letterSpacing
+            });
+            this.ctx.restore();
+        });
+        
         this.texture.update();
 
         if(this.timeout) clearTimeout(this.timeout);
