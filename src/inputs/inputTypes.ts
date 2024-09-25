@@ -42,6 +42,9 @@ export interface InputActions {
     HEIGHT: InputAction;
     SLICE: InputAction;
     SLICE_ROTATE: InputAction;
+    COLOR_LIGHTNESS: InputAction;
+    COLOR_CHROMA: InputAction;
+    COLOR_HUE: InputAction;
     SWITCH_MAP: InputAction;
     CONTROL_SENSITIVITY_PLUS: InputAction;
     CONTROL_SENSITIVITY_MINUS: InputAction;
@@ -76,6 +79,9 @@ export interface InputValues {
     HEIGHT: InputValue;
     SLICE: InputValue;
     SLICE_ROTATE: InputValue;
+    COLOR_LIGHTNESS: InputValue;
+    COLOR_CHROMA: InputValue;
+    COLOR_HUE: InputValue;
     SWITCH_MAP: InputValue;
     CONTROL_SENSITIVITY_PLUS: InputValue;
     CONTROL_SENSITIVITY_MINUS: InputValue;

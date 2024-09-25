@@ -54,7 +54,7 @@ class App {
     
     this.texts = new Texts(this.canvas2D, this.cesiumViewer)
 
-    if(this.scene.activeCamera) new PostProcessing(this.scene.activeCamera, this.canvas2D);
+    if(this.scene.activeCamera) new PostProcessing(this.scene.activeCamera, this.canvas2D, this.texts);
     
     //RENDER
     this.rendering()

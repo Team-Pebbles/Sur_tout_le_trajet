@@ -56,6 +56,27 @@ export const mapRob: InputActionMap = {
                 id: 93,
             }
         },
+        COLOR_LIGHTNESS: {
+            midi: {
+                type: MidiInputType.CONTROL,
+                channel: 0,
+                id: 91,
+            }
+        },
+        COLOR_CHROMA: {
+            midi: {
+                type: MidiInputType.CONTROL,
+                channel: 0,
+                id: 79,
+            }
+        },
+        COLOR_HUE: {
+            midi: {
+                type: MidiInputType.CONTROL,
+                channel: 0,
+                id: 72,
+            }
+        },
         SWITCH_MAP: {
             keyboard: 77,//M
             midi: {

@@ -10,10 +10,9 @@ uniform float u_contrast;
 uniform float u_brightness;
 uniform float u_exposure;
 uniform float u_time;
-uniform float u_red;
-uniform float u_green;
-uniform float u_blue;
+uniform vec3 u_color;
 uniform bool u_invert;
+
 
 vec4 vibrance(vec4 color) {
     float average = (color.r + color.g + color.b) / 3.;
@@ -75,14 +74,15 @@ void main(void) {
 
     vec4 color = texture2D(textureSampler, mix(uv, nuv, text));
 
-    // Basic color grading
-    color = vec4(color.r * u_red, color.g * u_green, color.b * u_blue, color.a);
-    
     color = contrast(color);
     if(u_invert) color = mix(invert(color), color, text);
     color = vibrance(color);
     color = exposure(color);
 
-    gl_FragColor = color;
+     // Basic color grading
+    //color = vec4(color.r * u_color.r, color.g * u_color.g, color.b * u_color.b, color.a);
+    color = vec4(mix(color.rgb, u_color.rgb, .5),color.a);
+    //color = vec4(mix(color.rgb, u_color.rgb, u_time),color.a);
+    gl_FragColor = vec4(color);
 
 }

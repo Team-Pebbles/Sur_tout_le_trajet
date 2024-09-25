@@ -1,7 +1,10 @@
-import { Camera, PostProcess, Vector2 } from "@babylonjs/core"
+import { Camera, Color3, PostProcess, Vector2, Vector3 } from "@babylonjs/core"
 import { Audio } from "../audio/audioActions";
 import { Inputs } from "../inputs/inputs";
 import { Canvas2D } from "./canvas2D";
+import { Texts } from "../text";
+import { oklabRgb, rgb, srgb } from "@thi.ng/color";
+import { Vec } from "@thi.ng/vectors";
 
 export class PostProcessing {
     /*TODO Effects :
@@ -9,7 +12,7 @@ export class PostProcessing {
     *    - Lens Miror (surimpression de l'image )
     *    _ 
     */
-    constructor(camera: Camera, canvas2D: Canvas2D) {
+    constructor(camera: Camera, canvas2D: Canvas2D, texts: Texts) {
 
         const ko = new PostProcess(
             "ko",
@@ -33,21 +36,19 @@ export class PostProcessing {
         const color = new PostProcess(
             "color",
             "./shaders/color",
-            ["u_time", "u_vibrance", "u_contrast","u_brightness","u_exposure", "u_red", "u_green", "u_blue", "u_invert"],
+            ["u_time", "u_vibrance", "u_contrast","u_brightness","u_exposure", "u_color","u_invert"],
             ["textureSampler", "canvas2D"],
             1,
             camera
         )
-        
+
         color.onApply = (effect) => {
             effect.setFloat("u_time", performance.now() / 1000);
             effect.setFloat("u_vibrance", 2.);
             effect.setFloat("u_contrast", 1.5);
             effect.setFloat("u_brightness", 1.5);
             effect.setFloat("u_exposure", -0.4);
-            effect.setFloat("u_red", 1.);
-            effect.setFloat("u_green", 1.);
-            effect.setFloat("u_blue", 1.);
+            effect.setColor3("u_color", rgb(texts.Color) );
             effect.setBool("u_invert", true);
             effect.setTexture("canvas2D", canvas2D.texture);
         }

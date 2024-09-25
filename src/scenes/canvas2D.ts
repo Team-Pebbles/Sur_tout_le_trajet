@@ -94,11 +94,11 @@ export class Canvas2D{
         this.timeout = setTimeout(() => { this.clear() }, duration);
     }
 
-    drawText(textArray: {text: {string:string, weight: string, style:string}[], x: number, y:number, fontSize: number}[], duration: number){
+    drawText(textArray: {text: {string:string, weight: string, style:string}[], x: number, y:number}[], fontSize: number, duration: number){
         this.clear();
         if(this.ctx == null) return;
         textArray.forEach(textItem => {
-            const letterSpacing = textItem.fontSize * .3;
+            const letterSpacing = fontSize * .3;
             let textPositionWidth: number = textItem.x;
             let textPositionHeight: number = textItem.y;
             
@@ -112,7 +112,7 @@ export class Canvas2D{
             let textWidth = 0;
             textItem.text.forEach(stringEl => {
                 if(this.ctx == null) return;
-                this.ctx.font = `${stringEl.style} ${stringEl.weight} ${textItem.fontSize}px infini`;
+                this.ctx.font = `${stringEl.style} ${stringEl.weight} ${fontSize}px infini`;
                 this.ctx.fillText(stringEl.string, textWidth,0);
                 textWidth = this.ctx.measureText(stringEl.string).width + letterSpacing
             });

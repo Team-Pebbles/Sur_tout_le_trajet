@@ -1,14 +1,21 @@
+import { Vector3 } from "@babylonjs/core";
 import { CesiumViewer } from "./cesiumViewer";
 import { Inputs } from "./inputs/inputs";
 import { Canvas2D } from "./scenes/canvas2D";
+import { Oklab, Oklch, oklab, oklch } from "@thi.ng/color";
 
 export class Texts {
     private canvas2D: Canvas2D;
     private cesiumViewer: CesiumViewer;
+    private stopUpdateColor: boolean;
+
+    public Color:Oklch;
 
     constructor(canvas2D: Canvas2D, cesiumViewer: CesiumViewer) {
         this.canvas2D = canvas2D;
         this.cesiumViewer = cesiumViewer
+        this.Color = oklch(99.7 / 100, 0, 0); // white
+        this.stopUpdateColor = false;
         this.render();
     }
 
@@ -28,6 +35,12 @@ export class Texts {
         this.whoAreYou()
         this.reve()
         this.reel()
+        this.colorManager()
+    }
+
+    colorManager() {
+        if(this.stopUpdateColor) return;
+        this.Color = oklch(Inputs.values.COLOR_LIGHTNESS.smoothValue, Math.min(Math.max(Inputs.values.COLOR_CHROMA.smoothValue, 0), 0.306), Inputs.values.COLOR_HUE.smoothValue)
     }
 
     displayTitle() {
@@ -62,9 +75,14 @@ export class Texts {
     nullepart() {
         if (!Inputs.values.DRAW_NULLEPART.once) return;
         this.canvas2D.drawText([
-            {text: [{string:"Car", weight:"normal", style:"normal"}, {string:"ici,", weight:"bold", style:"normal"}], x:150, y:window.innerHeight * .5, fontSize: 90,},
-            {text: [{string:"on est", weight:"normal", style:"normal"}, {string:"nulle part", weight:"bold", style:"italic"}], x:window.innerWidth * .65, y:window.innerHeight * .8, fontSize: 90,}
-        ], 1000);
+            {text: [{string:"Car", weight:"normal", style:"normal"}, {string:"ici,", weight:"bold", style:"normal"}], x:150, y:window.innerHeight * .5},
+            {text: [{string:"on est", weight:"normal", style:"normal"}, {string:"nulle part", weight:"bold", style:"italic"}], x:window.innerWidth * .65, y:window.innerHeight * .8}
+        ], 90, 5000);
+        this.Color = oklch(66.73 / 100, 0.214, .4)
+        this.stopUpdateColor = true;
+        setTimeout(() => {
+            this.stopUpdateColor = false;
+        }, 5000)
     }
 
     aisjedit(){
