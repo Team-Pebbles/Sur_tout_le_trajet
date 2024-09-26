@@ -40,7 +40,7 @@ export class Texts {
 
     colorManager() {
         if(this.stopUpdateColor) return;
-        this.Color = oklch(Inputs.values.COLOR_LIGHTNESS.smoothValue, Math.min(Math.max(Inputs.values.COLOR_CHROMA.smoothValue, 0), 0.306), Inputs.values.COLOR_HUE.smoothValue)
+        this.Color = oklch(Inputs.values.COLOR_LIGHTNESS.value, Math.min(Math.max(Inputs.values.COLOR_CHROMA.value, 0), 0.306), Inputs.values.COLOR_HUE.smoothValue)
     }
 
     displayTitle() {

@@ -11,6 +11,7 @@ uniform float u_brightness;
 uniform float u_exposure;
 uniform float u_time;
 uniform vec3 u_color;
+uniform float u_colormix;
 uniform bool u_invert;
 
 
@@ -38,6 +39,12 @@ vec4 exposure(vec4 color) {
 }
 
 vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+
+float czm_luminance(vec3 rgb)
+{
+    const vec3 W = vec3(0.2125, 0.7154, 0.0721);
+    return dot(rgb, W);
+}
 
 float snoise(vec2 v){
   const vec4 C = vec4(0.211324865405187, 0.366025403784439,
@@ -80,9 +87,9 @@ void main(void) {
     color = exposure(color);
 
      // Basic color grading
-    //color = vec4(color.r * u_color.r, color.g * u_color.g, color.b * u_color.b, color.a);
-    color = vec4(mix(color.rgb, u_color.rgb, .5),color.a);
-    //color = vec4(mix(color.rgb, u_color.rgb, u_time),color.a);
+    float nb = czm_luminance(color.rgb);
+    color = vec4(mix(color.rgb, nb*u_color, u_colormix),color.a);
+
     gl_FragColor = vec4(color);
 
 }

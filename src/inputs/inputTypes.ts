@@ -45,6 +45,8 @@ export interface InputActions {
     COLOR_LIGHTNESS: InputAction;
     COLOR_CHROMA: InputAction;
     COLOR_HUE: InputAction;
+    COLOR_MIX: InputAction;
+    COLOR_ABSURD : InputAction;
     SWITCH_MAP: InputAction;
     CONTROL_SENSITIVITY_PLUS: InputAction;
     CONTROL_SENSITIVITY_MINUS: InputAction;
@@ -82,6 +84,8 @@ export interface InputValues {
     COLOR_LIGHTNESS: InputValue;
     COLOR_CHROMA: InputValue;
     COLOR_HUE: InputValue;
+    COLOR_MIX: InputValue;
+    COLOR_ABSURD: InputValue;
     SWITCH_MAP: InputValue;
     CONTROL_SENSITIVITY_PLUS: InputValue;
     CONTROL_SENSITIVITY_MINUS: InputValue;

@@ -36,19 +36,28 @@ export class PostProcessing {
         const color = new PostProcess(
             "color",
             "./shaders/color",
-            ["u_time", "u_vibrance", "u_contrast","u_brightness","u_exposure", "u_color","u_invert"],
+            ["u_time", "u_vibrance", "u_contrast","u_brightness","u_exposure", "u_color", "u_colormix", "u_invert"],
             ["textureSampler", "canvas2D"],
             1,
             camera
         )
 
+        let isAbsurd = false;
         color.onApply = (effect) => {
+            if (Inputs.values.COLOR_ABSURD.once ) {
+                isAbsurd = !isAbsurd;
+            }
+
             effect.setFloat("u_time", performance.now() / 1000);
             effect.setFloat("u_vibrance", 2.);
             effect.setFloat("u_contrast", 1.5);
             effect.setFloat("u_brightness", 1.5);
             effect.setFloat("u_exposure", -0.4);
             effect.setColor3("u_color", rgb(texts.Color) );
+            effect.setFloat("u_colormix",
+                (isAbsurd) ?
+                Math.pow(Inputs.values.COLOR_MIX.value * 10, Inputs.values.COLOR_MIX.value * 10):
+                4 * Inputs.values.COLOR_MIX.value *Inputs.values.COLOR_MIX.value);
             effect.setBool("u_invert", true);
             effect.setTexture("canvas2D", canvas2D.texture);
         }

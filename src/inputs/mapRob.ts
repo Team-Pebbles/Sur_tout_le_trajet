@@ -77,6 +77,20 @@ export const mapRob: InputActionMap = {
                 id: 72,
             }
         },
+        COLOR_MIX : {
+            midi: {
+                type: MidiInputType.CONTROL,
+                channel: 0,
+                id: 17,
+            } 
+        },
+        COLOR_ABSURD : {
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 9,
+                id: 41,
+            }
+        },
         SWITCH_MAP: {
             keyboard: 77,//M
             midi: {
