@@ -37,6 +37,7 @@ class App {
     this.canvas.style.width = "100%"
     this.canvas.style.height = "100%"
     this.canvas.id = "gameCanvas"
+    this.canvas.setAttribute("crossorigin", "anonymous")
     document.body.appendChild(this.canvas)
 
     // initialize babylon scene and engine

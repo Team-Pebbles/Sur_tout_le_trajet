@@ -8,6 +8,7 @@ export class Texts {
     private canvas2D: Canvas2D;
     private cesiumViewer: CesiumViewer;
     private stopUpdateColor: boolean;
+    private textStyle: string
 
     public Color:Oklch;
 
@@ -16,6 +17,18 @@ export class Texts {
         this.cesiumViewer = cesiumViewer
         this.Color = oklch(99.7 / 100, 0, 0); // white
         this.stopUpdateColor = false;
+        this.textStyle = `
+        <style>
+            * {
+            font-Family: "infini";
+            font-variant-ligatures: "common-ligatures discretionary-ligatures";
+            font-variant-caps: "small-caps";
+            text-transform: "uppercase";
+            font-size: "100px";
+            color: "white";
+            }
+        </style>
+        `
         this.render();
     }
 
@@ -45,8 +58,16 @@ export class Texts {
 
     displayTitle() {
         if (Inputs.values.DRAW_TITLE.once) {
-            this.canvas2D.drawImage('title', './img/logo-white.png', 10000);
-            this.cesiumViewer.mapSwitch();
+            // this.canvas2D.drawImage('title', './img/logo-white.png', 10000);
+            // this.cesiumViewer.mapSwitch();
+            const html = document.createElement("div");
+            html.classList.add("offscreenTextWrapper");
+            html.innerHTML = this.textStyle + "<p style='color:red;font-size:90px;position:absolute; top:20vh;'>Test</p><p class='infini-font' style='color:white;font-size:90px'>SUPER</p>"
+            // html.textContent = "&azerty"
+            // html.style.fontSize = "90px"
+            // html.style.color = "white"
+            // his.textStyle + "<p>&azerty</p>"
+            this.canvas2D.createSVG(html, 2000);
         }
     }
 

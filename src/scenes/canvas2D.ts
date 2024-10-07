@@ -77,7 +77,7 @@ export class Canvas2D{
         }
 
         this.ctx.translate(textPositionWidth, textPositionHeight);
-        this.ctx.font = `bold ${fontSize}px infini`;
+        this.ctx.font = `${fontSize}px infini`;
         this.ctx.fillStyle = "white";
         this.ctx.textAlign = textAlign as CanvasTextAlign;
         this.ctx.textBaseline = "middle";
@@ -124,4 +124,109 @@ export class Canvas2D{
         if(this.timeout) clearTimeout(this.timeout);
         this.timeout = setTimeout(() => { this.clear() }, duration);
     }
+
+
+    async createSVG(html: string | Node, duration: number) {
+        this.clear();
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS( svgNS, "svg" );
+        // const font_data = await this.fetchAsDataURL( "https://fonts.gstatic.com/s/inter/v2/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7W0Q5nw.woff2" );
+        // const style = document.createElementNS( svgNS, "style" );
+        // style.textContent = `@font-face {
+        //   font-family: 'Inter';
+        //   font-style: normal;
+        //   font-weight: 200 900;
+        //   src: url(${ font_data }) format('woff2'); 
+        // }`;
+        // svg.append( style );
+        
+        const foreignObject = document.createElementNS( svgNS, "foreignObject" );
+        foreignObject.setAttribute( "x", "0" );
+        foreignObject.setAttribute( "y", "0" );
+      
+        document.body.append(html)
+        const target = document.querySelector(".offscreenTextWrapper");
+        const clone = this.cloneWithStyles( target );
+        foreignObject.append( clone );
+        foreignObject.setAttribute( "width", this.canvas.width.toString() );
+        foreignObject.setAttribute( "height", this.canvas.height.toString() );
+        svg.setAttribute( "width", this.canvas.width.toString() );
+        svg.setAttribute( "height", this.canvas.height.toString() );
+        
+        svg.append( foreignObject );
+        target?.remove();
+        
+        const svg_markup = new XMLSerializer().serializeToString( svg );
+        const svg_file = new Blob( [ svg_markup ], { type: "image/svg+xml" } );
+        
+        const img = new Image();
+        img.crossOrigin = "Anonymous"
+        // fix chrome crossorigin with data:image instead of url
+        img.src = "data:image/svg+xml;base64," + btoa(svg_markup);
+
+        img.onload = (() => {
+            this.ctx?.drawImage( img, 0, 0 );
+            console.log("NIK")
+            URL.revokeObjectURL( img.src );
+            
+            this.texture.update();
+
+            if(this.timeout) clearTimeout(this.timeout);
+            this.timeout = setTimeout(() => { this.clear() }, duration);
+        })
+        
+      }
+
+      cloneWithStyles( source ) {
+        const clone = source.cloneNode( true );
+        
+        // to make the list of rules smaller we try to append the clone element in an iframe
+        const iframe = document.createElement( "iframe" );
+        document.body.append( iframe );
+        // if we are in a sandboxed context it may be null
+        if( iframe.contentDocument ) {
+            console.log(clone)
+          iframe.contentDocument.body.append( clone );
+        }
+        
+        const source_walker = document.createTreeWalker( source, NodeFilter.SHOW_ELEMENT, null );
+        const clone_walker = document.createTreeWalker( clone, NodeFilter.SHOW_ELEMENT, null );
+        let source_element:HTMLElement = source_walker.currentNode as HTMLElement;
+        let clone_element:HTMLElement = clone_walker.currentNode as HTMLElement;
+        while ( source_element ) {
+        
+          const source_styles = getComputedStyle( source_element);
+          const clone_styles = getComputedStyle( clone_element);
+      
+          // we should be able to simply do [ ...source_styles.forEach( (key) => ...
+          // but thanks to https://crbug.com/1073573
+          // we have to filter all the snake keys from enumerable properties...
+          const keys = (() => {
+            // Start with a set to avoid duplicates
+            const props = new Set();
+            for( let prop in source_styles ) {
+              // Undo camel case
+              prop = prop.replace( /[A-Z]/g, (m) => "-" + m.toLowerCase() );
+              // Fix vendor prefix
+              prop = prop.replace( /^webkit-/, "-webkit-" );
+              props.add( prop );
+            }
+            return props;
+          })();
+          for( let key of keys ) {
+            if( clone_styles[ key as keyof CSSStyleDeclaration] !== source_styles[ key as keyof CSSStyleDeclaration] ) {
+                console.log(key as keyof CSSStyleDeclaration  + " : " + source_styles[ key as keyof CSSStyleDeclaration] )
+              clone_element.style.setProperty( key as string , source_styles[ key as string ] );
+            }
+          }
+      
+          source_element = source_walker.nextNode() as HTMLElement
+          clone_element = clone_walker.nextNode() as HTMLElement
+        
+        }
+        // clean up
+        iframe.remove();
+      
+        return clone;
+      }
 }
