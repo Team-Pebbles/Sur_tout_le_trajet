@@ -1,4 +1,5 @@
 import { DynamicTexture, HtmlElementTexture, Scene } from "@babylonjs/core";
+import { FontData } from "./fontData";
 
 export class Canvas2D{
     private canvas : HTMLCanvasElement;
@@ -130,25 +131,40 @@ export class Canvas2D{
         this.clear();
         const svgNS = "http://www.w3.org/2000/svg";
         const svg = document.createElementNS( svgNS, "svg" );
-        // const style = document.createElementNS( svgNS, "style" );
+        const style = document.createElementNS( svgNS, "style" );
 
-        // style.textContent = `@font-face {
-        //   font-family: 'infini';
-        //   font-style: normal;
-        //   font-weight: normal;
-        //   src: url("../fonts/infini-romain.woff") format("woff"),; 
-        // }`;
-        // svg.append( style );
+          style.textContent = `
+          @font-face {
+            font-family: 'infini';
+            font-style: normal;
+            font-weight: normal;
+            src: url(${FontData.infiniRomain  }) format("woff"); 
+          }
+          @font-face {
+            font-family: 'infini';
+            font-style: normal;
+            font-weight: bold;
+            src: url(${FontData.infiniBold }) format("woff"); 
+          }
+
+          @font-face {
+            font-family: 'infini';
+            font-style: italic;
+            font-weight: normal;
+            src: url(${FontData.infiniItalic }) format("woff"); 
+          }
+          `;
+          svg.append( style );
         
         const foreignObject = document.createElementNS( svgNS, "foreignObject" );
         foreignObject.setAttribute( "x", "0" );
         foreignObject.setAttribute( "y", "0" );
       
-        document.body.append(html)
+        document.body.appendChild(html as Node);
         const target:HTMLElement|null = document.querySelector(".offscreenTextWrapper");
         const clone = this.cloneWithStyles( target );
         if(!clone) return;
-        foreignObject.append( clone );
+        foreignObject.append( clone);
         foreignObject.setAttribute( "width", this.canvas.width.toString() );
         foreignObject.setAttribute( "height", this.canvas.height.toString() );
         svg.setAttribute( "width", this.canvas.width.toString() );
@@ -158,10 +174,10 @@ export class Canvas2D{
         target?.remove();
         
         const svg_markup = new XMLSerializer().serializeToString( svg );
-        const svg_file = new Blob( [ svg_markup ], { type: "image/svg+xml" } );
-        
+
         const img = new Image();
         img.crossOrigin = "Anonymous"
+
         // fix chrome crossorigin with data:image instead of url
         img.src = "data:image/svg+xml;base64," + btoa(svg_markup);
 

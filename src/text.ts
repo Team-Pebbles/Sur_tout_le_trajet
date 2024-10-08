@@ -62,7 +62,7 @@ export class Texts {
             // this.canvas2D.drawImage('title', './img/logo-white.png', 10000);
             // this.cesiumViewer.mapSwitch();
             const html = this.createHTML();
-            html.innerHTML = "<p style='color:red;font-size:90px;position:absolute; top:20vh;'>Test</p><p class='font-infini font-infini--ligature' style='color:white;font-size:90px'>SUPER</p>"
+            html.innerHTML = "<p style='color:red;font-size:90px;position:absolute; top:20vh;'>Test</p><p class='font-infini font-infini--ligature' style='font-family:infini;color:white;font-size:90px'>SUPER</p>"
             this.canvas2D.createSVG(html, 2000);
         }
     }
@@ -89,7 +89,7 @@ export class Texts {
         if (!Inputs.values.DRAW_FTOUM.once) return;
         console.log("ftoum")
         const html = this.createHTML();
-        html.innerHTML = `<p class="font-infini font-infini--ligature font-infini--uppercase" style="font-family:infini;font-size:90px"><span style="text-decoration:underline"><span style="font-weight:bold;">F</span>F</span>TOU<span style="text-decoration:underline">M</span></p>`
+        html.innerHTML = `<p class="font-infini font-infini--ligature font-infini--uppercase" style="font-family:infini;position:absolute;top: 0px;font-size:90px;color:white;font-family:infini"><span style="text-decoration:underline"><span style="font-weight:bold;">F</span>F</span>TOU<span style="text-decoration:underline;font-style:italic;">M</span></p>`
         this.canvas2D.createSVG(html, 2000);
     }
 

@@ -7,10 +7,6 @@
          url("../fonts/infini-romain.eot") format('svg');
     font-style: normal;
     font-weight: normal;
-    font-variant-ligatures: common-ligatures discretionary-ligatures;
-    font-variant-caps: small-caps;
-    text-transform: uppercase;
-    
 }
 
 @font-face {
@@ -22,9 +18,6 @@
          url("../fonts/infini-italique.eot") format('svg');
     font-style: italic;
     font-weight: normal;
-    font-variant-ligatures: common-ligatures discretionary-ligatures;
-    font-variant-caps: small-caps;
-    text-transform: uppercase;
 }
 
 @font-face {
@@ -35,9 +28,6 @@
          url("../fonts/infini-gras.eot") format('embedded-opentype'),
          url("../fonts/infini-gras.eot") format('svg');
     font-weight: bold;
-    font-variant-ligatures: common-ligatures discretionary-ligatures;
-    font-variant-caps: small-caps;
-    text-transform: uppercase;
 }
 
 
@@ -90,11 +80,11 @@ body {
     }
 }
 
-.offsreen {
-    position: absolute;
-    left: - 200vw;
-    top: -200vh;
-}
+// .offscreenTextWrapper {
+//     position: absolute;
+//     left: - 200vw;
+//     top: -200vh;
+// }
 
 #gameCanvas {
   clip-path: inset(6% 3% 6% 3% round 20px);

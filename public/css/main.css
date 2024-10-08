@@ -3,26 +3,17 @@
   src: url("../fonts/infini-romain.woff") format("woff"), url("../fonts/infini-romain.otf"), url("../fonts/infini-romain.ttf") format("truetype"), url("../fonts/infini-romain.eot") format("embedded-opentype"), url("../fonts/infini-romain.eot") format("svg");
   font-style: normal;
   font-weight: normal;
-  font-variant-ligatures: common-ligatures discretionary-ligatures;
-  font-variant-caps: small-caps;
-  text-transform: uppercase;
 }
 @font-face {
   font-family: infini;
   src: url("../fonts/infini-italique.woff") format("woff"), url("../fonts/infini-italique.otf"), url("../fonts/infini-italique.ttf") format("truetype"), url("../fonts/infini-italique.eot") format("embedded-opentype"), url("../fonts/infini-italique.eot") format("svg");
   font-style: italic;
   font-weight: normal;
-  font-variant-ligatures: common-ligatures discretionary-ligatures;
-  font-variant-caps: small-caps;
-  text-transform: uppercase;
 }
 @font-face {
   font-family: infini;
   src: url("../fonts/infini-gras.woff") format("woff"), url("../fonts/infini-gras.otf"), url("../fonts/infini-gras.ttf") format("truetype"), url("../fonts/infini-gras.eot") format("embedded-opentype"), url("../fonts/infini-gras.eot") format("svg");
   font-weight: bold;
-  font-variant-ligatures: common-ligatures discretionary-ligatures;
-  font-variant-caps: small-caps;
-  text-transform: uppercase;
 }
 button.cesium-infoBox-camera {
   display: none;
@@ -79,12 +70,6 @@ body {
 .font-infini--uppercase {
   font-variant-caps: small-caps;
   text-transform: uppercase;
-}
-
-.offsreen {
-  position: absolute;
-  left: -200vw;
-  top: -200vh;
 }
 
 #gameCanvas {
