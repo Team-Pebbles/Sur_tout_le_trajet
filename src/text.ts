@@ -58,13 +58,9 @@ export class Texts {
     }
 
     displayTitle() {
-        if (Inputs.values.DRAW_TITLE.once) {
-            // this.canvas2D.drawImage('title', './img/logo-white.png', 10000);
-            // this.cesiumViewer.mapSwitch();
-            const html = this.createHTML();
-            html.innerHTML = "<p style='color:red;font-size:90px;position:absolute; top:20vh;'>Test</p><p class='font-infini font-infini--ligature' style='font-family:infini;color:white;font-size:90px'>SUPER</p>"
-            this.canvas2D.createSVG(html, 2000);
-        }
+        if (!Inputs.values.DRAW_TITLE.once) return;
+        this.canvas2D.drawImage('title', './img/logo-white.png', 10000);
+        this.cesiumViewer.mapSwitch();
     }
 
     async displayCredits() {
@@ -79,18 +75,30 @@ export class Texts {
      
     }
 
-    createHTML() {
-        const html = document.createElement("div");
-        html.classList.add("offscreenTextWrapper");
-        return html;
+    createDiv() {
+        const div = document.createElement("div");
+        div.classList.add("offscreenTextWrapper");
+        return div;
+    }
+    createP(container: HTMLDivElement, inlineContent: string, style:string, className:string[]) {
+        const p = document.createElement("p");
+        p.classList.add(...className);
+        p.innerHTML = inlineContent;
+        p.style.cssText = style;
+        container.appendChild(p);
+        return container;
+
     }
 
     ftoum() {
         if (!Inputs.values.DRAW_FTOUM.once) return;
-        console.log("ftoum")
-        const html = this.createHTML();
-        html.innerHTML = `<p class="font-infini font-infini--ligature font-infini--uppercase" style="font-family:infini;position:absolute;top: 0px;font-size:90px;color:white;font-family:infini"><span style="text-decoration:underline"><span style="font-weight:bold;">F</span>F</span>TOU<span style="text-decoration:underline;font-style:italic;">M</span></p>`
-        this.canvas2D.createSVG(html, 2000);
+        let html: HTMLDivElement = this.createDiv();
+        html = this.createP(html,
+            `<span style="text-decoration:underline"><span style="font-weight:bold;">F</span>F</span>TOU<span style="text-decoration:underline;font-style:italic;">M</span>`,
+            "font-size:15vw;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
+        )
+        this.canvas2D.createSVG(html, 5000);
     }
 
     vides() {
@@ -105,10 +113,21 @@ export class Texts {
 
     nullepart() {
         if (!Inputs.values.DRAW_NULLEPART.once) return;
-        this.canvas2D.drawText([
-            {text: [{string:"Car", weight:"normal", style:"normal"}, {string:"ici,", weight:"bold", style:"normal"}], x:150, y:window.innerHeight * .5},
-            {text: [{string:"on est", weight:"normal", style:"normal"}, {string:"nulle part", weight:"bold", style:"italic"}], x:window.innerWidth * .65, y:window.innerHeight * .8}
-        ], 90, 5000);
+        let div = this.createDiv()
+        div = this.createP(div,
+            `Car <span style="font-weight:bold">ici,</span>`,
+            "font-size:90px",
+            ["font-infini", "font-infini--ligature", "center-left"]
+        )
+
+        div = this.createP(div,
+            `on est <span style="font-style:italic">nulle part</span>`,
+            "font-size:90px",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "bottom-right"]
+        )
+
+        this.canvas2D.createSVG(div, 5000);
+
         this.Color = oklch(66.73 / 100, 0.214, .4)
         this.stopUpdateColor = true;
         setTimeout(() => {
