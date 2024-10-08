@@ -130,15 +130,15 @@ export class Canvas2D{
         this.clear();
         const svgNS = "http://www.w3.org/2000/svg";
         const svg = document.createElementNS( svgNS, "svg" );
-        const style = document.createElementNS( svgNS, "style" );
+        // const style = document.createElementNS( svgNS, "style" );
 
-        style.textContent = `@font-face {
-          font-family: 'Inter';
-          font-style: normal;
-          font-weight: normal;
-          src: url("../fonts/infini-romain.woff") format("woff"),; 
-        }`;
-        svg.append( style );
+        // style.textContent = `@font-face {
+        //   font-family: 'infini';
+        //   font-style: normal;
+        //   font-weight: normal;
+        //   src: url("../fonts/infini-romain.woff") format("woff"),; 
+        // }`;
+        // svg.append( style );
         
         const foreignObject = document.createElementNS( svgNS, "foreignObject" );
         foreignObject.setAttribute( "x", "0" );
