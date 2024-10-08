@@ -36,6 +36,7 @@ export class Texts {
         this.displayTitle();
         this.displayCredits();
         this.vides()
+        this.ftoum()
         this.seule()
         this.nullepart()
         this.aisjedit()
@@ -60,13 +61,8 @@ export class Texts {
         if (Inputs.values.DRAW_TITLE.once) {
             // this.canvas2D.drawImage('title', './img/logo-white.png', 10000);
             // this.cesiumViewer.mapSwitch();
-            const html = document.createElement("div");
-            html.classList.add("offscreenTextWrapper");
-            html.innerHTML = this.textStyle + "<p style='color:red;font-size:90px;position:absolute; top:20vh;'>Test</p><p class='infini-font' style='color:white;font-size:90px'>SUPER</p>"
-            // html.textContent = "&azerty"
-            // html.style.fontSize = "90px"
-            // html.style.color = "white"
-            // his.textStyle + "<p>&azerty</p>"
+            const html = this.createHTML();
+            html.innerHTML = this.textStyle + "<p style='color:red;font-size:90px;position:absolute; top:20vh;'>Test</p><p style='color:white;font-size:90px'>SUPER</p>"
             this.canvas2D.createSVG(html, 2000);
         }
     }
@@ -81,6 +77,22 @@ export class Texts {
         await waitForMS(4500);
         this.canvas2D.drawSimpleText("credits", ["Et avec l'aide de Louis pour le code !", "coucou Louis"], "right", 50, 3000);
      
+    }
+
+    createHTML() {
+        const html = document.createElement("div");
+        html.classList.add("offscreenTextWrapper");
+        return html;
+    }
+
+    ftoum() {
+        if (!Inputs.values.DRAW_FTOUM.once) return;
+        console.log("ftoum")
+        const html = this.createHTML();
+        html.innerHTML = this.textStyle + `
+        <p class="font-infini font-infini--ligature font-infini--uppercase" style="font-family:infini;font-size:90px"><span style="text-decoration:underline"><span style="font-weight:bold;">F</span>F</span>TOU<span style="text-decoration:underline">M</span></p>
+        `
+        this.canvas2D.createSVG(html, 2000);
     }
 
     vides() {

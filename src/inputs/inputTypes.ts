@@ -51,6 +51,7 @@ export interface InputActions {
     CONTROL_SENSITIVITY_PLUS: InputAction;
     CONTROL_SENSITIVITY_MINUS: InputAction;
     DRAW_TITLE: InputAction;
+    DRAW_FTOUM: InputAction;
     DRAW_CREDITS: InputAction;
     DRAW_VIDES: InputAction;
     DRAW_SEULE: InputAction;
@@ -91,6 +92,7 @@ export interface InputValues {
     CONTROL_SENSITIVITY_MINUS: InputValue;
 
     DRAW_TITLE: InputValue;
+    DRAW_FTOUM: InputValue;
     DRAW_CREDITS: InputValue;
     DRAW_VIDES: InputValue;
     DRAW_SEULE: InputValue;

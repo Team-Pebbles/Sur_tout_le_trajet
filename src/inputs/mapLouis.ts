@@ -132,6 +132,9 @@ export const mapLouis: InputActionMap = {
                 id: 48,
             }
         },
+        DRAW_FTOUM: {
+            keyboard: 65,
+        },
         DRAW_CREDITS: {
             keyboard: 67,
             midi: {

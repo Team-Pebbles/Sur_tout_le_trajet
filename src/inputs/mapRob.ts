@@ -131,6 +131,14 @@ export const mapRob: InputActionMap = {
                 id: 48,
             }
         },
+        DRAW_FTOUM: {
+            keyboard: 65,
+            midi: {
+                type: MidiInputType.KEY,
+                channel: 0,
+                id: 72,
+            } 
+        },
         DRAW_CREDITS: {
             keyboard: 67,
             midi: {
@@ -220,7 +228,7 @@ export const mapRob: InputActionMap = {
             }
         },
         DRAW_WHOAREYOU: {
-            keyboard: 83,
+            keyboard: 81,
             midi: {
                 type: MidiInputType.KEY,
                 channel: 0,

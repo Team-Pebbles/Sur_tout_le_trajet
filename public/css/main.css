@@ -69,13 +69,16 @@ body {
   filter: opacity(0);
 }
 
-.infini-font {
+.font-infini {
   font-family: infini;
+  color: white;
+}
+.font-infini--ligature {
   font-variant-ligatures: common-ligatures discretionary-ligatures;
+}
+.font-infini--uppercase {
   font-variant-caps: small-caps;
   text-transform: uppercase;
-  color: white;
-  font-size: 90px;
 }
 
 .offsreen {

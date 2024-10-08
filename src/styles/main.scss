@@ -76,13 +76,18 @@ body {
   // pointer-events: none;
 }
 
-.infini-font {
+.font-infini {
     font-family: infini;
-    font-variant-ligatures: common-ligatures discretionary-ligatures;
-    font-variant-caps: small-caps;
-    text-transform: uppercase;
     color: white;
-    font-size: 90px;
+
+    &--ligature {
+      font-variant-ligatures: common-ligatures discretionary-ligatures;
+    }
+
+    &--uppercase {
+      font-variant-caps: small-caps;
+      text-transform: uppercase;
+    }
 }
 
 .offsreen {

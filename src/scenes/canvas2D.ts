@@ -130,23 +130,24 @@ export class Canvas2D{
         this.clear();
         const svgNS = "http://www.w3.org/2000/svg";
         const svg = document.createElementNS( svgNS, "svg" );
-        // const font_data = await this.fetchAsDataURL( "https://fonts.gstatic.com/s/inter/v2/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7W0Q5nw.woff2" );
-        // const style = document.createElementNS( svgNS, "style" );
-        // style.textContent = `@font-face {
-        //   font-family: 'Inter';
-        //   font-style: normal;
-        //   font-weight: 200 900;
-        //   src: url(${ font_data }) format('woff2'); 
-        // }`;
-        // svg.append( style );
+        const style = document.createElementNS( svgNS, "style" );
+
+        style.textContent = `@font-face {
+          font-family: 'Inter';
+          font-style: normal;
+          font-weight: normal;
+          src: url("../fonts/infini-romain.woff") format("woff"),; 
+        }`;
+        svg.append( style );
         
         const foreignObject = document.createElementNS( svgNS, "foreignObject" );
         foreignObject.setAttribute( "x", "0" );
         foreignObject.setAttribute( "y", "0" );
       
         document.body.append(html)
-        const target = document.querySelector(".offscreenTextWrapper");
+        const target:HTMLElement|null = document.querySelector(".offscreenTextWrapper");
         const clone = this.cloneWithStyles( target );
+        if(!clone) return;
         foreignObject.append( clone );
         foreignObject.setAttribute( "width", this.canvas.width.toString() );
         foreignObject.setAttribute( "height", this.canvas.height.toString() );
@@ -177,18 +178,18 @@ export class Canvas2D{
         
       }
 
-      cloneWithStyles( source ) {
-        const clone = source.cloneNode( true );
+      cloneWithStyles( source:HTMLElement|null ) {
+        const clone = source?.cloneNode( true );
         
         // to make the list of rules smaller we try to append the clone element in an iframe
         const iframe = document.createElement( "iframe" );
         document.body.append( iframe );
         // if we are in a sandboxed context it may be null
-        if( iframe.contentDocument ) {
-            console.log(clone)
+        if( iframe.contentDocument && clone) {
           iframe.contentDocument.body.append( clone );
         }
         
+        if(!clone || !source) return;
         const source_walker = document.createTreeWalker( source, NodeFilter.SHOW_ELEMENT, null );
         const clone_walker = document.createTreeWalker( clone, NodeFilter.SHOW_ELEMENT, null );
         let source_element:HTMLElement = source_walker.currentNode as HTMLElement;
