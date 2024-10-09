@@ -47,7 +47,7 @@ export class Canvas2D{
         
 
 
-            //this.clear();
+            this.clear();
             this.ctx?.save();
             this.ctx?.translate(this.canvas.width * .5, this.canvas.height * .5);
             this.ctx?.drawImage(img, -size.x * .5, -size.y * .5, size.x, size.y);
@@ -59,77 +59,76 @@ export class Canvas2D{
         };
     }
 
-    drawSimpleText(slug: string, text: string[], textAlign: string, fontSize: number, duration: number){
-        if(this.ctx == null) return;
+    // drawSimpleText(slug: string, text: string[], textAlign: string, fontSize: number, duration: number){
+    //     if(this.ctx == null) return;
 
-        const letterSpacing = fontSize * 1.2;
-        this.clear();
-        let textPositionWidth: number = this.canvas.width * .5;
-        let textPositionHeight: number = this.canvas.height * .60;
+    //     const letterSpacing = fontSize * 1.2;
+    //     this.clear();
+    //     let textPositionWidth: number = this.canvas.width * .5;
+    //     let textPositionHeight: number = this.canvas.height * .60;
 
-        this.ctx.save();
+    //     this.ctx.save();
 
-        switch (slug) {
-            case "credits":
-                textPositionHeight = this.canvas.height * .60;
-                textPositionWidth = this.canvas.width - 70;
-                break;
-            default:
-                break;
-        }
+    //     switch (slug) {
+    //         case "credits":
+    //             textPositionHeight = this.canvas.height * .60;
+    //             textPositionWidth = this.canvas.width - 70;
+    //             break;
+    //         default:
+    //             break;
+    //     }
 
-        this.ctx.translate(textPositionWidth, textPositionHeight);
-        this.ctx.font = `${fontSize}px infini`;
-        this.ctx.fillStyle = "white";
-        this.ctx.textAlign = textAlign as CanvasTextAlign;
-        this.ctx.textBaseline = "middle";
+    //     this.ctx.translate(textPositionWidth, textPositionHeight);
+    //     this.ctx.font = `${fontSize}px infini`;
+    //     this.ctx.fillStyle = "white";
+    //     this.ctx.textAlign = textAlign as CanvasTextAlign;
+    //     this.ctx.textBaseline = "middle";
 
-        for (var i = 0; i<text.length; i++){
-            this.ctx.fillText(text[i].toUpperCase(), 0,i * letterSpacing - Math.max(0,text.length-1) * 0.5 * letterSpacing);
-        }
+    //     for (var i = 0; i<text.length; i++){
+    //         this.ctx.fillText(text[i].toUpperCase(), 0,i * letterSpacing - Math.max(0,text.length-1) * 0.5 * letterSpacing);
+    //     }
 
-        this.ctx.restore();
+    //     this.ctx.restore();
 
-        this.texture.update();
+    //     this.texture.update();
 
-        if(this.timeout) clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => { this.clear() }, duration);
-    }
+    //     if(this.timeout) clearTimeout(this.timeout);
+    //     this.timeout = setTimeout(() => { this.clear() }, duration);
+    // }
 
-    drawText(textArray: {text: {string:string, weight: string, style:string}[], x: number, y:number}[], fontSize: number, duration: number){
-        this.clear();
-        if(this.ctx == null) return;
-        textArray.forEach(textItem => {
-            const letterSpacing = fontSize * .3;
-            let textPositionWidth: number = textItem.x;
-            let textPositionHeight: number = textItem.y;
+    // drawText(textArray: {text: {string:string, weight: string, style:string}[], x: number, y:number}[], fontSize: number, duration: number){
+    //     this.clear();
+    //     if(this.ctx == null) return;
+    //     textArray.forEach(textItem => {
+    //         const letterSpacing = fontSize * .3;
+    //         let textPositionWidth: number = textItem.x;
+    //         let textPositionHeight: number = textItem.y;
             
-            if(this.ctx == null) return;
-            this.ctx.save();
-            console.log(textItem.text)
-            this.ctx.translate(textPositionWidth, textPositionHeight);
-            this.ctx.fillStyle = "white";
-            this.ctx.textBaseline = "middle";
+    //         if(this.ctx == null) return;
+    //         this.ctx.save();
+    //         console.log(textItem.text)
+    //         this.ctx.translate(textPositionWidth, textPositionHeight);
+    //         this.ctx.fillStyle = "white";
+    //         this.ctx.textBaseline = "middle";
             
-            let textWidth = 0;
-            textItem.text.forEach(stringEl => {
-                if(this.ctx == null) return;
-                this.ctx.font = `${stringEl.style} ${stringEl.weight} ${fontSize}px infini`;
-                this.ctx.fillText(stringEl.string, textWidth,0);
-                textWidth = this.ctx.measureText(stringEl.string).width + letterSpacing
-            });
-            this.ctx.restore();
-        });
+    //         let textWidth = 0;
+    //         textItem.text.forEach(stringEl => {
+    //             if(this.ctx == null) return;
+    //             this.ctx.font = `${stringEl.style} ${stringEl.weight} ${fontSize}px infini`;
+    //             this.ctx.fillText(stringEl.string, textWidth,0);
+    //             textWidth = this.ctx.measureText(stringEl.string).width + letterSpacing
+    //         });
+    //         this.ctx.restore();
+    //     });
         
-        this.texture.update();
+    //     this.texture.update();
 
-        if(this.timeout) clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => { this.clear() }, duration);
-    }
+    //     if(this.timeout) clearTimeout(this.timeout);
+    //     this.timeout = setTimeout(() => { this.clear() }, duration);
+    // }
 
 
     async createSVG(html: string | Node, duration: number) {
-        this.clear();
         const svgNS = "http://www.w3.org/2000/svg";
         const svg = document.createElementNS( svgNS, "svg" );
         const style = document.createElementNS( svgNS, "style" );
@@ -182,9 +181,10 @@ export class Canvas2D{
         img.src = "data:image/svg+xml;base64," +  Base64.encode(svg_markup);
 
         img.onload = (() => {
+            this.clear();
             this.ctx?.drawImage( img, 0, 0 );
             console.log("NIK")
-            URL.revokeObjectURL( img.src );
+            //URL.revokeObjectURL( img.src );
             
             this.texture.update();
 

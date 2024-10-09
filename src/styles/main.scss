@@ -66,9 +66,15 @@ body {
   // pointer-events: none;
 }
 
+// .offscreenTextWrapper {
+//     position:absolute;
+//     z-index: -1;
+// }
+
 .font-infini {
     font-family: infini;
-    color: white;
+    color: red;
+    text-shadow: 0px 0px 100px blue, 0px 0px 10px green;
 
     &--ligature {
       font-variant-ligatures: common-ligatures discretionary-ligatures;

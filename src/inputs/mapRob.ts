@@ -136,7 +136,7 @@ export const mapRob: InputActionMap = {
             midi: {
                 type: MidiInputType.KEY,
                 channel: 0,
-                id: 72,
+                id: 49,
             } 
         },
         DRAW_CREDITS: {
