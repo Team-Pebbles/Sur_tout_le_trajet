@@ -58,7 +58,7 @@ export class Texts {
         
         let div = this.createDiv();
         div = this.createP(div,
-            `&Effiloche , &ROB À FLEURS 🌸, &RRRRROSE AZERTY, Pier-re`,
+            `&Effiloche , &ROB À FLEURS 🌸, &RRRRROSE AZERTY, &Pier-re`,
             "font-size:50px;",
             ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon-right"]
         )
@@ -128,15 +128,15 @@ export class Texts {
         if (!Inputs.values.DRAW_NULLEPART.once) return;
         let div = this.createDiv()
         div = this.createP(div,
-            `Car <span style="font-weight:bold">ici,</span>`,
-            "font-size:90px",
+            `Car <span style="font-weight:bold;text-decoration:underline">ici,</span>`,
+            "font-size:8vw",
             ["font-infini", "font-infini--ligature", "center-left"]
         )
 
         div = this.createP(div,
-            `on est <span style="font-style:italic">nulle part</span>`,
-            "font-size:90px",
-            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "bottom-right"]
+            `on est <span style="font-style:italic;text-decoration:underline">nulle part</span>`,
+            "font-size:8vw",
+            ["font-infini", "font-infini--ligature", "bottom-right"]
         )
 
         this.canvas2D.createSVG(div, 5000);
@@ -150,11 +150,16 @@ export class Texts {
 
     aisjedit(){
         if (!Inputs.values.DRAW_AISJEDIT.once) return;
-        let div = this.createDiv();
+        let div = this.createDiv(["center--horizon"]);
         div = this.createP(div,
-            `Vous l'avais-je dit ?`,
-            "font-size:90px;",
-            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
+            `Vous l'avais-je`,
+            "font-size:6vw;text-wrap:no-wrap",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
+        )
+        div = this.createP(div,
+            `dit ?`,
+            "font-size:10vw;font-weight:bold;text-decoration:underscore",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
         )
         this.canvas2D.createSVG(div, 5000);
     }
@@ -181,7 +186,7 @@ export class Texts {
         let div = this.createDiv();
         div = this.createP(div,
             `Sur tout ce trajet`,
-            "font-size:90px;",
+            "font-size:8vw;",
             ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
         )
         this.canvas2D.createSVG(div, 5000);
@@ -216,25 +221,30 @@ export class Texts {
 
     realite() {
         if (!Inputs.values.DRAW_REALITE.once) return;
-        let div = this.createDiv();
+        let div = this.createDiv(["top-left"]);
         div = this.createP(div,
-            `Je ne`,
-            "font-size:70px;",
+            `<span style="font-style:italic">Je</span> ne`,
+            "font-size:5vw;",
             ["font-infini", "font-infini--ligature"]
         )
         div = this.createP(div,
-            `crois pas`,
-            "font-size:70px;",
+            `crois`,
+            "font-size:5vw;position:relative;left:20vw; line-height:15vh;",
             ["font-infini", "font-infini--ligature"]
         )
         div = this.createP(div,
-            `en la`,
-            "font-size:70px;",
+            `pas`,
+            "font-size:5vw;position:relative;left:7vw; line-height:15vh;",
+            ["font-infini", "font-infini--ligature"]
+        )
+        div = this.createP(div,
+            `en&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;la`,
+            "font-size:5vw;position:relative;left:20vw; line-height:15vh;",
             ["font-infini", "font-infini--ligature"]
         )
         div = this.createP(div,
             `réalité.`,
-            "font-size:70px;",
+            "font-size:5vw;position:relative;left:40vw; line-height:15vh;",
             ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
         )
         this.canvas2D.createSVG(div, 5000);
@@ -245,7 +255,7 @@ export class Texts {
         let div = this.createDiv();
         div = this.createP(div,
             `C'est un plagiat du monde,`,
-            "font-size:90px;",
+            "font-size:8vw;",
             ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
         )
         this.canvas2D.createSVG(div, 5000);
@@ -267,7 +277,7 @@ export class Texts {
         let div = this.createDiv();
         div = this.createP(div,
             `Vous m'avez sortie du rêve`,
-            "font-size:90px;",
+            "font-size:8vw;",
             ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
         )
         this.canvas2D.createSVG(div, 5000);
