@@ -1,5 +1,6 @@
 import { DynamicTexture, HtmlElementTexture, Scene } from "@babylonjs/core";
 import { FontData } from "./fontData";
+import { Base64 } from 'js-base64';
 
 export class Canvas2D{
     private canvas : HTMLCanvasElement;
@@ -33,7 +34,7 @@ export class Canvas2D{
 
         var img = new Image();
         // Set the image source
-        img.src =src;;
+        img.src = src;
         img.onload = () => {
             console.log('image loaded');
 
@@ -177,9 +178,8 @@ export class Canvas2D{
 
         const img = new Image();
         img.crossOrigin = "Anonymous"
-
-        // fix chrome crossorigin with data:image instead of url
-        img.src = "data:image/svg+xml;base64," + btoa(svg_markup);
+        // fix chrome crossorigin with data:image instead of url 
+        img.src = "data:image/svg+xml;base64," +  Base64.encode(svg_markup);
 
         img.onload = (() => {
             this.ctx?.drawImage( img, 0, 0 );

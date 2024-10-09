@@ -86,6 +86,20 @@ body {
   transform: translateY(-50%);
 }
 
+.center--horizon-left {
+  position: absolute;
+  top: 60%;
+  left: 10%;
+  transform: translateY(-50%);
+}
+
+.center--horizon-right {
+  position: absolute;
+  top: 60%;
+  right: 10%;
+  transform: translateY(-50%);
+}
+
 .bottom-right {
   position: absolute;
   bottom: 10%;

@@ -17,18 +17,6 @@ export class Texts {
         this.cesiumViewer = cesiumViewer
         this.Color = oklch(99.7 / 100, 0, 0); // white
         this.stopUpdateColor = false;
-        this.textStyle = `
-        <style>
-            * {
-            font-Family: "infini";
-            font-variant-ligatures: "common-ligatures discretionary-ligatures";
-            font-variant-caps: "small-caps";
-            text-transform: "uppercase";
-            font-size: "100px";
-            color: "white";
-            }
-        </style>
-        `
         this.render();
     }
 
@@ -75,9 +63,10 @@ export class Texts {
      
     }
 
-    createDiv() {
+    createDiv(className:string[] = []) {
         const div = document.createElement("div");
-        div.classList.add("offscreenTextWrapper");
+        className.push("offscreenTextWrapper")
+        div.classList.add(...className);
         return div;
     }
     createP(container: HTMLDivElement, inlineContent: string, style:string, className:string[]) {
@@ -103,12 +92,24 @@ export class Texts {
 
     vides() {
         if (!Inputs.values.DRAW_VIDES.once) return;
-        this.canvas2D.drawSimpleText("emphasis", ["Vides."], "center", 100, 5000);
+        let div = this.createDiv();
+        div = this.createP(div,
+            `Vides.`,
+            "font-size:100px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
+        )
+        this.canvas2D.createSVG(div, 5000);
     }
 
     seule() {
         if (!Inputs.values.DRAW_SEULE.once) return;
-        this.canvas2D.drawSimpleText("emphasis", ["Seule."], "center", 100, 5000);
+        let div = this.createDiv();
+        div = this.createP(div,
+            `Seules.`,
+            "font-size:100px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
+        )
+        this.canvas2D.createSVG(div, 5000);
     }
 
     nullepart() {
@@ -137,52 +138,139 @@ export class Texts {
 
     aisjedit(){
         if (!Inputs.values.DRAW_AISJEDIT.once) return;
-        this.canvas2D.drawSimpleText("emphasis", ["Vous l'avais-je dit ?"], "center", 100, 5000);
+        let div = this.createDiv();
+        div = this.createP(div,
+            `Vous l'avais-je dit ?`,
+            "font-size:90px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
+        )
+        this.canvas2D.createSVG(div, 5000);
     }
 
     moncorps() {
         if (!Inputs.values.DRAW_MONCORPS.once) return;
-        this.canvas2D.drawSimpleText("emphasis", ["mon corps", "est monde"], "left", 100, 5000);
+        let div = this.createDiv(["center--horizon-left"]);
+        div = this.createP(div,
+            `mon corps`,
+            "font-size:100px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
+        )
+        div = this.createP(div,
+            `est monde`,
+            "font-size:100px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
+        )
+        this.canvas2D.createSVG(div, 5000);
+        
     }
 
     trajet(){
         if (!Inputs.values.DRAW_TRAJET.once) return;
-        this.canvas2D.drawSimpleText("emphasis", ["Sur tout ce trajet"], "center", 100, 5000);
+        let div = this.createDiv();
+        div = this.createP(div,
+            `Sur tout ce trajet`,
+            "font-size:90px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
+        )
+        this.canvas2D.createSVG(div, 5000);
     }
 
     voyage(){
         if (!Inputs.values.DRAW_VOYAGE.once) return;
-        this.canvas2D.drawSimpleText("emphasis", ["On ne voyage","pas par choix"], "right", 100, 5000);
+        let div = this.createDiv(["center--horizon-right"]);
+        div = this.createP(div,
+            `On ne voyage`,
+            "font-size:100px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
+        )
+        div = this.createP(div,
+            `pas par choix`,
+            "font-size:100px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
+        )
+        this.canvas2D.createSVG(div, 5000);
     }
 
     ailleurs() {
         if (!Inputs.values.DRAW_AILLEURS.once) return;
-        this.canvas2D.drawSimpleText("emphasis", ["L’ailleurs"], "center", 100, 5000);
+        let div = this.createDiv();
+        div = this.createP(div,
+            `L’ailleurs`,
+            "font-size:100px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
+        )
+        this.canvas2D.createSVG(div, 5000);
     }
 
     realite() {
         if (!Inputs.values.DRAW_REALITE.once) return;
         this.canvas2D.drawSimpleText("emphasis", ["Je ne crois pas","en la réalité."], "center", 100, 5000);
+        let div = this.createDiv();
+        div = this.createP(div,
+            `Je ne`,
+            "font-size:70px;",
+            ["font-infini", "font-infini--ligature"]
+        )
+        div = this.createP(div,
+            `crois pas`,
+            "font-size:70px;",
+            ["font-infini", "font-infini--ligature"]
+        )
+        div = this.createP(div,
+            `en la`,
+            "font-size:70px;",
+            ["font-infini", "font-infini--ligature"]
+        )
+        div = this.createP(div,
+            `réalité.`,
+            "font-size:70px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
+        )
+        this.canvas2D.createSVG(div, 5000);
     }
 
     plagiat() {
         if (!Inputs.values.DRAW_PLAGIAT.once) return;
-        this.canvas2D.drawSimpleText("emphasis", ["C'est un plagiat du monde,"], "center", 100, 5000);
+        let div = this.createDiv();
+        div = this.createP(div,
+            `C'est un plagiat du monde,`,
+            "font-size:90px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
+        )
+        this.canvas2D.createSVG(div, 5000);
     }
 
     whoAreYou() {
         if (!Inputs.values.DRAW_WHOAREYOU.once) return;
-        this.canvas2D.drawSimpleText("emphasis", ["qui êtes-vous ?"], "center", 100, 5000);
+        let div = this.createDiv();
+        div = this.createP(div,
+            `qui êtes-vous ?`,
+            "font-size:100px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
+        )
+        this.canvas2D.createSVG(div, 5000);
     }
 
     reve() {
         if (!Inputs.values.DRAW_REVE.once) return;
-        this.canvas2D.drawSimpleText("emphasis", ["Vous m'avez sortie du rêve"], "center", 100, 5000);
+        let div = this.createDiv();
+        div = this.createP(div,
+            `Vous m'avez sortie du rêve`,
+            "font-size:90px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
+        )
+        this.canvas2D.createSVG(div, 5000);
     }
 
     reel() {
         if (!Inputs.values.DRAW_REEL.once) return;
-        this.canvas2D.drawSimpleText("emphasis", ["Vous êtes réel."], "center", 100, 5000);
+        let div = this.createDiv();
+        div = this.createP(div,
+            `Vous êtes réel.`,
+            "font-size:100px;",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
+        )
+        this.canvas2D.createSVG(div, 5000);
     }
 }
 
