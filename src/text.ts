@@ -56,11 +56,16 @@ export class Texts {
         this.canvas2D.drawImage('title', './img/logo-rb.png', 5000);
         await waitForMS(7000);
         
-        let div = this.createDiv();
+        let div = this.createDiv(["center--horizon-right"]);
         div = this.createP(div,
-            `&Effiloche , &ROB À FLEURS 🌸, &RRRRROSE AZERTY, &Pier-re`,
-            "font-size:50px;",
-            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon-right"]
+            `&Effiloche , &ROB À FLEURS 🌸,`,
+            "font-size:50px;line-height:70px",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
+        )
+        div = this.createP(div,
+            `&RRRRROSE AZERTY, &Pier-re`,
+            "font-size:50px;line-height:70px",
+            ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
         )
         this.canvas2D.createSVG(div, 3000);
         await waitForMS(4500);
@@ -108,7 +113,7 @@ export class Texts {
         div = this.createP(div,
             `Vides.`,
             "font-size:10vw;",
-            ["font-infini", "font-infini--ligature", "font-infini--uppercase", "center--horizon"]
+            ["font-infini", "font-infini--uppercase", "center--horizon"]
         )
         this.canvas2D.createSVG(div, 5000);
     }
@@ -161,8 +166,25 @@ export class Texts {
             "font-size:10vw;font-weight:bold;text-decoration:underscore",
             ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
         )
-        this.canvas2D.createSVG(div, 5000);
+        this.canvas2D.createSVG(div, 100);
     }
+
+    // Rrrrrose VJ
+    // aisjedit(){
+    //     if (!Inputs.values.DRAW_AISJEDIT.once) return;
+    //     let div = this.createDiv(["center--horizon"]);
+    //     div = this.createP(div,
+    //         `Extrêmement PD`,
+    //         "font-size:6vw;text-wrap:no-wrap",
+    //         ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
+    //     )
+    //     div = this.createP(div,
+    //         `De Toi`,
+    //         "font-size:10vw;font-weight:bold;text-decoration:underscore",
+    //         ["font-infini", "font-infini--ligature", "font-infini--uppercase"]
+    //     )
+    //     this.canvas2D.createSVG(div, 100);
+    // }
 
     moncorps() {
         if (!Inputs.values.DRAW_MONCORPS.once) return;

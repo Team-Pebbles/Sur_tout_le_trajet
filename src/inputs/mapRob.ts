@@ -148,7 +148,7 @@ export const mapRob: InputActionMap = {
             } //c
         },
         DRAW_VIDES: {
-            keyboard: 68,
+            //keyboard: 68,
             midi: {
                 type: MidiInputType.KEY,
                 channel: 0,
@@ -156,7 +156,7 @@ export const mapRob: InputActionMap = {
             }
         },
         DRAW_SEULE: {
-            keyboard: 69,
+            //keyboard: 69,
             midi: {
                 type: MidiInputType.KEY,
                 channel: 0,
@@ -228,7 +228,7 @@ export const mapRob: InputActionMap = {
             }
         },
         DRAW_WHOAREYOU: {
-            keyboard: 81,
+            // keyboard: 81,
             midi: {
                 type: MidiInputType.KEY,
                 channel: 0,
@@ -236,7 +236,7 @@ export const mapRob: InputActionMap = {
             }
         },
         DRAW_REVE: {
-            keyboard: 81,
+            //keyboard: 81,
             midi: {
                 type: MidiInputType.KEY,
                 channel: 0,
@@ -251,5 +251,12 @@ export const mapRob: InputActionMap = {
                 id: 71,
             }
         },
+        AUDIO_GAIN: {
+            midi: {
+                type: MidiInputType.CONTROL,
+                channel: 0,
+                id: 18,
+            } 
+        }
     },
 }

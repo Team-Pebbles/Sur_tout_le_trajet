@@ -247,5 +247,12 @@ export const mapLouis: InputActionMap = {
                 id: 65,
             }
         },
+        AUDIO_GAIN: {
+            midi: {
+                type: MidiInputType.CONTROL,
+                channel: 0,
+                id: 18,
+            } 
+        }
     },
 }

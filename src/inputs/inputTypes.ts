@@ -67,6 +67,7 @@ export interface InputActions {
     DRAW_REVE: InputAction;
     DRAW_REEL: InputAction;
     RESET_CAM: InputAction;
+    AUDIO_GAIN: InputAction;
 }
 
 export interface InputValues {
@@ -108,5 +109,6 @@ export interface InputValues {
     DRAW_REVE: InputValue;
     DRAW_REEL: InputValue;
     RESET_CAM: InputValue;
+    AUDIO_GAIN: InputValue;
 }
 

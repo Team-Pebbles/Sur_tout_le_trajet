@@ -59,10 +59,10 @@ export class CesiumViewer {
         console.log("init viewer")
         //console.log(IACesiumCamera.FORWARD)
         // Token 1
-        // Ion.defaultAccessToken =
-        //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw"
+        Ion.defaultAccessToken =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyYTJjZTMzZC1kNjU5LTRjMWEtODQzZi1iNTUyNjE5MDJmMWUiLCJpZCI6NDkzLCJpYXQiOjE1MjUyNTQzODh9.2v8b1Vel8pp-AYQELIBwu5q7lE75yXPsXQrhppADDlw"
         // Token 2 : 
-        Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZmZiNjVjOC0yN2RlLTQ4MDQtOTZiZC0zNDA4MTI0NzlhYTEiLCJpZCI6MjA2OTMwLCJpYXQiOjE3MTI0MDcwNzl9.Pjp_GoeS_feA3aol6-7p9uRmIUqt4ElaMP0qfml3q9c"
+        // Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZmZiNjVjOC0yN2RlLTQ4MDQtOTZiZC0zNDA4MTI0NzlhYTEiLCJpZCI6MjA2OTMwLCJpYXQiOjE3MTI0MDcwNzl9.Pjp_GoeS_feA3aol6-7p9uRmIUqt4ElaMP0qfml3q9c"
         // let mapBoxProvider = new MapboxImageryProvider({
         //   url: "https://api.mapbox.com/v4/",
         //   mapId: "mapbox.satellite",
@@ -187,6 +187,9 @@ export class CesiumViewer {
             if(Inputs.values.RECORD_MOVE.value > 0){
                 imove = rotateVector({ x: Inputs.values.MOVE_X.value, y: Inputs.values.MOVE_Z.value }, this.cameraData.heading);
             }
+            //Keyboard
+            //imove = rotateVector({ x: Inputs.values.MOVE_X.value, y: Inputs.values.MOVE_Z.value }, this.cameraData.heading);
+
 
             simove.x += (imove.x - simove.x) * 0.01;
             simove.y += (imove.y - simove.y) * 0.01;
